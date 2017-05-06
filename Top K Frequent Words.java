@@ -38,6 +38,7 @@ class Pair {
     }
 }
 
+
 public class Solution {
     /**
      * @param words an array of string
@@ -45,7 +46,7 @@ public class Solution {
      * @return an array of string
      */
      
-    private Comparator<Pair> pairComparator = new Comparator<Pair>() {
+    private Comparator<Pair> WordsComparator = new Comparator<Pair>() {
         public int compare(Pair left, Pair right) {
             if (left.value != right.value) {
                 return left.value - right.value;
@@ -55,10 +56,9 @@ public class Solution {
     };
     
     public String[] topKFrequentWords(String[] words, int k) {
-        if (k == 0) {
+        if (words == null || words.length == 0 || k > words.length) {
             return new String[0];
-        }
-        
+        } 
         HashMap<String, Integer> counter = new HashMap<>();
         for (String word : words) {
             if (counter.containsKey(word)) {
@@ -66,56 +66,35 @@ public class Solution {
             } else {
                 counter.put(word, 1);
             }
-        }
-        
-        PriorityQueue<Pair> Q = new PriorityQueue<Pair>(k, pairComparator);
-        for (String word : counter.keySet()) {
-            Pair peak = Q.peek();
-            Pair newPair = new Pair(word, counter.get(word));
-            if (Q.size() < k) {
-                Q.add(newPair);
-                // a new pair count that is larger that the min, then add it to
-                // the
-                // minHeap
-            } else if (pairComparator.compare(newPair, peak) > 0) {
-                Q.poll();
-                Q.add(new Pair(word, counter.get(word)));
-            }
-        }
-        
-        String[] result = new String[k];
-        int index = k - 1;
-        while (!Q.isEmpty()) {
-            result[index--] = Q.poll().key;
-        }
-        
-        return result;
-     }
-}
 
-/*
-1. The Comparator!!! I'll just write it inside the Solution and call it a
-private
-method:
-    private Comparator<Pair> pairComparator = new Comparator<Pair>() {
-        public int compare(Pair left, Pair right) {
-            if (left.value != right.value) {
-                return left.value - right.value;
+
+        }
+
+        PriorityQueue<Pair> pq = new PriorityQueue<Pair>(k,  WordsComparator);
+        for (String word : counter.keySet()) {
+            Pair peak = pq.peek();
+            Pair newPair = new Pair(word, counter.get(word));
+            if (pq.size() < k) {
+                pq.add(newPair);
+            } else if (WordsComparator.compare(newPair, peak) > 0) {
+                pq.poll();
+                pq.add(new Pair(word, counter.get(word)));
             }
-            return right.key.compareTo(left.key);
         }
-    };
-2. When and where to use minHeap or MaxHeap!!!
-3. Always wants to use hash map
-4. The hardest part:
-    for (String word : counter.keySet()) {
-        Pair peak = Q.peek();
-        Pair newPair = new Pair(word, counter.get(word));
-        if (Q.size() < k) {
-            Q.add(newPair);
-        } else if (pairComparator.compare(newPair, peak) > 0) {
-            Q.poll();
-            Q.add(new Pair(word, counter.get(word)));
+
+        String[] result = new String[k];
+        int index = 0;
+        while (!pq.isEmpty()) {
+            result[index++] = pq.poll().key;
         }
+
+        // reverse
+        for (int i = 0; i < index / 2; ++i) {
+            String temp = result[i];
+            result[i] = result[index - i - 1];
+            result[index - i - 1] = temp;
+        }
+
+        return result;
     }
-*/
+}
