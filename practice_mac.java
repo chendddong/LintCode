@@ -1,74 +1,33 @@
-public class Solution {
+
+public class ZigzagIterator {
     
-    public int depthSum(List<NestedInteger> nestedList) {
-        return helper(nestedList, 1);
-    }
- 
-    public int helper(List<NestedInteger> nestedList, int depth){
-        if (nestedList == null || nestedList.size() == 0)
-            return 0;
+    public Iterator<Integer> it1;
+    public Iterator<Integer> it2;
+    public int turns;
 
-        int sum = 0;
-        for(NestedInteger ele : nestedList) {
-            if (ele.isInteger()) {
-                sum += ele.getInteger() * depth;
-            } else {
-                sum += helper(ele.getList(), depth + 1);
-            }
-        }
- 
-        return sum;
+    /**
+     * @param v1 v2 two 1d vectors
+     */
+    public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
+        // initialize your data structure here.
+        this.it1 = v1.iterator();
+        this.it2 = v2.iterator();
+        turns = 0;
     }
-}
 
-// 非递归
-/**
- * // This is the interface that allows for creating nested lists.
- * // You should not implement it, or speculate about its implementation
- * public interface NestedInteger {
- *
- *     // @return true if this NestedInteger holds a single integer,
- *     // rather than a nested list.
- *     public boolean isInteger();
- *
- *     // @return the single integer that this NestedInteger holds,
- *     // if it holds a single integer
- *     // Return null if this NestedInteger holds a nested list
- *     public Integer getInteger();
- *
- *     // @return the nested list that this NestedInteger holds,
- *     // if it holds a nested list
- *     // Return null if this NestedInteger holds a single integer
- *     public List<NestedInteger> getList();
- * }
- */
-public class Solution {
-    public int depthSum(List<NestedInteger> nestedList) {
+    public int next() {
         // Write your code here
-        if (nestedList == null || nestedList.size() == 0) {
-            return 0;
+        turns++;
+        if((turns % 2 == 1 && it1.hasNext()) || (!it2.hasNext())) {
+            return it1.next();
+        } else if((turns % 2 == 0 && it2.hasNext()) || (!it1.hasNext())) {
+            return it2.next();
         }
-        int sum = 0;
-        Queue<NestedInteger> queue = new LinkedList<NestedInteger>();
-        for (NestedInteger nestedInt : nestedList) {
-            queue.offer(nestedInt);
-        }
+        return -1;  
+    }
 
-        int depth = 0;
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            depth++;
-            for (int i = 0; i < size; i++) {
-                NestedInteger nestedInt = queue.poll();
-                if (nestedInt.isInteger()) {
-                    sum += nestedInt.getInteger() * depth;
-                } else {
-                    for (NestedInteger innerInt : nestedInt.getList()) {
-                        queue.offer(innerInt);
-                    }
-                }
-            }
-        }
-        return sum;
+    public boolean hasNext() {
+        // Write your code here
+        return it1.hasNext() || it2.hasNext();        
     }
 }
