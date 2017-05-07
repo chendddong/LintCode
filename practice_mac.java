@@ -1,33 +1,36 @@
-
-public class ZigzagIterator {
+public class ZigzagIterator2 {
     
-    public Iterator<Integer> it1;
-    public Iterator<Integer> it2;
+    public List<Iterator<Integer>> its;
     public int turns;
 
     /**
-     * @param v1 v2 two 1d vectors
+     * @param vecs a list of 1d vectors
      */
-    public ZigzagIterator(List<Integer> v1, List<Integer> v2) {
+    public ZigzagIterator2(ArrayList<ArrayList<Integer>> vecs) {
         // initialize your data structure here.
-        this.it1 = v1.iterator();
-        this.it2 = v2.iterator();
+        this.its = new ArrayList<Iterator<Integer>>();
+        for (List<Integer> vec : vecs) {
+            if (vec.size() > 0)
+                its.add(vec.iterator());
+        }
         turns = 0;
     }
 
     public int next() {
         // Write your code here
-        turns++;
-        if((turns % 2 == 1 && it1.hasNext()) || (!it2.hasNext())) {
-            return it1.next();
-        } else if((turns % 2 == 0 && it2.hasNext()) || (!it1.hasNext())) {
-            return it2.next();
+        int elem = its.get(turns).next();
+        if (its.get(turns).hasNext())
+            turns = (turns + 1) % its.size();
+        else {
+            its.remove(turns);
+            if (its.size() > 0) 
+                turns %= its.size();
         }
-        return -1;  
+        return elem;
     }
 
     public boolean hasNext() {
         // Write your code here
-        return it1.hasNext() || it2.hasNext();        
+        return its.size() > 0;        
     }
 }
