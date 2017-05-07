@@ -1,121 +1,66 @@
-// Given a list of words and an integer k, return the top k frequent words in  
-// the list.
-
-//  Notice
-
-// You should order the words by the frequency of them in the return list, the
-// most frequent one comes first. If two words has the same frequency, the one
-// with lower alphabetical order come first.
-
-// ["work", "do", "happy", "good", "this", "this"] 2
-// ["this", "do"]
-
-// What we need is a maxHeap for the count
-// We are gonna construct this data type using -- string word --, -- int count
-// --,
-
-// Example
-// Given
-
-// [
-//     "yes", "lint", "code",
-//     "yes", "code", "baby",
-//     "you", "baby", "chrome",
-//     "safari", "lint", "code",
-//     "body", "lint", "code"
-// ]
-// for k = 3, return ["code", "lint", "baby"].
-
-// for k = 4, return ["code", "lint", "baby", "yes"],
-
-class Pair {
-    String key;
-    int value;
-    
-    Pair(String key, int value) {
-        this.key = key;
-        this.value = value;
-    }
-}
-
 public class Solution {
     /**
-     * @param words an array of string
-     * @param k an integer
-     * @return an array of string
+     * @param source a source string
+     * @param target a target string
+     * @return an integer as index
      */
-     
-    private Comparator<Pair> pairComparator = new Comparator<Pair>() {
-        public int compare(Pair left, Pair right) {
-            if (left.value != right.value) {
-                return left.value - right.value;
-            }
-            return right.key.compareTo(left.key);
+    public int strStr2(String source, String target) {
+        if(target == null) {
+            return -1;
         }
-    };
-    
-    public String[] topKFrequentWords(String[] words, int k) {
-        if (k == 0) {
-            return new String[0];
+        int m = target.length();
+        if(m==0) {
+            return 0;
         }
         
-        HashMap<String, Integer> counter = new HashMap<>();
-        for (String word : words) {
-            if (counter.containsKey(word)) {
-                counter.put(word, counter.get(word) + 1);
-            } else {
-                counter.put(word, 1);
-            }
+        if(source == null) {
+            return -1;
+        }
+        int n = source.length();
+        if(n==0) {
+            return -1;
         }
         
-        PriorityQueue<Pair> Q = new PriorityQueue<Pair>(k, pairComparator);
-        for (String word : counter.keySet()) {
-            Pair peak = Q.peek();
-            Pair newPair = new Pair(word, counter.get(word));
-            if (Q.size() < k) {
-                Q.add(newPair);
-                // a new pair count that is larger that the min, then add it to
-                // the
-                // minHeap
-            } else if (pairComparator.compare(newPair, peak) > 0) {
-                Q.poll();
-                Q.add(new Pair(word, counter.get(word)));
-            }
+        if (m == 0) {
+            return 0;
         }
         
-        String[] result = new String[k];
-        int index = k - 1;
-        while (!Q.isEmpty()) {
-            result[index--] = Q.poll().key;
-        }
-        
-        return result;
-     }
-}
+        // mod could be any big integer
+        // just make sure mod * 33 wont exceed max value of int.
+        int mod = Integer.MAX_VALUE / 33;
+        int hash_target = 0;
 
-/*
-1. The Comparator!!! I'll just write it inside the Solution and call it a
-private
-method:
-    private Comparator<Pair> pairComparator = new Comparator<Pair>() {
-        public int compare(Pair left, Pair right) {
-            if (left.value != right.value) {
-                return left.value - right.value;
+        // 33 could be something else like 26 or whatever you want
+        for (int i = 0; i < m; ++i) {
+            hash_target = (hash_target * 33 + target.charAt(i) - 'a') % mod;
+            if (hash_target < 0) {
+                hash_target += mod;
             }
-            return right.key.compareTo(left.key);
         }
-    };
-2. When and where to use minHeap or MaxHeap!!!
-3. Always wants to use hash map
-4. The hardest part:
-    for (String word : counter.keySet()) {
-        Pair peak = Q.peek();
-        Pair newPair = new Pair(word, counter.get(word));
-        if (Q.size() < k) {
-            Q.add(newPair);
-        } else if (pairComparator.compare(newPair, peak) > 0) {
-            Q.poll();
-            Q.add(new Pair(word, counter.get(word)));
+
+        int m33 = 1;
+        for (int i = 0; i < m - 1; ++i) {
+            m33 = m33 * 33 % mod;
         }
+
+        int value = 0;
+        for (int i = 0; i < n; ++i) {
+            if (i >= m) {
+                value = (value - m33 * (source.charAt(i - m) - 'a')) % mod;
+            }
+
+            value = (value * 33 + source.charAt(i) - 'a') % mod;
+            if (value < 0) {
+                value += mod;
+            }
+
+            if (i >= m - 1 && value == hash_target) {
+                // you have to double check by directly compare the string
+                if (target.equals(source.substring(i - m + 1, i + 1))) {
+                    return i - m + 1;
+                }
+            }
+        }
+        return -1;
     }
-*/
+}
