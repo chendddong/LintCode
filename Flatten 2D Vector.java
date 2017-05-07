@@ -15,7 +15,7 @@ public class Vector2D implements Iterator<Integer> {
     Stack<Integer> stackj;
 
     void pushListListToStack(List<List<Integer>> vec2d) {
-        Stack<List<Intger>> temp = new Stack<>();
+        Stack<List<Integer>> temp = new Stack<>();
         for (List<Integer> nested : vec2d) {
             temp.push(nested);
         }
@@ -27,7 +27,7 @@ public class Vector2D implements Iterator<Integer> {
 
     void pushListToStack(List<Integer> vec) {
         Stack<Integer> temp = new Stack<>();
-        for (Intger nested : vec) {
+        for (Integer nested : vec) {
             temp.push(nested);
         }
 
@@ -48,12 +48,12 @@ public class Vector2D implements Iterator<Integer> {
         }
 
         return stackj.pop();
-    }x
+    }
 
     @Override
     public boolean hasNext() {
         while (stackj.isEmpty() && !stack.isEmpty()) {
-            pushListTosStack(stack.pop());
+            pushListToStack(stack.pop());
         }
         return !stackj.isEmpty();
     }
