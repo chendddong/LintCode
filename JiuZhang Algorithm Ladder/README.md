@@ -5,6 +5,8 @@
 |         Topic         |                                                 Link                                                | Difficulty |                                                                                                 Solution                                                                                                 |
 |:---------------------:|:--------------------------------------------------------------------------------------------------------:|:------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | String / DFS | [13. strStr](http://lintcode.com/problem/strstr)                           |   Easy   | [13. strStr.java](https://github.com/chendddong/LintCode/blob/master/JiuZhang%20Algorithm%20Ladder/1%20-%20strStr%20%26%20Coding%20Style/Reqiured/13.%20strStr.java)           |
+| DFS | [18. Subsets II](http://lintcode.com/en/problem/subsets-ii) 
+|  Medium   | [18. Subsets II.java](https://github.com/chendddong/LintCode/blob/master/JiuZhang%20Algorithm%20Ladder/1%20-%20strStr%20%26%20Coding%20Style/Optional/18.%20Subsets%20II.java)           |
 | Hash | [594. strStr II Hard](http://lintcode.com/en/problem/strstr-ii)    |   Hard   | [594. strStr II Hard.java](https://github.com/chendddong/LintCode/blob/master/JiuZhang%20Algorithm%20Ladder/1%20-%20strStr%20%26%20Coding%20Style/Optional/594.%20strStr%20II.java)           |
 
 ## LintCode Ladder 2
