@@ -71,3 +71,56 @@ class Solution {
          */        
     }
 }
+
+
+  ///////////////////////////
+  // Solution 2 Using Bits //
+  ///////////////////////////
+
+class Solution {
+    /**
+     * @param S: A set of numbers.
+     * @return: A list of lists. All valid subsets.
+     */
+    public ArrayList<ArrayList<Integer>> subsets(int[] nums) {
+        ArrayList<ArrayList<Integer>> results = new
+        ArrayList<>();
+        if (nums == null) {
+            return  results;
+        }
+
+        if (nums.length == 0) {
+            results.add(new ArrayList<Integer>());
+            return results;
+        }
+
+        Arrays.sort(nums);
+        int n = nums.length;
+        
+        for (int i = 0; i < (1 << n); ++i) {
+            ArrayList<Integer> subset = new ArrayList<Integer>();
+            for (int j = 0; j < n; ++j) {
+                if ((i & (1 << j)) != 0) {
+                    subset.add(nums[j]);
+                }
+            }
+            results.add(subset);
+        }
+
+        return results;
+    }
+}
+
+/*
+    1 << n is 2^n
+    each subset equals to an binary integer between 0 .. 2^n - 1
+    0 -> 000 -> []
+    1 -> 001 -> [1]
+    2 -> 010 -> [2]
+    3 -> 011 -> [1, 2]
+    4 -> 100 -> [3]
+    5 -> 101 -> [1, 3]
+    6 -> 110 -> [2, 3]
+    7 -> 111 -> [1, 2, 3] 
+ */
+ 
