@@ -74,3 +74,16 @@ class Solution {
         }
      } 
 }
+
+/*
+    Thoughts
+
+    1.  The if clause:
+
+        if ( visited[i] == 1 || ( i != 0 && nums[i] == nums[i - 1]
+        && visited[i-1] == 0)){
+            continue;
+        }       
+        
+    2.  the visited array
+ */
