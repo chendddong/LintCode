@@ -27,14 +27,18 @@ public class Solution {
             return 0;
         }
 
-        // preparation
+        /*
+        preparation
+         */ 
         boolean[][] isPalindrome = getIsPalindrome(s);
         
-        // initialize
+        /*
+        initialize
+         */ 
         int[] f = new int[s.length() + 1];
         f[0] = 0;
         
-        // main
+
         for (int i = 1; i <= s.length(); i++) {
             f[i] = Integer.MAX_VALUE; // or f[i] = i
             for (int j = 0; j < i; j++) {
