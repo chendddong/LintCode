@@ -1,13 +1,23 @@
-// Given a rotated sorted array, recover it to sorted array in-place.
+/**
+ * Given a rotated sorted array, recover it to sorted array in-place.
+ */
 
-// Clarification
-// What is rotated array?
 
-// For example, the orginal array is [1,2,3,4], The rotated array of it can be [1,2,3,4], [2,3,4,1], [3,4,1,2], [4,1,2,3]
-// Example
-// [4, 5, 1, 2, 3] -> [1, 2, 3, 4, 5]
+/*
+    Clarification
+    What is rotated array?
 
-// Solution #0 straightforward?
+    For example, the orginal array is [1,2,3,4], The rotated array of it can
+    be [1,2,3,4], [2,3,4,1], [3,4,1,2], [4,1,2,3]
+    Example
+    [4, 5, 1, 2, 3] -> [1, 2, 3, 4, 5]
+
+ */
+    
+//////////////////////////////////
+// Solution #0 straightforward? //
+//////////////////////////////////
+
 public class Solution {
     /**
      * @param nums: The rotated sorted array
@@ -26,9 +36,18 @@ public class Solution {
 There is definitely a way to sort the ArrayList which is to use Collections.sort something like Arrays.sort();
 */
 
-// Solution #1 we can know the size of the of the ArrayList and we can use binary search to get the smallest number
-// and the index i then try to add the first i numbers to the ArrayList at same time delete that number
-// So the time complexity acutally is O(n)
+
+////////////////////////////////////////////
+// Solution #1 Java Class Add to the Last //
+////////////////////////////////////////////
+
+
+/*
+    Solution #1 we can know the size of the of the ArrayList and we can use binary search to get the smallest number
+    and the index i then try to add the first i numbers to the ArrayList at same time delete that number
+    So the time complexity acutally is O(n)
+ */
+
 
 public class Solution {
     /**
@@ -51,14 +70,17 @@ public class Solution {
 }
 
 /*
-This is a O(n) algorithm. There are some nice features in the Java Class, feel free to explore that in the future.
+    This is a O(n) algorithm. There are some nice features in the Java Class, feel free to explore that in the future.
 
-Try to remember how to find the min in the ArrayList Collections.min(nums)
-Try to remember how to find the minIndex in nums.indexOf(Collections.min(nums))
+    Try to remember how to find the min in the ArrayList Collections.min(nums)
+    Try to remember how to find the minIndex in nums.indexOf(Collections.min(nums))
 */
 
 
-// Solution #2 by jiuzhang
+ /////////////////////////////////////////////////
+ // Solution #2 by Tree Swaps in-Place Rotation //
+ /////////////////////////////////////////////////
+
 
 import java.util.ArrayList;
 
@@ -67,6 +89,8 @@ public class Solution {
      * @param nums: The rotated sorted array
      * @return: The recovered sorted array
      */
+    
+    /* Three swaps */
     private void reverse(ArrayList<Integer> nums, int start, int end) {
         for (int i = start, j = end; i < j; i++, j--) {
         	int temp = nums.get(i);
@@ -78,6 +102,7 @@ public class Solution {
 
     public void recoverRotatedSortedArray(ArrayList<Integer> nums) {
     	for (int index = 0; index < nums.size() - 1; index++) {
+            /* find the max-number position */
     		if (nums.get(index) > nums.get(index + 1)) {
     			reverse(nums, 0, index);
     			reverse(nums, index + 1, nums.size() - 1);
@@ -90,7 +115,7 @@ public class Solution {
 }
 
 /*
-This is weird. How can somebody come up with something like this?
-Actually it is pretty good. all the moves are O(n) without additional space being used;
-Reverse Reverse and Reverse!
+    This is weird. How can somebody come up with something like this?
+    Actually it is pretty good. all the moves are O(n) without additional space being used;
+    Reverse Reverse and Reverse!
 */
