@@ -23,7 +23,7 @@
 /////////////////////////////////////////////////////
 // Solution 1 Love & Understanding & Possibilities //
 /////////////////////////////////////////////////////
-    
+
 
 class Solution {
     /**
@@ -40,7 +40,8 @@ class Solution {
         
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
-            if (A[mid - 1] == A[mid + 1] && A[mid - 1] < A[mid] && A[mid + 1] < mid) {
+            if (A[mid - 1] == A[mid + 1] && A[mid - 1] < A[mid] && A[mid + 1] <
+                A[mid]) {
                 return mid;
             } else if (A[mid - 1] < A[mid] && A[mid] < A[mid + 1]) {
                 start = mid;
@@ -50,5 +51,38 @@ class Solution {
         }
         
         return A[start] > A[end] ? start : end;
+    }
+}
+
+/////////////////////////////////////////
+// Solution 2 Control the Border a bit //
+/////////////////////////////////////////
+
+
+
+class Solution {
+    /**
+     * @param A: An integers array.
+     * @return: return any of peek positions.
+     */
+    public int findPeak(int[] A) {
+        /* Restrict start and end so there are at least three elements to
+        compare with */
+        int start = 1, end = A.length-2; 
+        while(start + 1 <  end) {
+            int mid = (start + end) / 2;
+            if(A[mid] < A[mid - 1]) {
+                end = mid;
+            } else if(A[mid] < A[mid + 1]) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        if(A[start] < A[end]) {
+            return end;
+        } else { 
+            return start;
+        }
     }
 }
