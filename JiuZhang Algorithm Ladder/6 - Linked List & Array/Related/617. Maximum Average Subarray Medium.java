@@ -45,7 +45,7 @@ public class Solution {
         return l;
     }
 
-    private boolean check_valid(int nums[], double mid, int k) {
+    private boolean check_valid(int[] nums, double mid, int k) {
         int n = nums.length;
         double min_pre = 0;
         double[] sum = new double[n + 1];
