@@ -3,10 +3,10 @@
 
 // have a global variable to store the results which was the final return value;
 
-// first temp = [1] put this temp and the in a fuction and it will return the
-// meadian;
+// first temp = [1] put this temp and the in a function and it will return the
+// median;
 
-// now meadian = 1
+// now median = 1
 // results = [1];
 // temp = [1,2]; -- > results = [1,1];
 
@@ -18,12 +18,9 @@
 // run time is O(n ^ 2) for the first round traversal
 
 public class Solution {
-    /**
-     * @param nums: A list of integers.
-     * @return: the median of numbers
-     */
+
     ArrayList<Integer> results = new ArrayList<Integer>();
-    // test1 [1, 2, 3, 4, 5]
+    // Test [1, 2, 3, 4, 5]
     public int[] medianII(int[] nums) {
         if (nums == null || nums.length == 0) {
             return new int[0];
@@ -58,7 +55,8 @@ public class Solution {
 }
 
 
-/* this one is O(n) for the array traversal;
+/* 
+   this one is O(n) for the array traversal;
    but the sorting taking like O(nlogn); 
 */
 
@@ -102,9 +100,9 @@ public class Solution {
 }
 
 /* 
-Also, we can use the double heap -- minHeap and maxHeap;
-the time is O(n) for the traversal and O(logn) for the add.
-But pop only takes O(1). That been said, this is the best way to approach this 
+    Also, we can use the double heap -- minHeap and maxHeap;
+    the time is O(n) for the traversal and O(logn) for the add.
+    But pop only takes O(1). That been said, this is the best way to approach this 
 */
 
 public class Solution {
@@ -159,7 +157,7 @@ public class Solution {
 2.  Priority Queue can take ONE or TWO arguments 
         maxHeap = new PriorityQueue(cnt, revCmp);
         minHeap = new PriorityQueue(cnt);
-3.  Just draw it and analyse the situations
+3.  Just draw it and analyze the situations
     -1. always add to max, always return to the max heap
     -2. has something to do with the numberOfElements
 4.  Don't forget the getMedian();
