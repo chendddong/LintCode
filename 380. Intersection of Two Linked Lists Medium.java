@@ -34,41 +34,41 @@ public class Solution {
      * @return: a ListNode 
      */
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-    	if (headA == null || headB == null) {
-    		return null;
-    	}	
-    	// get the tail of list A
-    	ListNode node = headA;
-    	while (node.next != null) {
-    		node = node.next;
-    	}	
-    	// connect the two nodes
-    	node.next = headB;
-    	ListNode result = listCycleII(headA);
-    	// put the pointer back!
-    	node.next = null;
-    	return result;
+        if (headA == null || headB == null) {
+            return null;
+        }   
+        // get the tail of list A
+        ListNode node = headA;
+        while (node.next != null) {
+            node = node.next;
+        }   
+        // connect the two nodes
+        node.next = headB;
+        ListNode result = listCycleII(headA);
+        // put the pointer back!
+        node.next = null;
+        return result;
     }  
 
     private ListNode listCycleII(ListNode head) {
-    	ListNode fast;
-    	ListNode slow;
-    	fast = head.next;
-    	slow = head;
-    	while (fast != slow) {
-    		if (fast == null || fast.next == null) {
-    			return null;
-    		}
-    		fast = fast.next.next;
-    		slow = slow.next;
-    	}	
+        ListNode fast;
+        ListNode slow;
+        fast = head.next;
+        slow = head;
+        while (fast != slow) {
+            if (fast == null || fast.next == null) {
+                return null;
+            }
+            fast = fast.next.next;
+            slow = slow.next;
+        }   
 
-    	// this judgement is most important
-    	while (head != slow.next) {
-    		head = head.next;
-    		slow = slow.next;
-    	}
+        // this judgement is most important
+        while (head != slow.next) {
+            head = head.next;
+            slow = slow.next;
+        }
 
-    	return head;
+        return head;
     }
 }
