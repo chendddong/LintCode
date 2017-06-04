@@ -52,3 +52,8 @@ public class Solution {
         return Math.max(left, right) + 1;
     }
 }
+
+/*
+    Always think about the connection between the answer and the left child and
+    right child in binary tree problem
+ */

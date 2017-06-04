@@ -24,6 +24,7 @@ public class Solution {
             return 0;
         }
         
+        /* special occasion -- leaf node */
         if (root.left == null && root.right == null) {
             return 1;
         }
@@ -78,3 +79,7 @@ public class Solution {
         return Math.min(getMin(root.left), getMin(root.right)) + 1;
     }
 }
+
+/* 
+    Always remember to plus one when returning the depth of BT
+*/ 

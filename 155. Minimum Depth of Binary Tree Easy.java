@@ -24,6 +24,7 @@ public class Solution {
             return 0;
         }
         
+        /* special occasion -- leaf node */
         if (root.left == null && root.right == null) {
             return 1;
         }
