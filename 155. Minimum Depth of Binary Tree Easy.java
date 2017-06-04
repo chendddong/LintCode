@@ -79,3 +79,7 @@ public class Solution {
         return Math.min(getMin(root.left), getMin(root.right)) + 1;
     }
 }
+
+/* 
+    Always remember to plus one when returning the depth of BT
+*/ 
