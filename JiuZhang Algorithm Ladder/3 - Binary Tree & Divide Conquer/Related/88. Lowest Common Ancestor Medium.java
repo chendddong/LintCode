@@ -75,3 +75,65 @@ public class Solution {
 
     }
 }
+
+///////////////////////////
+// Solution 1 ResultType //
+///////////////////////////
+
+class ResultType {
+    public TreeNode lca;
+    public int count;
+    public ResultType(TreeNode lca, int count) {
+        this.lca = lca;
+        this.count = count;
+    }
+}
+
+public class Solution {
+    /* 
+        Thoughts:
+        Find the LCA of node A,B in the binary tree with root root
+        If we find it, then return the LCA
+        If we only find A, return A
+        If we only find B, return B
+        If we find neither of them, return null
+    */
+    /* Task: Find the LCA of node A,B in the binary tree */
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode A, TreeNode B){
+        return helper(root, A, B).lca;
+    }
+
+    private ResultType helper(TreeNode root, TreeNode A, TreeNode B) {
+        if (root == null) {
+            return new ResultType(null, 0);
+        }
+        /* Base case */
+        if (root == A || root == B) {
+            return new ResultType(root, 1);
+        }
+
+        /* Divide */
+        ResultType left = helper(root.left, A, B);
+        ResultType right = helper(root.right, A, B);
+
+        /* Solve the problem */
+        if (left.count == 1 && right.count == 1) {
+            return new ResultType(root, 2);
+        }
+        if (left.count == 2) {
+            return new ResultType(left.lca, 2);
+        } 
+        if (right.count == 2) {
+            return new ResultType(right.lca, 2);
+        }
+        
+        if (left.count == 1 && right.count == 0) {
+            return new ResultType(left.lca, 1);
+        }
+        if (right.count == 1 && left.count == 0) {
+            return new ResultType(right.lca, 1);
+        }
+        
+        return new ResultType(null, 0);        
+    }
+}
