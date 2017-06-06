@@ -60,8 +60,7 @@ public class Solution {
 
 public class Solution {
     /* Global Variable */
-    private int lastVal = Integer.MIN_VALUE;
-    private boolean firstNode = true;
+    private TreeNode lastNode = null;
 
     public boolean isValidBST(TreeNode root) {
         if (root == null) {
@@ -70,11 +69,12 @@ public class Solution {
         if (!isValidBST(root.left)) {
             return false;
         }
-        if (!firstNode && lastVal >= root.val) {
+        if (lastNode != null && lastNode.val >= root.val) {
             return false;
         }
-        firstNode = false;
-        lastVal = root.val;
+
+        lastNode = root;
+
         if (!isValidBST(root.right)) {
             return false;
         }
@@ -83,7 +83,8 @@ public class Solution {
 }
 
 /*
-    Bit hard to come up with this But just go over this would be good.
+    Based on the in-order traversal since the in-order traversal is sequential.
+    left - root - right
  */
 
 ////////////////////////////////////
