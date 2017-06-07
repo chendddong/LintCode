@@ -8,6 +8,7 @@
  *         this.left = this.right = null;
  *     }
  * }
+ * 
  * Example of iterate a tree:
  * BSTIterator iterator = new BSTIterator(root);
  * while (iterator.hasNext()) {
@@ -16,20 +17,20 @@
  * } 
  */
 public class BSTIterator {
-    private Stack<TreeNode> stack = new Stack<TreeNode>();
+    private ArrayDeque<TreeNode> stack = new ArrayDeque<TreeNode>();
     private TreeNode curt;
     public BSTIterator(TreeNode root) {
         curt = root;
     }
 
-    //@return: True if there has next node, or false
+    /* True if there has next node, or false */
     public boolean hasNext() {
         return (curt != null || !stack.isEmpty());
     }
     
-    //@return: return next node
+    /* return: return next node */
     public TreeNode next() {
-        // remember this (curt != null)
+        /* remember this (curt != null) */
         while (curt != null) {
             stack.push(curt);
             curt = curt.left;

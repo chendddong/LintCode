@@ -141,6 +141,21 @@ public class Solution {
 
 /*
     The [resultType] of things!
+
+    An experience:
+        When writing the long if clause, it's better to consider the abnormal
+        situation first, and then process the normal ones; It would reduce the
+        chance to make some errors during constructing the clause.
+
+        E.G.
+            if (!something || !elsesomething) {
+                // return;
+                // return false;
+                // break;...
+                // continue;...
+            }
+
+            
  */
 
 
