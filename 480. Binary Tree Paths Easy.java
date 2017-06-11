@@ -36,19 +36,23 @@ public class Solution {
     }
     
     private void helper(TreeNode root, String path, List<String> result) {
+        /* precaution */
         if (root == null) {
             return;
         }
         
+        /* Leaf */
         if (root.left == null && root.right == null) {
             result.add(path);
             return;
         }
         
+        /* Go left */
         if (root.left != null) {
             helper(root.left, path + "->" + String.valueOf(root.left.val), result);
         }
         
+        /* Go right */
         if (root.right != null) {
             helper(root.right, path + "->" + String.valueOf(root.right.val), result);
         }
@@ -67,3 +71,43 @@ public class Solution {
 
     Convert the int val to a string String.valueOf(int val);
 */
+
+
+///////////////////////////////
+// Solution 1 Divide Conquer //
+///////////////////////////////
+
+public class Solution {
+    /**
+     * @param root the root of the binary tree
+     * @return all root-to-leaf paths
+     */
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> paths = new ArrayList<>();
+        if (root == null) {
+            return paths;
+        }
+        
+        List<String> leftPaths = binaryTreePaths(root.left);
+        List<String> rightPaths = binaryTreePaths(root.right);
+
+        /* Loop and concatenate the path */
+        for (String path : leftPaths) {
+            paths.add(root.val + "->" + path);
+        }
+        for (String path : rightPaths) {
+            paths.add(root.val + "->" + path);
+        }
+        
+        /* root is a leaf */
+        if (paths.size() == 0) {
+            paths.add("" + root.val);
+        }
+        
+        return paths;
+    }
+}
+
+/*
+    Pretty neat and no need to convert the value and WOW!
+ */
