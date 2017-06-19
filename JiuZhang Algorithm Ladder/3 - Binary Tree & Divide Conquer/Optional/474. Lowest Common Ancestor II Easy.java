@@ -29,7 +29,9 @@ public class Solution {
     public ParentTreeNode lowestCommonAncestorII(ParentTreeNode root,
                                            ParentTreeNode A,
                                            ParentTreeNode B) {
+        /* Get the path from node A to Root */
         ArrayList<ParentTreeNode> pathA = getPath2Root(A);
+        /* Get the path from node A to Root */
         ArrayList<ParentTreeNode> pathB = getPath2Root(B);
 
         int indexA = pathA.size() - 1;

@@ -62,12 +62,16 @@ public class Solution {
         TreeNode right = lowestCommonAncestor(root.right, A, B);
 
         /* Solve the problem */
+
+        /* Both sides have LCA */
         if (left != null && right != null) {
             return root;
         }
+        /* left side has LCA */
         if (left != null) {
             return left;
         }
+        /* right side has LCA */
         if (right != null) {
             return right;
         }
@@ -117,6 +121,7 @@ public class Solution {
         ResultType right = helper(root.right, A, B);
 
         /* Solve the problem */
+        /* Count is the number A and B found in the tree */
         if (left.count == 1 && right.count == 1) {
             return new ResultType(root, 2);
         }
