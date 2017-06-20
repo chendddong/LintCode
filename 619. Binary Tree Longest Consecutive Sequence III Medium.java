@@ -74,7 +74,7 @@ public class Solution {
         max_len = Math.max(down + 1 + up, max_len);
         return new ResultType(max_len, down, up);
     }
-
+}
 /*
     Just compare this with the 614, basically both of these two are somewhat
     symmetric to write.
