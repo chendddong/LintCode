@@ -1,3 +1,19 @@
+/**
+ * Given a binary tree, return the preorder traversal of its nodes' values.
+ */
+
+/*
+    Example
+    Given:
+
+        1
+       / \
+      2   3
+     / \
+    4   5
+    return [1,2,4,5,3].
+*/
+
 
 /////////////////////////////////
 // Solution 1 Divide & Conquer //
@@ -99,22 +115,22 @@ public class Solution {
     public ArrayList<Integer> preorderTraversal(TreeNode root) {
         // Stack<TreeNode> stack = new Stack<TreeNode>();
         /* Rumor says that deck performs slightly better than stack :) */
-        ArrayDeque<TreeNode> deque = new ArrayDeque<>();
+        ArrayDeque<TreeNode> stack = new ArrayDeque<>();
         ArrayList<Integer> preorder = new ArrayList<Integer>();
 
         if (root == null) {
             return preorder;
         }
         /* push root outside, pop it, and goes right then left */
-        deque.push(root);
-        while (!deque.isEmpty()) {
-            TreeNode node = deque.pop();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
             preorder.add(node.val);
             if (node.right != null) {
-                deque.push(node.right);
+                stack.push(node.right);
             }
             if (node.left != null) {
-                deque.push(node.left);
+                stack.push(node.left);
             }
         }
 
@@ -129,7 +145,8 @@ public class Solution {
     
        ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
        The traverse method is like a knight doing all the stuff himself -- Ned
-       Stark. He would go all the way to all the nodes carry the king's wish.
+       Stark. He would go all the way to all the nodes carry the king's wish
+       which is the 'result'.
 
        There would always be a 'result' being carried around when the
        recursion happens.
