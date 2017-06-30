@@ -18,7 +18,7 @@
 
 
 /////////////////////////
-// Solution 1 Traverse //
+// Solution 0 Traverse //
 /////////////////////////
 
 
@@ -48,7 +48,7 @@ public class Solution {
 }
 
 //////////////////////
-// Solution 2 D & C //
+// Solution 1 D & C //
 //////////////////////
 
 public class Solution {
@@ -79,7 +79,7 @@ public class Solution {
 
 
 /////////////////////////
-// Solution 3 non-recu //
+// Solution 2 non-recu //
 /////////////////////////
 
 
