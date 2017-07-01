@@ -28,12 +28,16 @@ import java.util.Stack;
  *     5) postorderTraversalRec
  *     6) postorderTraversal
  *     
- * 4. Level Order Traversal 
+ * 4. Level order traversal
  *     1) levelTraversal
- *     2) levelTraversalRec 
+ *     2) levelTraversalRec
+ *     3) Level order traversal BFS
+ *     refer to LintCode 69 for more solutions
  *
+ * 5. Convert BST to Doubly LinkedList
+ *     1) convertBST2DLLRec (refer to LintCode 378)
+ *     2) convertBST2DLL
  * 
- * 5. 将二叉查找树变为有序的双向链表: convertBST2DLLRec, convertBST2DLL 
  * 6. 求二叉树第K层的节点个数：getNodeNumKthLevelRec, getNodeNumKthLevel
  * 7. 求二叉树中叶子节点的个数：getNodeNumLeafRec, getNodeNumLeaf 
  * 8. 判断两棵二叉树是否相同的树：isSameRec, isSame
@@ -568,26 +572,35 @@ public class TreeDemo {
     }
 
 //////////////////////////////
-// 4. Level Order Traversal //
-//////////////////////////////
+// 4. Level order traversal //
+//////////////////////////////  
+
+    ///////////////////////
+    // 1) levelTraversal //
+    ///////////////////////
 
     /*
-     * 分层遍历二叉树（按层次从上往下，从左往右）迭代 
-     * 其实就是广度优先搜索，使用队列实现。队列初始化，将根节点压入队列。当队列不为空，进行如下操作：弹出一个节点 
-     * ，访问，若左子节点或右子节点不为空，将其压入队列 
-     * */
+        The essence of the Lever order traversal:
+
+        1. BFS, use queue
+        2. Initialize the queue, offer the root to the queue.
+        3. While the queue is not empty
+        4. Ask if the children are not empty, offer them to the queue  
+    */
     public static void levelTraversal(TreeNode root) {
         if (root == null) {
             return;
         }
         
-        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        ArrayDeque<TreeNode> q = new ArrayDeque<TreeNode>();
         q.offer(root);
         
         while (!q.isEmpty()) {
             TreeNode cur = q.poll();
-            
+
+            /* Print it out */
             System.out.print(cur.val + " ");
+
             if (cur.left != null) {
                 q.offer(cur.left);
             }
@@ -597,55 +610,107 @@ public class TreeDemo {
         }
     }
     
+    //////////////////////////
+    // 2) levelTraversalRec //
+    //////////////////////////
+
+    /* Two level ArrayList Traversal */
     public static void levelTraversalRec(TreeNode root) {
         ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
         levelTraversalVisit(root, 0, ret);
         System.out.println(ret);
     }
-    
-    /** 
-     *  分层遍历二叉树（递归） 
-     *  很少有人会用递归去做level traversal 
-     *  基本思想是用一个大的ArrayList，里面包含了每一层的ArrayList。 
-     *  大的ArrayList的size和level有关系 
-     *   
-     *  http://discuss.leetcode.com/questions/49/binary-tree-level-order-traversal#answer-container-2543 
-     */  
-    public static void levelTraversalVisit(TreeNode root, int level, ArrayList<ArrayList<Integer>> ret) {
+    public static void levelTraversalVisit(TreeNode root, 
+                                           int level,
+                                           ArrayList<ArrayList<Integer>> ret) {
+        
         if (root == null) {
             return;
         }
-        
-        // 如果ArrayList的层数不够用， 则新添加一层
-        // when size = 3, level: 0, 1, 2
+            /* 
+                If the node is in the new level, add one more layer.
+                Example: when size = 3, level: 0, 1, 2
+            */
         if (level >= ret.size()) {
             ret.add(new ArrayList<Integer>());
         }
         
-        // visit 当前节点
+        /* Go to the current level and add that node's val */
         ret.get(level).add(root.val);
         
-        // 将左子树， 右子树添加到对应的层。
+        /* Recursive part */
         levelTraversalVisit(root.left, level + 1, ret);
         levelTraversalVisit(root.right, level + 1, ret);
     }
-    
+
+    //////////////////////////////////
+    // 3) Level order traversal BFS //
+    //////////////////////////////////
+
+    public ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
+        
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        ArrayDeque<TreeNode> queue = new ArrayDeque<TreeNode>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            ArrayList<Integer> level = new ArrayList<>();
+            /* Using a for loop to separate the level thing */
+            for (int i = 0; i < size; i++) {
+                TreeNode head = queue.poll();
+                level.add(head.val);
+                if (head.left != null) {
+                    queue.offer(head.left);
+                }
+                if (head.right != null) {
+                    queue.offer(head.right);
+                }                
+            }
+            result.add(level);
+
+        }
+
+        return result;
+    }
+
+/////////////////////////////////////////
+// 5. Convert BST to Doubly LinkedList //
+/////////////////////////////////////////
+
     /*
-     * 题目要求：将二叉查找树转换成排序的双向链表，不能创建新节点，只调整指针。
-       查找树的结点定义如下：
-       既然是树，其定义本身就是递归的，自然用递归算法处理就很容易。将根结点的左子树和右子树转换为有序的双向链表，
-       然后根节点的left指针指向左子树结果的最后一个结点，同时左子树最后一个结点的right指针指向根节点；
-       根节点的right指针指向右子树结果的第一个结点，
-       同时右子树第一个结点的left指针指向根节点。
-     * */
+                10
+              /    \
+             6     15
+            / \   /  \
+           3   8 11   18
+            
+            8 <- 10 -> 15
+            8 -> 10 <- 15
+        Requirements: Convert the BST to DLL where you can't create new nodes,
+        and only can adjust the pointers.
+
+        First, we connect the root left pointer to the last node of the left
+        children and then pointing the root with the right pointer of last node
+        of the left children.
+        
+        Second, we point the root's right pointer to the first node of the
+        right children, then we use the left pointer of the first node of the
+        right children to point to the root
+    */
+   
+    //////////////////////////
+    // 1) convertBST2DLLRec //
+    //////////////////////////
+
     public static TreeNode convertBST2DLLRec(TreeNode root) {
         return convertBST2DLLRecHelp(root)[0];
     }
-    
-    /*
-     * ret[0] 代表左指针
-     * ret[1] 代表右指针
-     * */
+    /* ret[0] left pointer; ret[1] right pointer */
     public static TreeNode[] convertBST2DLLRecHelp(TreeNode root) {
         TreeNode[] ret = new TreeNode[2];
         ret[0] = null;
@@ -656,41 +721,48 @@ public class TreeDemo {
         }
         
         if (root.left != null) {
+            /* Go to the far left */
             TreeNode left[] = convertBST2DLLRecHelp(root.left);
-            left[1].right = root;  // 将左子树的尾节点连接到根
+            /* connect the last node of the left children to the root */
+            left[1].right = root;  
             root.left = left[1];
             
             ret[0] = left[0];
         } else {
-            ret[0] = root;   // 左节点返回root.
+            /* left node return back to root */
+            ret[0] = root;   
         }
         
         if (root.right != null) {
+            /* Deal with the right */
             TreeNode right[] = convertBST2DLLRecHelp(root.right);
-            right[0].left = root;  // 将右子树的头节点连接到根
+            /* connect the first node of the right children to the root */
+            right[0].left = root;
             root.right = right[0];
             
             ret[1] = right[1];
         } else {
-            ret[1] = root;  // 右节点返回root.
+            /* right node return back to root */
+            ret[1] = root;
         }
         
         return ret;
     }
-    
-    /** 
-     * 将二叉查找树变为有序的双向链表 迭代解法 
-     * 类似inOrder traversal的做法 
-     */  
+
+    ///////////////////////
+    // 2) convertBST2DLL //
+    ///////////////////////
+
+    /* Similar to in-order traversal */ 
     public static TreeNode convertBST2DLL(TreeNode root) {
         while (root == null) {
             return null;
         }
         
         TreeNode pre = null;
-        Stack<TreeNode> s = new Stack<TreeNode>();
+        ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         TreeNode cur = root;
-        TreeNode head = null;       // 链表头
+        TreeNode head = null;       // Head of the DLL
         
         while (true) {
             while (cur != null) {
@@ -698,7 +770,7 @@ public class TreeDemo {
                 cur = cur.left;
             }
             
-            // if stack is empty, just break;
+            /* if stack is empty, just break; */
             if (s.isEmpty()) {
                 break;
             }
@@ -708,13 +780,13 @@ public class TreeDemo {
                 head = cur;
             }
 
-            // link pre and cur.
+            /* link pre and cur. */
             cur.left = pre;
             if (pre != null) {
                 pre.right = cur;
             }
             
-            // 左节点已经处理完了，处理右节点
+            /* Handle the right children */
             cur = cur.right;
             pre = cur;
         }

@@ -5,7 +5,8 @@
 /*
   Here we use the right pointer in TreeNode as the next pointer in ListNode.
 
-  Don't forget to mark the left child of each node to null. Or you will get Time Limit Exceeded or Memory Limit Exceeded.
+  Don't forget to mark the left child of each node to null. Or you will get Time
+  Limit Exceeded or Memory Limit Exceeded.
 
   Example
                 1
@@ -39,7 +40,8 @@
 /*
   Here we use the right pointer in TreeNode as the next pointer in ListNode.
 
-  Don't forget to mark the left child of each node to null. Or you will get Time Limit Exceeded or Memory Limit Exceeded.
+  Don't forget to mark the left child of each node to null. Or you will get Time
+  Limit Exceeded or Memory Limit Exceeded.
 
   Example
                 1
@@ -53,7 +55,7 @@
                         5
                          \
                           6
- */
+*/
 
 /**
  * Definition of TreeNode:
@@ -138,7 +140,7 @@ public class Solution {
             
             /* Connect right in the loop */
             node.left = null;
-            if (stack.!stack.isEmpty()) {
+            if (stack.isEmpty()) {
                 node.right = null;
             } else {
                 /* The peek time */
@@ -204,7 +206,7 @@ public class Solution {
         TreeNode leftLast = helper(root.left);
         TreeNode rightLast = helper(root.right);
         
-        // connect leftLast to root.right
+        /* Connect leftLast to root.right. Tree steps connection */
         if (leftLast != null) {
             leftLast.right = root.right;
             root.right = root.left;
