@@ -37,10 +37,19 @@ import java.util.Stack;
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
  *     2) convertBST2DLL
+ *
+ * 6. Get the number of Nodes from Kth level
+ *     1) getNodeNumKthLevel
+ *     2) getNodeNumKthLevelRec
+ *     
+ * 7. Get the number of leaf nodes
+ *     1) getNodeNumLeafRec
+ *     2) getNodeNumLeaf
  * 
- * 6. 求二叉树第K层的节点个数：getNodeNumKthLevelRec, getNodeNumKthLevel
- * 7. 求二叉树中叶子节点的个数：getNodeNumLeafRec, getNodeNumLeaf 
- * 8. 判断两棵二叉树是否相同的树：isSameRec, isSame
+ * 8. Are those BT the same 
+ *     1) isSameRec
+ *     2) isSame
+ *     
  * 9. 判断二叉树是不是平衡二叉树：isAVLRec 
  * 10. 求二叉树的镜像（破坏和不破坏原来的树两种情况）：
  *     mirrorRec, mirrorCopyRec
@@ -65,14 +74,14 @@ public class TreeDemo {
         TreeNode r4 = new TreeNode(4);
         TreeNode r5 = new TreeNode(5);
         TreeNode r6 = new TreeNode(6);
-        TreeNode r7 = new TreeNode(0); 
+        // TreeNode r7 = new TreeNode(0); 
 
         r1.left = r2;
         r1.right = r3;
         r2.left = r4;
         r2.right = r5;
         r3.right = r6;
-        r4.left = r7; 
+        // r4.left = r7; 
     /* 
         Tree: r
 
@@ -81,8 +90,8 @@ public class TreeDemo {
           2   3  
          / \   \  
         4   5   6
-       /
-      0 
+       
+    
 
     */         
         TreeNode t1 = new TreeNode(10);
@@ -794,80 +803,83 @@ public class TreeDemo {
         return root;
     }
 
+///////////////////////////////////////////////
+// 6. Get the number of Nodes from Kth level //
+///////////////////////////////////////////////
 
+    //////////////////////////////
+    // 1) getNodeNumKthLevelRec //
+    //////////////////////////////
 
-
-
-/*
- *  * 6. 求二叉树第K层的节点个数：getNodeNumKthLevelRec, getNodeNumKthLevel 
- * */
-    public static int getNodeNumKthLevel(TreeNode root, int k) {
+    /* Count the level and if it is the right level, return the size of the Q */
+    public static int getNodeNumKth(TreeNode root, int k) {
         if (root == null || k <= 0) {
             return 0;
         }
-        
+
         int level = 0;
-        
-        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        int count = 0;
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
         q.offer(root);
-        
-        TreeNode dummy = new TreeNode(0);
-        int cnt = 0; // record the size of the level.
-        
-        q.offer(dummy);
+
         while (!q.isEmpty()) {
-            TreeNode node = q.poll();
-            
-            if (node == dummy) {
-                level++;
-                if (level == k) {
-                    return cnt;
-                }
-                cnt = 0; // reset the cnt;
-                if (q.isEmpty()) {
-                    break;
-                }
-                q.offer(dummy);
-                continue;
+            level++;
+            /* Size of the array */
+            int size = q.size();
+            if (level == k) {
+                return size;
             }
-            
-            cnt++;
-            if (node.left != null) {
-                q.offer(node.left);
-            }
-            
-            if (node.right != null) {
-                q.offer(node.right);
+            /* For loop every element in the queue */
+            for (int i = 0; i < size; i++) {
+                TreeNode node = q.poll();
+                if (node.left != null) {
+                    q.offer(node.left);
+                }
+                if (node.right != null) {
+                    q.offer(node.right);
+                }
             }
         }
-        
-        return 0;
+        return count;
     }
-    
-    /*
-     *  * 6. 求二叉树第K层的节点个数：getNodeNumKthLevelRec, getNodeNumKthLevel 
-     * */
+
+
+    //////////////////////////////
+    // 2) getNodeNumKthLevelRec //
+    //////////////////////////////
+
+    /* Two base case: zero node and one node */
     public static int getNodeNumKthLevelRec(TreeNode root, int k) {
+        /* Zero node */
         if (root == null || k <= 0) {
             return 0;
         }
         
+        /* One node */
         if (k == 1) {
             return 1;
         }
         
-        // 将左子树及右子树在K层的节点个数相加.
-        return getNodeNumKthLevelRec(root.left, k - 1) + getNodeNumKthLevelRec(root.right, k - 1);
+        /* Get the sum of the nodes on the kth level from left and right */
+        return getNodeNumKthLevelRec(root.left, k - 1) 
+               + getNodeNumKthLevelRec(root.right, k - 1);
     }
-    
-    /*
-     * 7. getNodeNumLeafRec  把左子树和右子树的叶子节点加在一起即可
-     * */
+
+/////////////////////////////////////
+// 7. Get the number of leaf nodes //
+/////////////////////////////////////
+
+    //////////////////////////
+    // 1) getNodeNumLeafRec //
+    //////////////////////////
+
+    /* Just add all the leaf from the left and the right, and null return 0 */
     public static int getNodeNumLeafRec(TreeNode root) {
         if (root == null) {
             return 0;
         }
         
+        /* Only this situation can be called the leaf node */
         if (root.left == null && root.right == null) {
             return 1;
         }
@@ -875,10 +887,11 @@ public class TreeDemo {
         return getNodeNumLeafRec(root.left) + getNodeNumLeafRec(root.right);
     }
     
-    /* 7. getNodeNumLeaf
-     * 随便使用一种遍历方法都可以，比如，中序遍历。
-     * inorderTraversal，判断是不是叶子节点。
-     * */
+    ///////////////////////
+    // 2) getNodeNumLeaf //
+    ///////////////////////
+
+    /* We can use any one of those traversal method, for example in-order */
     public static int getNodeNumLeaf(TreeNode root) {
         if (root == null) {
             return 0;
@@ -886,80 +899,88 @@ public class TreeDemo {
         
         int cnt = 0;
         
-        // we can use inorderTraversal travesal to do it.
-        Stack<TreeNode> s = new Stack<TreeNode>();
+        ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         TreeNode cur = root;
         
-        while (true) {
+        while (cur != null || !s.isEmpty()) {
+            /* Go to far left and add the cur node along the way */
+
+            // Left children
             while (cur != null) {
                 s.push(cur);
                 cur = cur.left;
             }
-            
-            if (s.isEmpty()) {
-                break;
-            }
-            
-            // all the left child has been put into the stack, let's deal with the 
-            // current node.
-            cur = s.pop();
+
+            // The 'root'
+            cur = s.peek();
+            s.pop();
+
+            // solve problem
             if (cur.left == null && cur.right == null) {
                 cnt++;
             }
+
+            // Go right
             cur = cur.right;
         }
         
         return cnt;
     }
-    
+
+//////////////////////////////
+// 8. Are those BT the same //
+//////////////////////////////
+
+    //////////////////
+    // 1) isSameRec //
+    //////////////////
+
     /*
-     * 8. 判断两棵二叉树是否相同的树。 
-     * 递归解法：  
-     * （1）如果两棵二叉树都为空，返回真 
-     * （2）如果两棵二叉树一棵为空，另一棵不为空，返回假  
-     * （3）如果两棵二叉树都不为空，如果对应的左子树和右子树都同构返回真，其他返回假 
-     * */
+        (1) if two tree are all empty return true.
+        (2) if one of those is empty and the other is not, return false
+        (3) if two trees are both not empty if their val and their children are
+        all the same return true, else return false;
+    */
     public static boolean isSameRec(TreeNode r1, TreeNode r2) {
-        // both are null.
+        /* (1) */
         if (r1 == null && r2 == null) {
             return true;
         }
         
-        // one is null.
+        /* (2) */
         if (r1 == null || r2 == null) {
             return false;
         }
-        
-        // 1. the value of the root should be the same;
-        // 2. the left tree should be the same.
-        // 3. the right tree should be the same.
+
+        /* (3) */
         return r1.val == r2.val && 
                 isSameRec(r1.left, r2.left) && isSameRec(r1.right, r2.right);
     }
-    
-    /*
-     * 8. 判断两棵二叉树是否相同的树。
-     * 迭代解法 
-     * 我们直接用中序遍历来比较就好啦 
-     * */
+
+    ///////////////
+    // 2) isSame //
+    ///////////////
+
+    /* We can use in-order traversal to compare with the two nodes */
     public static boolean isSame(TreeNode r1, TreeNode r2) {
-        // both are null.
         if (r1 == null && r2 == null) {
             return true;
         }
         
-        // one is null.
         if (r1 == null || r2 == null) {
             return false;
         }
         
-        Stack<TreeNode> s1 = new Stack<TreeNode>();
-        Stack<TreeNode> s2 = new Stack<TreeNode>();
+        ArrayDeque<TreeNode> s1 = new ArrayDeque<TreeNode>();
+        ArrayDeque<TreeNode> s2 = new ArrayDeque<TreeNode>();
         
         TreeNode cur1 = r1;
         TreeNode cur2 = r2;
         
-        while (true) {
+        while ((cur1 != null && cur2 != null) || 
+              (!s1.isEmpty() && !s2.isEmpty())) {
+
+            /* Left side */
             while (cur1 != null && cur2 != null) {
                 s1.push(cur1);
                 s2.push(cur2);
@@ -967,26 +988,78 @@ public class TreeDemo {
                 cur2 = cur2.left;
             }
             
+            /* Solve problem */
             if (cur1 != null || cur2 != null) {
                 return false;
             }
-            
-            if (s1.isEmpty() && s2.isEmpty()) {
-                break;
-            }
-            
-            cur1 = s1.pop();
-            cur2 = s2.pop();
+
+            /* Current node */
+            cur1 = s1.peek();
+            s1.pop();
+            cur2 = s2.peek();
+            s2.pop();
+
+            /* Solve problem */            
             if (cur1.val != cur2.val) {
                 return false;
             }
             
+            /* Right side */
             cur1 = cur1.right;
             cur2 = cur2.right;
         }
         
         return true;
     }
+    /* This is the Preorder traversal */
+    public boolean isSame(TreeNode r1, TreeNode r2) {
+        if (r1 == null && r2 == null) {
+            return true;
+        }
+
+        if (r1 == null || r2 == null) {
+            return false;
+        }
+
+        ArrayDeque<TreeNode> s1 = new ArrayDeque<>();
+        ArrayDeque<TreeNode> s2 = new ArrayDeque<>();
+        s1.push(r1);
+        s2.push(r2);
+
+        while (!s1.isEmpty() && !s2.isEmpty()) {
+            TreeNode node1 = s1.pop();
+            TreeNode node2 = s2.pop();
+
+            if (node1.val != node2.val) {
+                return false;
+            }
+
+            if (node1.right != null) {
+                s1.push(node1.right);
+            }
+            if (node2.right != null) {
+                s2.push(node2.right);
+            }
+            if (s1.size() != s2.size()) {
+                return false ;
+            }
+
+            if (node1.left != null) {
+                s1.push(node1.left);
+            }
+
+            if (node2.left != null) {
+                s2.push(node2.left);
+            }
+
+            if (s1.size() != s2.size()) {
+                return false ;
+            }
+        }
+
+        return s1.size() == s2.size();
+    }
+
     
 /*
  * 
