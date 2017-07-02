@@ -51,8 +51,7 @@ public class Solution {
             return new ResultType(false, -1);
         }
         
-        return new ResultType(true, Math.max(left.maxDepth,
-                                             right.maxDepth) + 1);
+        return new ResultType(true, Math.max(left.maxDepth, right.maxDepth) + 1);
     }
 }
 
