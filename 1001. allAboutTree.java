@@ -52,12 +52,19 @@ import java.util.ArrayDeque;
  *     2) isSame
  *     
  * 9. Is balanced binary tree 
- *     1) isAVLRec 
+ *     1) isAVLRec
+ *     2) isAVLResultType 
  *     
- * 10. 求二叉树的镜像（破坏和不破坏原来的树两种情况）：
- *     mirrorRec, mirrorCopyRec
- *     mirror, mirrorCopy 
- * 10.1 判断两个树是否互相镜像：isMirrorRec isMirror
+ * 10. BT mirror
+ *     1) mirrorRec
+ *     2) mirrorCopyRec
+ *     3) mirror
+ *     4) mirrorCopy
+ *      
+ * 10.1 Two trees are mirrors
+ *     1) isMirrorRec
+ *     2) isMirror
+ *     
  * 11. 求二叉树中两个节点的最低公共祖先节点：
  *      LAC        求解最小公共祖先, 使用list来存储path.
  *      LCABstRec  递归求解BST树.
@@ -1095,6 +1102,51 @@ public class TreeDemo {
         return true;
     }
     
+    ////////////////////////
+    // 2) isAVLResultType //
+    ////////////////////////
+
+    /* When we need to return more than just one element, use ResultType */
+    class ResultType {
+        public boolean isBalanced;
+        public int maxDepth;
+        public ResultType(boolean isBalanced, int maxDepth) {
+            this.isBalanced = isBalanced;
+            this.maxDepth = maxDepth;
+        }
+    }
+
+    public boolean isBalanced(TreeNode root) {
+        return helper(root).isBalanced;
+    }
+    
+    private ResultType helper(TreeNode root) {
+        if (root == null) {
+            return new ResultType(true, 0);
+        }
+        
+        ResultType left = helper(root.left);
+        ResultType right = helper(root.right);
+        
+        /* subtree not balance */
+        /* see if the left and the right are balanced */
+        if (!left.isBalanced || !right.isBalanced) {
+            return new ResultType(false, -1);
+        }
+        
+        /* root not balance */
+        /* we can use 0 for the maxDepth */
+        if (Math.abs(left.maxDepth - right.maxDepth) > 1) {
+            return new ResultType(false, -1);
+        }
+        
+        return new ResultType(true, Math.max(left.maxDepth, right.maxDepth) + 1);
+    }
+    
+///////////////////
+// 10. BT mirror //
+///////////////////
+
     /** 
      * 10. 求二叉树的镜像 递归解法：
      * 
@@ -1238,6 +1290,11 @@ public class TreeDemo {
         
         return rootCopy;
     }  
+
+////////////////////////////////
+// 10.1 Two trees are mirrors //
+////////////////////////////////
+    
     
     /*
      * 10.1. 判断两个树是否互相镜像
