@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.ArrayDeque;
 
 
 /**
@@ -50,7 +51,9 @@ import java.util.Stack;
  *     1) isSameRec
  *     2) isSame
  *     
- * 9. 判断二叉树是不是平衡二叉树：isAVLRec 
+ * 9. Is balanced binary tree 
+ *     1) isAVLRec 
+ *     
  * 10. 求二叉树的镜像（破坏和不破坏原来的树两种情况）：
  *     mirrorRec, mirrorCopyRec
  *     mirror, mirrorCopy 
@@ -1060,24 +1063,30 @@ public class TreeDemo {
         return s1.size() == s2.size();
     }
 
-    
-/*
- * 
- *  9. 判断二叉树是不是平衡二叉树：isAVLRec
- *     1. 左子树，右子树的高度差不能超过1
- *     2. 左子树，右子树都是平衡二叉树。 
- *      
- */
+////////////////////////////////
+// 9. Is balanced binary tree //
+////////////////////////////////
+
+    /////////////////
+    // 1) isAVLRec //
+    /////////////////
+
+    /* 
+        (1) The height difference between left and right children should be < 1.
+        (2) The left children and right children have to be all AVL.
+     */
     public static boolean isAVLRec(TreeNode root) {
         if (root == null) {
             return true;
         }
         
-        // 左子树，右子树都必须是平衡二叉树。 
+        /* (2) */
         if (!isAVLRec(root.left) || !isAVLRec(root.right)) {
             return false;
         }
         
+        /* (1) and refer to the method in 2. 1) */
+
         int dif = Math.abs(getDepthRec(root.left) - getDepthRec(root.right));
         if (dif > 1) {
             return false;

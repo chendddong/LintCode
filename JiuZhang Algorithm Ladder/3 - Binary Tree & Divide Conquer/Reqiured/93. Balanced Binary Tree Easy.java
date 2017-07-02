@@ -59,8 +59,44 @@ public class Solution {
     Think about all the possible solutions when generating those test cases
  */
 
+//////////////////////////////////////////////
+// Solution 2: D & C with a previous method //
+//////////////////////////////////////////////
+
+    /* 
+        (1) The height difference between left and right children should be < 1.
+        (2) The left children and right children have to be all AVL.
+     */
+public class Solution {
+    public boolean isBalanced(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        
+        /* (1) */
+        if (!isBalanced(root.left) || !isBalanced(root.right)) {
+            return false;
+        }
+        
+        /* (2) */
+        int diff = Math.abs(getDepthRec(root.left) - getDepthRec(root.right));
+        if (diff > 1) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private static int getDepthRec(TreeNode root) {
+        if (root == null) {
+            return -1;
+        }
+        return Math.max(getDepthRec(root.left), getDepthRec(root.right)) + 1;
+    }
+}
+
 ///////////////////////
-// Solution 2: D & C //
+// Solution 3: D & C //
 ///////////////////////
 
 public class Solution {
@@ -82,3 +118,4 @@ public class Solution {
         return Math.max(left, right) + 1;
     }
 }
+
