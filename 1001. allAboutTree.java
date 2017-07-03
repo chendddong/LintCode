@@ -66,11 +66,13 @@ import java.util.ArrayDeque;
  *     2) isMirror
  *     
  * 11. Least common ancestor
- *     1) LCA
- *     2) LCABstRec  递归求解BST树.
- *     3) LCARec     递归算法
+ *     1) LCA*
+ *     2) LCARec
+ *     3) LCABstRec
  *     
- * 12. 求二叉树中节点的最大距离：getMaxDistanceRec 
+ * 12. Max distance between nodes
+ *     1) getMaxDistanceRec
+ *   
  * 13. 由前序遍历序列和中序遍历序列重建二叉树：rebuildBinaryTreeRec
  * 14. 判断二叉树是不是完全二叉树：isCompleteBinaryTree, isCompleteBinaryTreeRec
  * 15. 找出二叉树中最长连续子串(即全部往左的连续节点，或是全部往右的连续节点）findLongest
@@ -1355,32 +1357,34 @@ public class TreeDemo {
 ///////////////////////////////
 
     ////////////
-    // 1) LAC //
+    // 1) LCA //
     ////////////
 
     /* Record the path along the way and compare them */
     public static TreeNode LCA(TreeNode root, TreeNode r1, TreeNode r2) {
-        // If the nodes have one in the root, just return the root.
+        /* Edge case */
         if (root == null || r1 == null || r2 == null) {
             return null;
         }
         
+        /* Initialize two dynamic arrays */
         ArrayList<TreeNode> list1 = new ArrayList<TreeNode>();
         ArrayList<TreeNode> list2 = new ArrayList<TreeNode>();
         
+        /* See if we can find the path */
         boolean find1 = LCAPath(root, r1, list1);
         boolean find2 = LCAPath(root, r2, list2);
         
-        // If didn't find any of the node, just return a null.
+        /* If didn't find any of the node, just return a null. */
         if (!find1 || !find2) {
             return null;
         }
         
-        // 注意: 使用Iterator 对于linkedlist可以提高性能。
-        // 所以 统一使用Iterator 来进行操作。
+        /* Note that it would boot the performance if we use Iterator. */
         Iterator<TreeNode> iter1 = list1.iterator();
         Iterator<TreeNode> iter2 = list2.iterator();
         
+        /* Iterate and compare the node */
         TreeNode last = null;
         while (iter1.hasNext() && iter2.hasNext()) {
             TreeNode tmp1 = iter1.next();
@@ -1393,101 +1397,119 @@ public class TreeDemo {
             last = tmp1;
         }
         
-        // If never find any node which is different, means Node 1 and Node 2 are the same one.
-        // so just return the last one.
+        /* 
+            If we cannot find any node which is different, which means Node 1
+            and Node 2 are the same node. So just return the last one.
+         */
+        
         return last;
     }
-    
-    public static boolean LCAPath(TreeNode root, TreeNode node, ArrayList<TreeNode> path) {
-        // if didn't find, we should return a empty path.
+    public static boolean LCAPath(TreeNode root, 
+                                  TreeNode node, 
+                                  ArrayList<TreeNode> path) {
+        /* if can't find the node in the tree, we should return a empty path. */
         if (root == null || node == null) {
             return false;
         }
         
-        // First add the root node.
+        /* Add the root node */
         path.add(root);
         
-        // if the node is in the left side.
         if (root != node 
                 && !LCAPath(root.left, node, path)
                 && !LCAPath(root.right, node, path)
                 ) {
-            // Didn't find the node. should remove the node added before.
+            /* 
+                Didn't find the node. We should remove the node added before.
+                AKA backtracking 
+            */
             path.remove(root);
             return false;
         }
         
-        // found
+        /* Found the node */
         return true;
     }
-    /*
-     * 11. 求二叉树中两个节点的最低公共祖先节点：
-     * Recursion Version:
-     * LACRec 
-     * 1. If found in the left tree, return the Ancestor.
-     * 2. If found in the right tree, return the Ancestor.
-     * 3. If Didn't find any of the node, return null.
-     * 4. If found both in the left and the right tree, return the root.
-     * */
-    public static TreeNode LACRec(TreeNode root, TreeNode node1, TreeNode node2) {
+
+    ///////////////
+    // 2) LCARec //
+    ///////////////
+
+    /* 
+        (1) null situation
+        (2) root situation
+        (3) left null and right null situation
+     */
+    public static TreeNode LCARec(TreeNode root, TreeNode node1, TreeNode node2)
+    {
+        /* (1) */
         if (root == null || node1 == null || node2 == null) {
             return null;
         }
         
-        // If any of the node is the root, just return the root.
+        /* (2) */
         if (root == node1 || root == node2) {
             return root;
         }
         
-        // if no node is in the node, just recursively find it in LEFT and RIGHT tree.
-        TreeNode left = LACRec(root.left, node1, node2);
-        TreeNode right = LACRec(root.right, node1, node2);
+        /* (3) */
+        TreeNode left = LCARec(root.left, node1, node2);
+        TreeNode right = LCARec(root.right, node1, node2);
         
-        if (left == null) {  // If didn't found in the left tree, then just return it from right.
+        /* If didn't find LCA the left tree, then just return it from right. */
+        if (left == null) {  
             return right;
-        } else if (right == null) { // Or if didn't found in the right tree, then just return it from the left side.
+        /* If didn't find LCA the right tree, then just return it from left. */  
+        } else if (right == null) { 
             return left;
         } 
         
-        // if both right and right found a node, just return the root as the Common Ancestor.
+        /* If we found LCA from both sides, just return the root */
         return root;
     }
     
-    /*
-     * 11. 求BST中两个节点的最低公共祖先节点：
-     * Recursive version:
-     * LCABst 
-     * 
-     * 1. If found in the left tree, return the Ancestor.
-     * 2. If found in the right tree, return the Ancestor.
-     * 3. If Didn't find any of the node, return null.
-     * 4. If found both in the left and the right tree, return the root.
-     * */
+    //////////////////
+    // 3) LCABstRec //
+    //////////////////
+
+    /* 
+        We could also use 2) LCARec to solve this since BST's also BT. And this
+        algorithm could be log(n) if it is an AVL. The runtime of LCARec is O(n).
+     */
     public static TreeNode LCABstRec(TreeNode root, TreeNode node1, TreeNode node2) {
+        /* Null work */
         if (root == null || node1 == null || node2 == null) {
             return null;
         }
         
-        // If any of the node is the root, just return the root.
+        /* Root work */
         if (root == node1 || root == node2) {
             return root;
         }
         
+        /* Got the min and max and compare */
         int min = Math.min(node1.val, node2.val);
         int max = Math.max(node1.val, node2.val);
         
-        // if the values are smaller than the root value, just search them in the left tree.
+        /* If root val is larger than max, Go left */
         if (root.val > max) {
             return LCABstRec(root.left, node1, node2);
         } else if (root.val < min) {
-        // if the values are larger than the root value, just search them in the right tree.    
+        /* If root val is smaller than min, Go right */
             return LCABstRec(root.right, node1, node2);
         }
         
-        // if root is in the middle, just return the root.
+        /* if root is in the middle, just return the root */
         return root;
     }
     
+////////////////////////////////////
+// 12. Max distance between nodes //
+////////////////////////////////////
+    
+    //////////////////////////
+    // 1) getMaxDistanceRec //
+    //////////////////////////
 
     
     /*
