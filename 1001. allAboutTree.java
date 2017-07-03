@@ -57,18 +57,19 @@ import java.util.ArrayDeque;
  *     
  * 10. BT mirror
  *     1) mirrorRec
- *     2) mirrorCopyRec
- *     3) mirror
+ *     2) mirror
+ *     3) mirrorCopyRec
  *     4) mirrorCopy
  *      
  * 10.1 Two trees are mirrors
  *     1) isMirrorRec
  *     2) isMirror
  *     
- * 11. 求二叉树中两个节点的最低公共祖先节点：
- *      LAC        求解最小公共祖先, 使用list来存储path.
- *      LCABstRec  递归求解BST树.
- *      LCARec     递归算法 .
+ * 11. Least common ancestor
+ *     1) LCA
+ *     2) LCABstRec  递归求解BST树.
+ *     3) LCARec     递归算法
+ *     
  * 12. 求二叉树中节点的最大距离：getMaxDistanceRec 
  * 13. 由前序遍历序列和中序遍历序列重建二叉树：rebuildBinaryTreeRec
  * 14. 判断二叉树是不是完全二叉树：isCompleteBinaryTree, isCompleteBinaryTreeRec
@@ -1146,24 +1147,22 @@ public class TreeDemo {
 ///////////////////
 // 10. BT mirror //
 ///////////////////
+  
+    //////////////////
+    // 1) mirrorRec //
+    //////////////////
 
-    /** 
-     * 10. 求二叉树的镜像 递归解法：
-     * 
-     *   (1) 破坏原来的树
-     *   
-     *      1               1
-     *     /                 \
-     *    2     ----->        2
-     *     \                 /
-     *      3               3
-     * */  
+     // *      1               1
+     // *     /                 \
+     // *    2     ----->        2
+     // *     \                 /
+     // *      3               3
+    /* Break the original tree swap the left and right children recursively */
     public static TreeNode mirrorRec(TreeNode root) {  
         if (root == null) {
             return null;
         }
-        
-        // 先把左右子树分别镜像,并且交换它们
+        /* Classic 3-way swap */
         TreeNode tmp = root.right;
         root.right = mirrorRec(root.left);
         root.left = mirrorRec(tmp);
@@ -1171,37 +1170,24 @@ public class TreeDemo {
         return root;
     }  
     
-    /** 
-     * 10. 求二叉树的镜像 Iterator解法：
-     * 
-     *   (1) 破坏原来的树
-     *   
-     *      1               1
-     *     /                 \
-     *    2     ----->        2
-     *     \                 /
-     *      3               3
-     *      
-     *  应该可以使用任何一种Traversal 方法。 
-     *  我们现在可以试看看使用最简单的前序遍历。
-     * */  
+    /* Use the easiest preorder traversal */ 
     public static TreeNode mirror(TreeNode root) {  
         if (root == null) {
             return null;
         }
         
-        Stack<TreeNode> s = new Stack<TreeNode>();
+        ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         s.push(root);
         
         while (!s.isEmpty()) {
             TreeNode cur = s.pop();
             
-            // 交换当前节点的左右节点
+            /* Swap between 3 nodes */
             TreeNode tmp = cur.left;
             cur.left = cur.right;
             cur.right = tmp;
             
-            // traversal 左节点，右节点。
+            /* Go deeper if possible */
             if (cur.right != null) {
                 s.push(cur.right);
             }
@@ -1214,28 +1200,28 @@ public class TreeDemo {
         return root;
     }  
     
-    /** 
-     * 10. 求二叉树的镜像 Iterator解法：
-     * 
-     *   (2) 创建一个新的树
-     *   
-     *      1               1
-     *     /                 \
-     *    2     ----->        2
-     *     \                 /
-     *      3               3
-     *      
-     *  应该可以使用任何一种Traversal 方法。 
-     *  我们现在可以试看看使用最简单的前序遍历。
-     *  前序遍历我们可以立刻把新建好的左右节点创建出来，比较方便 
-     * */  
+    /* Copy the root, copy the children and connect them at the same time. */
+    public static TreeNode mirrorCopyRec(TreeNode root) {  
+        if (root == null) {
+            return null;
+        }
+        
+        /* Deep copy */
+        TreeNode rootCopy = new TreeNode(root.val);
+        rootCopy.left = mirrorCopyRec(root.right);
+        rootCopy.right = mirrorCopyRec(root.left);
+        
+        return rootCopy;
+    }  
+
+    /* Preorder Traversal; Pop the node and create and connect the nodes. */
     public static TreeNode mirrorCopy(TreeNode root) {  
         if (root == null) {
             return null;
         }
         
-        Stack<TreeNode> s = new Stack<TreeNode>();
-        Stack<TreeNode> sCopy = new Stack<TreeNode>();
+        ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
+        ArrayDeque<TreeNode> sCopy = new ArrayDeque<TreeNode>();
         s.push(root);
         
         TreeNode rootCopy = new TreeNode(root.val);
@@ -1245,19 +1231,20 @@ public class TreeDemo {
             TreeNode cur = s.pop();
             TreeNode curCopy = sCopy.pop();
             
-            // traversal 左节点，右节点。
+            /* Copy original tree's right to new tree's left */
             if (cur.right != null) {
-                
-                // copy 在这里做比较好，因为我们可以容易地找到它的父节点
+                /* Easier to find the father for the children while copying. */
                 TreeNode leftCopy = new TreeNode(cur.right.val);
+                /* Thinking about the mirror */
                 curCopy.left = leftCopy;
                 s.push(cur.right);
                 sCopy.push(curCopy.left);
             }
             
             if (cur.left != null) {
-                // copy 在这里做比较好，因为我们可以容易地找到它的父节点
+                /* Easier to find the father for the children while copying. */
                 TreeNode rightCopy = new TreeNode(cur.left.val);
+                /* Thinking about the mirror */
                 curCopy.right = rightCopy;
                 s.push(cur.left);
                 sCopy.push(curCopy.right);
@@ -1266,88 +1253,65 @@ public class TreeDemo {
         
         return rootCopy;
     }  
-    
-    /** 
-     * 10. 求二叉树的镜像 递归解法：
-     * 
-     *   (1) 不破坏原来的树，新建一个树 
-     *   
-     *      1               1
-     *     /                 \
-     *    2     ----->        2
-     *     \                 /
-     *      3               3
-     * */  
-    public static TreeNode mirrorCopyRec(TreeNode root) {  
-        if (root == null) {
-            return null;
-        }
-        
-        // 先把左右子树分别镜像,并且把它们连接到新建的root节点。
-        TreeNode rootCopy = new TreeNode(root.val);
-        rootCopy.left = mirrorCopyRec(root.right);
-        rootCopy.right = mirrorCopyRec(root.left);
-        
-        return rootCopy;
-    }  
 
 ////////////////////////////////
 // 10.1 Two trees are mirrors //
 ////////////////////////////////
-    
-    
+
+    ////////////////////
+    // 1) isMirrorRec //
+    ////////////////////
+
     /*
-     * 10.1. 判断两个树是否互相镜像
-     *  (1) 根必须同时为空，或是同时不为空
-     * 
-     * 如果根不为空:
-     *  (1).根的值一样
-     *  (2).r1的左树是r2的右树的镜像
-     *  (3).r1的右树是r2的左树的镜像  
-     * */
+        (1) if two tree are all empty return true.
+        (2) if one of those is empty and the other is not, return false
+        (3) if two trees are both not empty if their val and their children are
+        all the same to the opposite branch return true, else return false;
+    */
+   
+    /* Similar to isSameRec except altering the left and right children */
     public static boolean isMirrorRec(TreeNode r1, TreeNode r2){  
-        // 如果2个树都是空树
+        /* (1) */
         if (r1 == null && r2 == null) {
             return true;
         }
-        
-        // 如果其中一个为空，则返回false.
+        /* (2) */    
         if (r1 == null || r2 == null) {
             return false;
         }
-        
-        // If both are not null, they should be:
-        // 1. have same value for root.
-        // 2. R1's left tree is the mirror of R2's right tree;
-        // 3. R2's right tree is the mirror of R1's left tree;
+        /* (3) */        
         return r1.val == r2.val 
                 && isMirrorRec(r1.left, r2.right)
                 && isMirrorRec(r1.right, r2.left);
     }
     
+    /////////////////
+    // 2) isMirror //
+    /////////////////
+
     /*
-     * 10.1. 判断两个树是否互相镜像 Iterator 做法
-     *  (1) 根必须同时为空，或是同时不为空
-     * 
-     * 如果根不为空:
-     * traversal 整个树，判断它们是不是镜像，每次都按照反向来traversal  
-     * (1). 当前节点的值相等
-     * (2). 当前节点的左右节点要镜像，
-     *    无论是左节点，还是右节点，对应另外一棵树的镜像位置，可以同时为空，或是同时不为空，但是不可以一个为空，一个不为空。      
-     * */
+        (1) if two tree are all empty return true.
+        (2) if one of those is empty and the other is not, return false
+        (3) compare tree_1's left children with tree_2's right children and vise
+        versa, they can be: 
+            i.      both null (return true at the end)
+            ii.     both be not null (go deeper)
+            iii.    one of the children is null and the other is not
+     */
     public static boolean isMirror(TreeNode r1, TreeNode r2){  
-        // 如果2个树都是空树
+        /* (1) */
         if (r1 == null && r2 == null) {
             return true;
         }
         
-        // 如果其中一个为空，则返回false.
+        /* (2) */    
         if (r1 == null || r2 == null) {
             return false;
         }
         
-        Stack<TreeNode> s1 = new Stack<TreeNode>();
-        Stack<TreeNode> s2 = new Stack<TreeNode>();
+        /* Use two stacks */
+        ArrayDeque<TreeNode> s1 = new ArrayDeque<TreeNode>();
+        ArrayDeque<TreeNode> s2 = new ArrayDeque<TreeNode>();
         
         s1.push(r1);
         s2.push(r2);
@@ -1356,12 +1320,12 @@ public class TreeDemo {
             TreeNode cur1 = s1.pop();
             TreeNode cur2 = s2.pop();
             
-            // 弹出的节点的值必须相等 
+            /* Root */
             if (cur1.val != cur2.val) {
                 return false;
             }
             
-            // tree1的左节点，tree2的右节点，可以同时不为空，也可以同时为空，否则返回false.
+            /* Compare tree_1's left children with tree_2's right children */
             TreeNode left1 = cur1.left;
             TreeNode right1 = cur1.right;
             TreeNode left2 = cur2.left;
@@ -1374,7 +1338,7 @@ public class TreeDemo {
                 return false;
             }
             
-            // tree1的左节点，tree2的右节点，可以同时不为空，也可以同时为空，否则返回false.
+            /* Compare tree_2's left children with tree_1's right children */
             if (right1 != null && left2 != null) {
                 s1.push(right1);
                 s2.push(left2);
@@ -1385,7 +1349,77 @@ public class TreeDemo {
         
         return true;
     }  
+
+///////////////////////////////
+// 11. Least common ancestor //
+///////////////////////////////
+
+    ////////////
+    // 1) LAC //
+    ////////////
+
+    /* Record the path along the way and compare them */
+    public static TreeNode LCA(TreeNode root, TreeNode r1, TreeNode r2) {
+        // If the nodes have one in the root, just return the root.
+        if (root == null || r1 == null || r2 == null) {
+            return null;
+        }
+        
+        ArrayList<TreeNode> list1 = new ArrayList<TreeNode>();
+        ArrayList<TreeNode> list2 = new ArrayList<TreeNode>();
+        
+        boolean find1 = LCAPath(root, r1, list1);
+        boolean find2 = LCAPath(root, r2, list2);
+        
+        // If didn't find any of the node, just return a null.
+        if (!find1 || !find2) {
+            return null;
+        }
+        
+        // 注意: 使用Iterator 对于linkedlist可以提高性能。
+        // 所以 统一使用Iterator 来进行操作。
+        Iterator<TreeNode> iter1 = list1.iterator();
+        Iterator<TreeNode> iter2 = list2.iterator();
+        
+        TreeNode last = null;
+        while (iter1.hasNext() && iter2.hasNext()) {
+            TreeNode tmp1 = iter1.next();
+            TreeNode tmp2 = iter2.next();
+            
+            if (tmp1 != tmp2) {
+                return last;
+            }
+            
+            last = tmp1;
+        }
+        
+        // If never find any node which is different, means Node 1 and Node 2 are the same one.
+        // so just return the last one.
+        return last;
+    }
     
+    public static boolean LCAPath(TreeNode root, TreeNode node, ArrayList<TreeNode> path) {
+        // if didn't find, we should return a empty path.
+        if (root == null || node == null) {
+            return false;
+        }
+        
+        // First add the root node.
+        path.add(root);
+        
+        // if the node is in the left side.
+        if (root != node 
+                && !LCAPath(root.left, node, path)
+                && !LCAPath(root.right, node, path)
+                ) {
+            // Didn't find the node. should remove the node added before.
+            path.remove(root);
+            return false;
+        }
+        
+        // found
+        return true;
+    }
     /*
      * 11. 求二叉树中两个节点的最低公共祖先节点：
      * Recursion Version:
@@ -1454,72 +1488,7 @@ public class TreeDemo {
         return root;
     }
     
-    /*
-     * 解法1. 记录下path,并且比较之:
-     * LAC
-     * http://www.geeksforgeeks.org/lowest-common-ancestor-binary-tree-set-1/
-     * */
-    public static TreeNode LCA(TreeNode root, TreeNode r1, TreeNode r2) {
-        // If the nodes have one in the root, just return the root.
-        if (root == null || r1 == null || r2 == null) {
-            return null;
-        }
-        
-        ArrayList<TreeNode> list1 = new ArrayList<TreeNode>();
-        ArrayList<TreeNode> list2 = new ArrayList<TreeNode>();
-        
-        boolean find1 = LCAPath(root, r1, list1);
-        boolean find2 = LCAPath(root, r2, list2);
-        
-        // If didn't find any of the node, just return a null.
-        if (!find1 || !find2) {
-            return null;
-        }
-        
-        // 注意: 使用Iterator 对于linkedlist可以提高性能。
-        // 所以 统一使用Iterator 来进行操作。
-        Iterator<TreeNode> iter1 = list1.iterator();
-        Iterator<TreeNode> iter2 = list2.iterator();
-        
-        TreeNode last = null;
-        while (iter1.hasNext() && iter2.hasNext()) {
-            TreeNode tmp1 = iter1.next();
-            TreeNode tmp2 = iter2.next();
-            
-            if (tmp1 != tmp2) {
-                return last;
-            }
-            
-            last = tmp1;
-        }
-        
-        // If never find any node which is different, means Node 1 and Node 2 are the same one.
-        // so just return the last one.
-        return last;
-    }
-    
-    public static boolean LCAPath(TreeNode root, TreeNode node, ArrayList<TreeNode> path) {
-        // if didn't find, we should return a empty path.
-        if (root == null || node == null) {
-            return false;
-        }
-        
-        // First add the root node.
-        path.add(root);
-        
-        // if the node is in the left side.
-        if (root != node 
-                && !LCAPath(root.left, node, path)
-                && !LCAPath(root.right, node, path)
-                ) {
-            // Didn't find the node. should remove the node added before.
-            path.remove(root);
-            return false;
-        }
-        
-        // found
-        return true;
-    }
+
     
     /*
      *  * 12. 求二叉树中节点的最大距离：getMaxDistanceRec
