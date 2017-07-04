@@ -77,10 +77,13 @@ import java.util.ArrayDeque;
  *     1) rebuildBinaryTreeRec
  *     
  * 14. Is the BT Complete BT
- *     1) isCompleteBinaryTree
- *     2) isCompleteBinaryTreeRec
+ *     1) isCompleteBinaryTree*
+ *     2) isCompleteBinaryTreeNoDummy*
+ *     3) isCompleteBinaryTreeRec*
  *     
- * 15. 找出二叉树中最长连续子串(即全部往左的连续节点，或是全部往右的连续节点）findLongest
+ * 15. Longest Consecutive Path
+ *     1) findLongest
+ * 
 */  
 
 public class TreeDemo {
@@ -1641,29 +1644,37 @@ public class TreeDemo {
         
         return root;        
     }
-    
+
 ///////////////////////////////
 // 14. Is the BT Complete BT //
 ///////////////////////////////
 
+    /////////////////////////////
+    // 1) isCompleteBinaryTree //
+    /////////////////////////////
+
     /*
-     * 14. 判断二叉树是不是完全二叉树：isCompleteBinaryTree, isCompleteBinaryTreeRec
-     * 进行level traversal, 一旦遇到一个节点的左节点为空，后面的节点的子节点都必须为空。而且不应该有下一行，其实就是队列中所有的
-     * 元素都不应该再有子元素。
-     * */
-    
+        We will perform level traversal using a Queue.
+
+        Complete binary tree:
+        1.  Once we find that the one of the node's left child is null, the next
+        coming children should be all null
+        2.  There is no next level which means that all the nodes in the queue
+        should not have children.
+     */
     public static boolean isCompleteBinaryTree(TreeNode root) {
         if (root == null) {
             return false;
         }
         
         TreeNode dummyNode = new TreeNode(0);
-        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        ArrayDeque<TreeNode> q = new ArrayDeque<TreeNode>();
         
         q.offer(root);
+        /* For separating the level; We can also use a loop to separate nodes */
         q.offer(dummyNode);
         
-        // if this is true, no node should have any child.
+        /* If this flag is true, no node should have any children. */
         boolean noChild = false;
         
         while (!q.isEmpty()) {
@@ -1672,58 +1683,95 @@ public class TreeDemo {
                 if (!q.isEmpty()) {
                     q.offer(dummyNode);
                 }
-                // Dummy node不需要处理。 
+                /* We do not need to process the dummy node. */
                 continue;
             }
             
             if (cur.left != null) {
-                // 如果标记被设置，则Queue中任何元素不应再有子元素。
+                /* 
+                    Flag the node child again and there should be no children
+                    for those nodes in the queue
+                */
                 if (noChild) {
                     return false;
                 }
                 q.offer(cur.left);
             } else {
-                // 一旦某元素没有左节点或是右节点，则之后所有的元素都不应有子元素。
-                // 并且该元素不可以有右节点.
+                /* 
+                    If the one of the nodes does not have the left or right
+                    children, the rest of the nodes after that node should not
+                    have any children. And this node can't have the right child
+                */
                 noChild = true;
             }
             
+            /* Same for the right side */
             if (cur.right != null) {
-                // 如果标记被设置，则Queue中任何元素不应再有子元素。
                 if (noChild) {
                     return false;
                 }
                 q.offer(cur.right);
             } else {
-                // 一旦某元素没有左节点或是右节点，则之后所有的元素都不应有子元素。
                 noChild = true;
             }
         }
         
         return true;
     }
-    
-    /*
-     * 14. 判断二叉树是不是完全二叉树：isCompleteBinaryTreeRec
-     * 
-     * 
-     *    我们可以分解为：
-     *    CompleteBinary Tree 的条件是：
-     *    1. 左右子树均为Perfect binary tree, 并且两者Height相同
-     *    2. 左子树为CompleteBinaryTree, 右子树为Perfect binary tree，并且两者Height差1
-     *    3. 左子树为Perfect Binary Tree,右子树为CompleteBinaryTree, 并且Height 相同
-     *    
-     *    Base 条件：
-     *    (1) root = null: 为perfect & complete BinaryTree, Height -1;
-     *    
-     *    而 Perfect Binary Tree的条件：
-     *    左右子树均为Perfect Binary Tree,并且Height 相同。
-     * */
-    
-    public static boolean isCompleteBinaryTreeRec(TreeNode root) {
-        return isCompleteBinaryTreeRecHelp(root).isCompleteBT;
+
+    ////////////////////////////////////
+    // 2) isCompleteBinaryTreeNoDummy //
+    ////////////////////////////////////
+
+    /* We can also use a for loop to separate nodes */
+    public static boolean isCompleteBinaryTreeNoDummy(TreeNode root) {
+        if (root == null) {
+            return false;
+        }
+
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+        boolean noChild = false;
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = q.poll();
+                if (node.left != null) {
+                    if (noChild) {
+                        return false;
+                    }
+                    q.offer(node.left);
+                } else {
+                    noChild = true;
+                }
+
+                if (node.right != null) {
+                    if (noChild) {
+                        return false;
+                    }
+                    q.offer(node.right);
+                } else {
+                    noChild = true;
+                }
+            }
+        }
+
+        return true;
     }
-    
+
+    ////////////////////////////////
+    // 3) isCompleteBinaryTreeRec //
+    ////////////////////////////////
+
+    /*
+        There are 3 conditions:
+        • Left branch and right branch are all Perfect with the same Height.
+        • Left branch is Complete; Right branch is Perfect; Height differs 1.
+        • Left branch is Perfect; Right branch is Complete; Same height.
+
+        Base case:
+        root = null, both Perfect and Complete, Height = -1;
+     */
     private static class ReturnBinaryTree {
         boolean isCompleteBT;
         boolean isPerfectBT;
@@ -1735,58 +1783,54 @@ public class TreeDemo {
             this.height = height;
         }
     }
-    
-    /*
-     * 我们可以分解为：
-     *    CompleteBinary Tree 的条件是：
-     *    1. 左右子树均为Perfect binary tree, 并且两者Height相同
-     *    2. 左子树为CompleteBinaryTree, 右子树为Perfect binary tree，并且两者Height差1
-     *    3. 左子树为Perfect Binary Tree,右子树为CompleteBinaryTree, 并且Height 相同
-     *    
-     *    Base 条件：
-     *    (1) root = null: 为perfect & complete BinaryTree, Height -1;
-     *    
-     *    而 Perfect Binary Tree的条件：
-     *    左右子树均为Perfect Binary Tree,并且Height 相同。
-     * */
+    public static boolean isCompleteBinaryTreeRec(TreeNode root) {
+        return isCompleteBinaryTreeRecHelp(root).isCompleteBT;
+    }
     public static ReturnBinaryTree isCompleteBinaryTreeRecHelp(TreeNode root) {
-        ReturnBinaryTree ret = new ReturnBinaryTree(true, true, -1);
-        
+        ReturnBinaryTree result = new ReturnBinaryTree(true, true, -1);
+        /* Base */
         if (root == null) {
-            return ret;
+            return result;
         }
-        
+        /* Divide */
         ReturnBinaryTree left = isCompleteBinaryTreeRecHelp(root.left);
         ReturnBinaryTree right = isCompleteBinaryTreeRecHelp(root.right);
         
-        // 树的高度为左树高度，右树高度的最大值+1
-        ret.height = 1 + Math.max(left.height, right.height);
+        /* Height */
+        result.height = 1 + Math.max(left.height, right.height);
         
-        // set the isPerfectBT
-        ret.isPerfectBT = false;
-        if (left.isPerfectBT && right.isPerfectBT && left.height == right.height) {
-            ret.isPerfectBT = true;
+        /* set the result isPerfectBT */
+        result.isPerfectBT = false;
+
+        /* Perfect */
+        if (left.isPerfectBT && 
+            right.isPerfectBT && 
+            left.height == right.height) {
+
+            result.isPerfectBT = true;
         }
         
-        // set the isCompleteBT.
-        /*
-         * CompleteBinary Tree 的条件是：
-         *    1. 左右子树均为Perfect binary tree, 并且两者Height相同(其实就是本树是perfect tree)
-         *    2. 左子树为CompleteBinaryTree, 右子树为Perfect binary tree，并且两者Height差1
-         *    3. 左子树为Perfect Binary Tree,右子树为CompleteBinaryTree, 并且Height 相同
-         * */
-        ret.isCompleteBT = ret.isPerfectBT 
+        /* Complete -- the 3 conditions */
+        result.isCompleteBT = result.isPerfectBT 
                 || (left.isCompleteBT && right.isPerfectBT && left.height == right.height + 1)
                 || (left.isPerfectBT && right.isCompleteBT && left.height == right.height);
         
-        return ret;
+        return result;
     }
 
-    /*
-     * 15. findLongest
-     * 第一种解法：
-     * 返回左边最长，右边最长，及左子树最长，右子树最长。
-     * */
+//////////////////////////////////
+// 15. Longest Consecutive Path //
+//////////////////////////////////
+
+    ////////////////////
+    // 1) findLongest //
+    ////////////////////
+    
+    /* 
+        Count to the far left and count to the far right;
+        Count the left child's Longest and right child's Longest;
+        Find the max of them
+     */
     public static int findLongest(TreeNode root) {
         if (root == null) {
             return -1;
