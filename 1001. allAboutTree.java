@@ -1,5 +1,3 @@
-package Algorithms.tree;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -81,7 +79,7 @@ import java.util.ArrayDeque;
  *     2) isCompleteBinaryTreeNoDummy*
  *     3) isCompleteBinaryTreeRec*
  *     
- * 15. Longest Consecutive Path
+ * 15. Longest Path (root to leaf)
  *     1) findLongest
  * 
 */  
@@ -1818,14 +1816,14 @@ public class TreeDemo {
         return result;
     }
 
-//////////////////////////////////
-// 15. Longest Consecutive Path //
-//////////////////////////////////
+/////////////////////////////////////
+// 15. Longest Path (root to leaf) //
+/////////////////////////////////////
 
     ////////////////////
     // 1) findLongest //
     ////////////////////
-    
+
     /* 
         Count to the far left and count to the far right;
         Count the left child's Longest and right child's Longest;
@@ -1860,42 +1858,5 @@ public class TreeDemo {
         return max;
     }
     
-    /*      1
-     *    2   3
-     *  3       4
-     *         6  1
-     *        7
-     *       9
-     *     11
-     *    2
-     *  14      
-     * */
-    public static int findLongest2(TreeNode root) {
-        int [] maxVal = new int[1];
-        maxVal[0] = -1;
-        findLongest2Help(root, maxVal);
-        return maxVal[0];
-    }
-    
-    // ret:
-    // 0: the left side longest,
-    // 1: the right side longest.
-    static int maxLen = -1;
-    static int[] findLongest2Help(TreeNode root, int[] maxVal) {
-        int[] ret = new int[2];
-        if (root == null) {
-            ret[0] = -1;
-            ret[1] = -1;
-            return ret;
-        }
-        
-        ret[0] = findLongest2Help(root.left, maxVal)[0] + 1;
-        ret[1] = findLongest2Help(root.right, maxVal)[1] + 1;
-        //maxLen = Math.max(maxLen, ret[0]);
-        //maxLen = Math.max(maxLen, ret[1]);
-        maxVal[0] = Math.max(maxVal[0], ret[0]);
-        maxVal[0] = Math.max(maxVal[0], ret[1]);
-
-        return ret;
-    }
 } 
+
