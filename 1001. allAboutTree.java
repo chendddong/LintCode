@@ -73,8 +73,13 @@ import java.util.ArrayDeque;
  * 12. Max distance between nodes
  *     1) getMaxDistanceRec
  *   
- * 13. 由前序遍历序列和中序遍历序列重建二叉树：rebuildBinaryTreeRec
- * 14. 判断二叉树是不是完全二叉树：isCompleteBinaryTree, isCompleteBinaryTreeRec
+ * 13. Rebuild BT
+ *     1) rebuildBinaryTreeRec
+ *     
+ * 14. Is the BT Complete BT
+ *     1) isCompleteBinaryTree
+ *     2) isCompleteBinaryTreeRec
+ *     
  * 15. 找出二叉树中最长连续子串(即全部往左的连续节点，或是全部往右的连续节点）findLongest
 */  
 
@@ -1506,67 +1511,38 @@ public class TreeDemo {
 ////////////////////////////////////
 // 12. Max distance between nodes //
 ////////////////////////////////////
-    
+
     //////////////////////////
     // 1) getMaxDistanceRec //
     //////////////////////////
 
-    
-    /*
-     *  * 12. 求二叉树中节点的最大距离：getMaxDistanceRec
-     *  
-     *  首先我们来定义这个距离：
-     *  距离定义为：两个节点间边的数目.
-     *  如：
-     *     1
-     *    / \
-     *   2   3
-     *        \
-     *         4
-     *   这里最大距离定义为2，4的距离，为3.      
-     * 求二叉树中节点的最大距离 即二叉树中相距最远的两个节点之间的距离。 (distance / diameter) 
-     * 递归解法：
-     * 返回值设计：
-     * 返回1. 深度， 2. 当前树的最长距离  
-     * (1) 计算左子树的深度，右子树深度，左子树独立的链条长度，右子树独立的链条长度
-     * (2) 最大长度为三者之最：
-     *    a. 通过根节点的链，为左右深度+2
-     *    b. 左子树独立链
-     *    c. 右子树独立链。
-     * 
-     * (3)递归初始条件：
-     *   当root == null, depth = -1.maxDistance = -1;
-     *   
-     */  
-    public static int getMaxDistanceRec(TreeNode root) {
-        return getMaxDistanceRecHelp(root).maxDistance;
-    }
-    
-    public static Result getMaxDistanceRecHelp(TreeNode root) {
-        Result ret = new Result(-1, -1);
-        
-        if (root == null) {
-            return ret;
-        }
-        
-        Result left = getMaxDistanceRecHelp(root.left);
-        Result right = getMaxDistanceRecHelp(root.right);
-        
-        // 深度应加1， the depth from the subtree to the root.
-        ret.depth = Math.max(left.depth, right.depth) + 1;
-        
-        // 左子树，右子树与根的距离都要加1，所以通过根节点的路径为两边深度+2
-        int crossLen = left.depth + right.depth + 2;
-        
-        // 求出cross根的路径，及左右子树的独立路径，这三者路径的最大值。
-        ret.maxDistance = Math.max(left.maxDistance, right.maxDistance);
-        ret.maxDistance = Math.max(ret.maxDistance, crossLen);
-        
-        return ret;
-    }
+    /* 
+        What is the distance between two nodes: the edges between two nodes.
+        Example:
+                  1
+                 / \
+                2   3
+               / \   \
+              5  6    4        
+        So the distance between 2 and 4 is 3 and the max distance for the tree
+        is the distance(the distance between far left node and far right node)
+        between 5 and 4 which is 4.
 
-    
-    private static class Result {
+        We will use ResultType to keep track of:
+        1 -- the Depth of the node.
+        2 -- the maxDistance of the current branch.
+
+        Algorithm:
+        1 -- calculate the Depth of left and right side, respectively;
+             calculate the Distance of left and right side, respectively;
+        2 -- Max distance is the max between the three:
+            a. If it goes through the root, depth + 2
+            b. Left side distance
+            c. Right side distance
+        3 -- Base case of the recursion:
+            root == null, depth = -1, maxDistance = -1;
+     */
+    private static class ResultType {
         int depth;
         int maxDistance;
         public Result(int depth, int maxDistance) {
@@ -1574,37 +1550,73 @@ public class TreeDemo {
             this.maxDistance = maxDistance;
         }
     }
+
+    public static int getMaxDistanceRec(TreeNode root) {
+        return getMaxDistanceRecHelp(root).maxDistance;
+    }
     
-    /*
-     *  13. 由前序遍历序列和中序遍历序列重建二叉树：rebuildBinaryTreeRec 
-     *  We assume that there is no duplicate in the trees.
-     *  For example:
-     *          1
-     *         / \
-     *        2   3
-     *       /\    \
-     *      4  5    6
-     *              /\
-     *             7  8  
-     *             
-     *  PreOrder should be: 1   2 4 5   3 6 7 8
-     *                      根   左子树    右子树  
-     *  InOrder should be:  4 2 5   1   3 7 6 8
-     *                       左子树  根  右子树
-     * */                   
-    public static TreeNode rebuildBinaryTreeRec(List<Integer> preOrder, List<Integer> inOrder) {
+    public static ResultType getMaxDistanceRecHelp(TreeNode root) {
+        /* Base */
+        ResultType ret = new ResultType(-1, -1);
+        if (root == null) {
+            return ret;
+        }
+        
+        ResultType left = getMaxDistanceRecHelp(root.left);
+        ResultType right = getMaxDistanceRecHelp(root.right);
+        
+         
+        /* The depth from the subtree to the root. */
+        ret.depth = Math.max(left.depth, right.depth) + 1;
+        
+        /* If the path go through the root, it should add 2 */
+        int crossLen = left.depth + right.depth + 2;
+        
+        /* Calculate the largest between the 3 things */
+        ret.maxDistance = Math.max(left.maxDistance, right.maxDistance);
+        ret.maxDistance = Math.max(ret.maxDistance, crossLen);
+        
+        return ret;
+    }
+
+////////////////////
+// 13. Rebuild BT //
+////////////////////
+
+    /////////////////////////////
+    // 1) rebuildBinaryTreeRec //
+    /////////////////////////////
+
+    /*        
+       We assume that there is no duplicate in the trees.
+       For example:
+               1
+              / \
+             2   3
+            / \   \
+           4   5   6
+                   /\
+                  7  8  
+                  
+       PreOrder should be: 1        2 4 5   3 6 7 8
+                           root     Left    right  
+       InOrder should be:  4 2 5    1       3 7 6 8
+                           Left     root    right
+     */                     
+    public static TreeNode rebuildBinaryTreeRec(List<Integer> preOrder, 
+                                                List<Integer> inOrder) 
+    {
+        /* Null yeah */
         if (preOrder == null || inOrder == null) {
             return null;
         }
         
-        // If the traversal is empty, just return a NULL.
+        /* Size matters */
         if (preOrder.size() == 0 || inOrder.size() == 0) {
             return null;
         }
         
-        // we can get the root from the preOrder. 
-        // Because the first one is the root.
-        // So we just create the root node here.
+        /* Create the root from the preorder list (first of the list) */
         TreeNode root = new TreeNode(preOrder.get(0));
         
         List<Integer> preOrderLeft;
@@ -1612,22 +1624,28 @@ public class TreeDemo {
         List<Integer> inOrderLeft;
         List<Integer> inOrderRight;
         
-        // 获得在 inOrder中，根的位置
+        /* Get the root index in the inorder list */
         int rootInIndex = inOrder.indexOf(preOrder.get(0));
+
+        /* LIST.sublist(a,b) behaves like String.substring(a,b) */
         preOrderLeft = preOrder.subList(1, rootInIndex + 1);
         preOrderRight = preOrder.subList(rootInIndex + 1, preOrder.size());
         
-        // 得到inOrder左边的左子树
+        /* Get the 'left' and 'right' side of the tree */
         inOrderLeft = inOrder.subList(0, rootInIndex);
         inOrderRight = inOrder.subList(rootInIndex + 1, inOrder.size());
 
-        // 通过 Rec 来调用生成左右子树。
+        /* Recursively build the tree by connecting to the right children */
         root.left = rebuildBinaryTreeRec(preOrderLeft, inOrderLeft);
         root.right = rebuildBinaryTreeRec(preOrderRight, inOrderRight);
         
         return root;        
     }
     
+///////////////////////////////
+// 14. Is the BT Complete BT //
+///////////////////////////////
+
     /*
      * 14. 判断二叉树是不是完全二叉树：isCompleteBinaryTree, isCompleteBinaryTreeRec
      * 进行level traversal, 一旦遇到一个节点的左节点为空，后面的节点的子节点都必须为空。而且不应该有下一行，其实就是队列中所有的
