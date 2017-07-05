@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
 import java.util.ArrayDeque;
 
 
@@ -11,277 +8,83 @@ import java.util.ArrayDeque;
  * MENU:
  *
  * 1. Get all the nodes number:
- *     1) getNodeNumRec(recursive)
- *     2) getNodeNum(iteration)
- *     
- * 2. Get the depth: 
- *     1) getDepthRec(recursive)，
- *     2) getDepth(iteration)
- *     3) getDepthTraverse(global variable)
- *     
- * 3. Binary tree traversal 
+ *     1) getNodeNumRec
+ *     2) getNodeNum
+ *
+ * 2. Get the depth:
+ *     1) getDepthRec
+ *     2) getDepth
+ *     3) getDepthTraverse (with global variable)
+ *
+ * 3. Binary tree traversal
  *     1) preorderTraversalRec
  *     2) preorderTraversal
  *     3) inorderTraversalRec
  *     4) inorderTraversal
  *     5) postorderTraversalRec
  *     6) postorderTraversal
- *     
+ *
  * 4. Level order traversal
  *     1) levelTraversal
  *     2) levelTraversalRec
- *     3) Level order traversal BFS
+ *     3) levelOrderBFS
  *     refer to LintCode 69 for more solutions
  *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
- *     2) convertBST2DLL
  *
  * 6. Get the number of Nodes from Kth level
  *     1) getNodeNumKthLevel
  *     2) getNodeNumKthLevelRec
- *     
+ *
  * 7. Get the number of leaf nodes
  *     1) getNodeNumLeafRec
- *     2) getNodeNumLeaf
- * 
- * 8. Are those BT the same 
+ *     2) getNodeNumLeafInorder
+ *     3) getNodeNumLeafPreorder
+ *     4) getNodeNumLeafPostorder
+ *
+ * 8. Are those BT the same
  *     1) isSameRec
- *     2) isSame
- *     
- * 9. Is balanced binary tree 
+ *     2) isSameInorder
+ *     3) isSamePreorder
+ *
+ * 9. Is balanced binary tree
  *     1) isAVLRec
- *     2) isAVLResultType 
- *     
+ *     2) isAVLResultType
+ *
  * 10. BT mirror
  *     1) mirrorRec
  *     2) mirror
  *     3) mirrorCopyRec
  *     4) mirrorCopy
- *      
+ *
  * 10.1 Two trees are mirrors
  *     1) isMirrorRec
  *     2) isMirror
- *     
+ *
  * 11. Least common ancestor
  *     1) LCA*
  *     2) LCARec
  *     3) LCABstRec
- *     
+ *
  * 12. Max distance between nodes
  *     1) getMaxDistanceRec
- *   
+ *
  * 13. Rebuild BT
  *     1) rebuildBinaryTreeRec
- *     
+ *
  * 14. Is the BT Complete BT
  *     1) isCompleteBinaryTree*
  *     2) isCompleteBinaryTreeNoDummy*
  *     3) isCompleteBinaryTreeRec*
- *     
+ *
  * 15. Longest Path (root to leaf)
  *     1) findLongest
- * 
-*/  
+ *
+ */
 
 public class TreeDemo {
- 
-    public static void main(String[] args) {
-        TreeNode r1 = new TreeNode(1);
-        TreeNode r2 = new TreeNode(2);
-        TreeNode r3 = new TreeNode(3);
-        TreeNode r4 = new TreeNode(4);
-        TreeNode r5 = new TreeNode(5);
-        TreeNode r6 = new TreeNode(6);
-        // TreeNode r7 = new TreeNode(0); 
-
-        r1.left = r2;
-        r1.right = r3;
-        r2.left = r4;
-        r2.right = r5;
-        r3.right = r6;
-        // r4.left = r7; 
-    /* 
-        Tree: r
-
-            1  
-           / \  
-          2   3  
-         / \   \  
-        4   5   6
-       
-    
-
-    */         
-        TreeNode t1 = new TreeNode(10);
-        TreeNode t2 = new TreeNode(6);
-        TreeNode t3 = new TreeNode(14);
-        TreeNode t4 = new TreeNode(4);
-        TreeNode t5 = new TreeNode(8);
-        TreeNode t6 = new TreeNode(16);
-        TreeNode t7 = new TreeNode(0);
-        TreeNode t8 = new TreeNode(0);
-        TreeNode t9 = new TreeNode(0);
-        TreeNode t10 = new TreeNode(0);
-        TreeNode t11 = new TreeNode(0);
-
-        t1.left = t2;
-        t1.right = t3;
-        t2.left = t4;
-        t2.right = t5;
-        t3.left = t6;
-        t3.right = t7;
-        t4.left = t8;
-        //t4.right = t9;
-        t5.right = t9;
-    /*                    
-           10  
-           /  \  
-          6    14  
-         / \   / \  
-        4   8 16  0
-       /     \
-      0       0 
-    */ 
-        
-        
-    // test distance
-    //        t5.right = t8;
-    //        t8.right = t9;
-    //        t9.right = t10;
-    //        t10.right = t11;
-        
-    /* 
-            10  
-            / \  
-           6   14  
-          / \   \  
-         4   8   16
-        /
-       0  
-
-     */ 
-    //        System.out.println(LCABstRec(t1, t2, t4).val);
-    //        System.out.println(LCABstRec(t1, t2, t6).val);
-    //        System.out.println(LCABstRec(t1, t4, t6).val);
-    //        System.out.println(LCABstRec(t1, t4, t7).val);
-    //        System.out.println(LCABstRec(t1, t3, t6).val);
-    //        
-    //        System.out.println(LCA(t1, t2, t4).val);
-    //        System.out.println(LCA(t1, t2, t6).val);
-    //        System.out.println(LCA(t1, t4, t6).val);
-    //        System.out.println(LCA(t1, t4, t7).val);
-    //        System.out.println(LCA(t1, t3, t6).val);
-    //        System.out.println(LCA(t1, t6, t6).val);
-            
-            //System.out.println(getMaxDistanceRec(t1));
-            
-            //System.out.println(isSame(r1, t1));
-            
-    //        System.out.println(isAVLRec(r1));
-    //        
-    //        preorderTraversalRec(r1);
-    //        //mirrorRec(r1);
-    //        //TreeNode r1Mirror = mirror(r1);
-    //        
-    //        TreeNode r1MirrorCopy = mirrorCopy(r1);
-    //        System.out.println();
-    //        //preorderTraversalRec(r1Mirror);
-    //        preorderTraversalRec(r1MirrorCopy);
-    //        
-    //        System.out.println();
-    //        
-    //        System.out.println(isMirrorRec(r1, r1MirrorCopy));
-    //        System.out.println(isMirror(r1, r1MirrorCopy));
-            
-            
-            //System.out.println(getNodeNumKthLevelRec(r1, 5));
-            
-            //System.out.println(getNodeNumLeaf(r1));
-            
-    //      System.out.println(getNodeNumRec(null));
-    //      System.out.println(getNodeNum(r1));
-            //System.out.println(getDepthRec(null));
-    //        System.out.println(getDepth(r1));
-    //        
-    //        preorderTraversalRec(r1);
-    //        System.out.println();
-    //        preorderTraversal(r1);
-    //        System.out.println();
-    //        inorderTraversalRec(r1);
-    //        
-    //        System.out.println();
-    //          inorderTraversal(r1);
-    //        postorderTraversalRec(r1);
-    //        System.out.println();
-    //        postorderTraversal(r1);
-    //        System.out.println();
-    //        levelTraversal(r1);
-    //        
-    //        System.out.println();
-    //        levelTraversalRec(r1);
-            
-    //        TreeNode ret = convertBST2DLLRec(r1);
-    //        while (ret != null) {
-    //            System.out.print(ret.val + " ");
-    //            ret = ret.right;
-    //        }
-            
-    //        TreeNode ret2 = convertBST2DLL(r1);
-    //        while (ret2.right != null) {
-    //            ret2 = ret2.right;
-    //        }
-    //        
-    //        while (ret2 != null) {
-    //            System.out.print(ret2.val + " ");
-    //            ret2 = ret2.left;
-    //        }
-    //        
-    //        TreeNode ret = convertBST2DLL(r1);
-    //        while (ret != null) {
-    //            System.out.print(ret.val + " ");
-    //            ret = ret.right;
-    //        }
-            
-    //        System.out.println();
-    //        System.out.println(findLongest(r1));
-    //        System.out.println();
-    //        System.out.println(findLongest2(r1));
-        
-        // test the rebuildBinaryTreeRec.
-        //test_rebuildBinaryTreeRec();
-        
-        System.out.println(isCompleteBinaryTreeRec(t1));
-        System.out.println(isCompleteBinaryTree(t1));
-    }
-    
-    public static void test_rebuildBinaryTreeRec() {
-        ArrayList<Integer> list1 = new ArrayList<Integer>();
-        list1.add(1);
-        list1.add(2);
-        list1.add(4);
-        list1.add(5);
-        list1.add(3);
-        list1.add(6);
-        list1.add(7);
-        list1.add(8);
-        
-        ArrayList<Integer> list2 = new ArrayList<Integer>();
-        list2.add(4);
-        list2.add(2);
-        list2.add(5);
-        list2.add(1);
-        list2.add(3);
-        list2.add(7);
-        list2.add(6);
-        list2.add(8);
-        
-        TreeNode root = rebuildBinaryTreeRec(list1, list2);
-        preorderTraversalRec(root);
-        System.out.println();
-        postorderTraversalRec(root);
-    }
-    
+    /* TreeNode */
     private static class TreeNode{
         int val;
         TreeNode left;
@@ -289,9 +92,505 @@ public class TreeDemo {
         public TreeNode(int val){
             this.val = val;
             left = null;
-            right = null;                    
+            right = null;
         }
     }
+
+    public static void main(String[] args) {
+////////////////////////////////////////////////////////////////////////////////
+        /*
+            Tree 1: Basic Binary Tree
+                      1
+                    /   \
+                   2     3
+                 /  \     \
+                4    5     6
+              / \    /    / \
+             9   10 11   7   8
+
+             where r1 is the root
+         */
+////////////////////////////////////////////////////////////////////////////////
+
+        /* Make Tree 1: */
+        TreeNode r1 = new TreeNode(1);
+        TreeNode r2 = new TreeNode(2);
+        TreeNode r3 = new TreeNode(3);
+        TreeNode r4 = new TreeNode(4);
+        TreeNode r5 = new TreeNode(5);
+        TreeNode r6 = new TreeNode(6);
+        TreeNode r7 = new TreeNode(7);
+        TreeNode r8 = new TreeNode(8);
+        TreeNode r9 = new TreeNode(9);
+        TreeNode r10 = new TreeNode(10);
+        TreeNode r11 = new TreeNode(11);
+
+        r1.left = r2;
+        r1.right = r3;
+        r2.left = r4;
+        r2.right = r5;
+        r3.right = r6;
+        r6.left = r7;
+        r6.right = r8;
+        r4.left = r9;
+        r4.right = r10;
+        r5.left = r11;
+////////////////////////////////////////////////////////////////////////////////
+        /*
+            Tree 2: Binary Search Tree
+                      100
+                    /    \
+                   40     180
+                 /  \     /
+                30   60  110
+
+             where r100 is the root
+         */
+////////////////////////////////////////////////////////////////////////////////
+
+        /* Making Tree 2: */
+        TreeNode r100 = new TreeNode(100);
+        TreeNode r40 = new TreeNode(40);
+        TreeNode r180 = new TreeNode(180);
+        TreeNode r30 = new TreeNode(30);
+        TreeNode r60 = new TreeNode(60);
+        TreeNode r110 = new TreeNode(110);
+
+        r100.left = r40;
+        r100.right = r180;
+        r40.left =  r30;
+        r40.right = r60;
+        r180.left = r110;
+
+////////////////////////////////////////////////////////////////////////////////
+
+        /* Make lists for 13. rebuildBinaryTreeRec */
+        List<Integer> preOrder = new ArrayList<>();
+        preOrder.add(1);
+        preOrder.add(2);
+        preOrder.add(4);
+        preOrder.add(9);
+        preOrder.add(10);
+        preOrder.add(5);
+        preOrder.add(11);
+        preOrder.add(3);
+        preOrder.add(6);
+        preOrder.add(7);
+        preOrder.add(8);
+
+        List<Integer> inOrder = new ArrayList<>();
+        inOrder.add(9);
+        inOrder.add(4);
+        inOrder.add(10);
+        inOrder.add(2);
+        inOrder.add(11);
+        inOrder.add(5);
+        inOrder.add(1);
+        inOrder.add(3);
+        inOrder.add(7);
+        inOrder.add(6);
+        inOrder.add(8);
+
+////////////////////////////////////////////////////////////////////////////////
+
+        /* Test all the methods */
+
+//        /* 1.1 */
+//        System.out.println("********************** 1.1 **********************");
+//        System.out.print("The total number of nodes of Tree 1 is: ");
+//        System.out.println(getNodeNumRec(r1));
+//        System.out.print("The total number of nodes of Tree 2 is: ");
+//        System.out.println(getNodeNumRec(r100));
+//        /* 1.2 */
+//        System.out.println("********************** 1.2 **********************");
+//        System.out.print("The total number of nodes of Tree 1 is: ");
+//        System.out.println(getNodeNum(r1));
+//        System.out.print("The total number of nodes of Tree 2 is: ");
+//        System.out.println(getNodeNum(r100));
+//        /* 2.1 */
+//        System.out.println("********************** 2.1 **********************");
+//        System.out.print("The Depth of Tree 1 is: ");
+//        System.out.println(getDepthRec(r1));
+//        System.out.print("The Depth of Tree 2 is: ");
+//        System.out.println(getDepthRec(r100));
+//        /* 2.2 */
+//        System.out.println("********************** 2.2 **********************");
+//        System.out.print("The Depth of Tree 1 is: ");
+//        System.out.println(getDepth(r1));
+//        System.out.print("The Depth of Tree 2 is: ");
+//        System.out.println(getDepth(r100));
+//        /* 2.3 */
+//        System.out.println("********************** 2.3 **********************");
+//        System.out.print("The Depth of Tree 1 is: ");
+//        System.out.println(getDepthTraverse(r1));
+//        System.out.print("The Depth of Tree 2 is: ");
+//        System.out.println(getDepthTraverse(r100));
+//        /* 3.1 */
+//        System.out.println("********************** 3.1 **********************");
+//        System.out.print("The Preorder Traversal of Tree 1 is: ");
+//        System.out.println();
+//        preorderTraversalRec(r1);
+//        System.out.println();
+//        System.out.print("The Preorder Traversal of Tree 2 is: ");
+//        System.out.println();
+//        preorderTraversalRec(r100);
+//        System.out.println();
+//        /* 3.2 */
+//        System.out.println("********************** 3.2 **********************");
+//        System.out.print("The Preorder Traversal of Tree 1 is: ");
+//        System.out.println();
+//        preorderTraversal(r1);
+//        System.out.println();
+//        System.out.print("The Preorder Traversal of Tree 2 is: ");
+//        System.out.println();
+//        preorderTraversal(r100);
+//        System.out.println();
+//        /* 3.3 */
+//        System.out.println("********************** 3.3 **********************");
+//        System.out.print("The Inorder Traversal of Tree 1 is: ");
+//        System.out.println();
+//        inorderTraversalRec(r1);
+//        System.out.println();
+//        System.out.print("The Inorder Traversal of Tree 2 is: ");
+//        System.out.println();
+//        inorderTraversalRec(r100);
+//        System.out.println();
+//        /* 3.4 */
+//        System.out.println("********************** 3.4 **********************");
+//        System.out.print("The Inorder Traversal of Tree 1 is: ");
+//        System.out.println();
+//        inorderTraversal(r1);
+//        System.out.println();
+//        System.out.print("The Inorder Traversal of Tree 2 is: ");
+//        System.out.println();
+//        inorderTraversal(r100);
+//        System.out.println();
+//        /* 3.5 */
+//        System.out.println("********************** 3.5 **********************");
+//        System.out.print("The Postorder Traversal of Tree 1 is: ");
+//        System.out.println();
+//        postorderTraversalRec(r1);
+//        System.out.println();
+//        System.out.print("The Postorder Traversal of Tree 2 is: ");
+//        System.out.println();
+//        postorderTraversalRec(r100);
+//        System.out.println();
+//        /* 3.6 */
+//        System.out.println("********************** 3.5 **********************");
+//        System.out.print("The Postorder Traversal of Tree 1 is: ");
+//        System.out.println();
+//        postorderTraversal(r1);
+//        System.out.println();
+//        System.out.print("The Postorder Traversal of Tree 2 is: ");
+//        System.out.println();
+//        postorderTraversal(r100);
+//        System.out.println();
+//        /* 4.1 */
+//        System.out.println("********************** 4.1 **********************");
+//        System.out.print("The Level Traversal of Tree 1 is: ");
+//        System.out.println();
+//        levelTraversal(r1);
+//        System.out.println();
+//        System.out.print("The Level Traversal of Tree 2 is: ");
+//        System.out.println();
+//        levelTraversal(r100);
+//        System.out.println();
+//        /* 4.2 */
+//        System.out.println("********************** 4.2 **********************");
+//        System.out.print("The Level Order Traversal of Tree 1 is: ");
+//        System.out.println();
+//        levelTraversalRec(r1);
+//        System.out.print("The Level Order Traversal of Tree 2 is: ");
+//        System.out.println();
+//        levelTraversalRec(r100);
+//        /* 4.3 */
+//        System.out.println("********************** 4.3 **********************");
+//        System.out.print("The Level Order Traversal of Tree 1 is: ");
+//        System.out.println();
+//        System.out.println(levelOrderBFS(r1));
+//        System.out.print("The Level Order Traversal of Tree 2 is: ");
+//        System.out.println();
+//        System.out.println(levelOrderBFS(r100));
+//        /* 5.1 */
+//        System.out.println("********************** 5.1 **********************");
+//        System.out.println("Converting Tree 1 to DDL: ");
+//        TreeNode ret = convertBST2DLLRec(r1);
+//        while (ret != null) {
+//            System.out.print(ret.val + " <-> ");
+//            ret = ret.right;
+//        }
+//        System.out.println();
+//        System.out.println("Converting Tree 2 to DDL: ");
+//        TreeNode ret100 = convertBST2DLLRec(r100);
+//        while (ret100 != null) {
+//            System.out.print(ret100.val + " <-> ");
+//            ret100 = ret100.right;
+//        }
+//        System.out.println();
+//        /* 6.1 */
+//        System.out.println("********************** 6.1 **********************");
+//        levelTraversalRec(r1);
+//        System.out.println("The 1st level of Tree 1 to DDL: "
+//                + getNodeNumKth(r1, 1));
+//        System.out.println("The 2nd level of Tree 1 to DDL: "
+//                + getNodeNumKth(r1, 2));
+//        System.out.println("The 3rd level of Tree 1 to DDL: "
+//                + getNodeNumKth(r1, 3));
+//        System.out.println("The 4th level of Tree 1 to DDL: "
+//                + getNodeNumKth(r1, 4));
+//        levelTraversalRec(r100);
+//        System.out.println("The 1st level of Tree 2 to DDL: "
+//                + getNodeNumKth(r100, 1));
+//        System.out.println("The 2nd level of Tree 2 to DDL: "
+//                + getNodeNumKth(r100, 2));
+//        System.out.println("The 3rd level of Tree 2 to DDL: "
+//                + getNodeNumKth(r100, 3));
+//        System.out.println("The 4th level of Tree 2 to DDL: "
+//                + getNodeNumKth(r100, 4));
+//        /* 6.2 */
+//        System.out.println("********************** 6.2 **********************");
+//        levelTraversalRec(r1);
+//        System.out.println("The 1st level of Tree 1 to DDL: "
+//                + getNodeNumKthLevelRec(r1, 1));
+//        System.out.println("The 2nd level of Tree 1 to DDL: "
+//                + getNodeNumKthLevelRec(r1, 2));
+//        System.out.println("The 3rd level of Tree 1 to DDL: "
+//                + getNodeNumKthLevelRec(r1, 3));
+//        System.out.println("The 4th level of Tree 1 to DDL: "
+//                + getNodeNumKthLevelRec(r1, 4));
+//        levelTraversalRec(r100);
+//        System.out.println("The 1st level of Tree 2 to DDL: "
+//                + getNodeNumKthLevelRec(r100, 1));
+//        System.out.println("The 2nd level of Tree 2 to DDL: "
+//                + getNodeNumKthLevelRec(r100, 2));
+//        System.out.println("The 3rd level of Tree 2 to DDL: "
+//                + getNodeNumKthLevelRec(r100, 3));
+//        System.out.println("The 4th level of Tree 2 to DDL: "
+//                + getNodeNumKthLevelRec(r100, 4));
+//
+//        /* 7.1 */
+//        System.out.println("********************** 7.1 **********************");
+//        System.out.println("The total number of leaves of Tree 1 is : "
+//                + getNodeNumLeafRec(r1));
+//        System.out.println("The total number of leaves of Tree 2 is : "
+//                + getNodeNumLeafRec(r100));
+//        /* 7.2 */
+//        System.out.println("********************** 7.2 **********************");
+//        System.out.println("The total number of leaves of Tree 1 is : "
+//                + getNodeNumLeafInorder(r1));
+//        System.out.println("The total number of leaves of Tree 2 is : "
+//                + getNodeNumLeafInorder(r100));
+//        /* 7.3 */
+//        System.out.println("********************** 7.3 **********************");
+//        System.out.println("The total number of leaves of Tree 1 is : "
+//                + getNodeNumLeafPreorder(r1));
+//        System.out.println("The total number of leaves of Tree 2 is : "
+//                + getNodeNumLeafPreorder(r100));
+//        /* 7.4 */
+//        System.out.println("********************** 7.4 **********************");
+//        System.out.println("The total number of leaves of Tree 1 is : "
+//                + getNodeNumLeafPostorder(r1));
+//        System.out.println("The total number of leaves of Tree 2 is : "
+//                + getNodeNumLeafPostorder(r100));
+
+//        /* 8.1 */
+//        System.out.println("********************** 8.1 **********************");
+//        System.out.print("Are the two trees the same" + " (r1, r1): ");
+//        System.out.println(isSameRec(r1, r1));
+//        System.out.print("Are the two trees the same" + " (r2, r4): ");
+//        System.out.println(isSameRec(r2, r4));
+//        System.out.print("Are the two trees the same" + " (r8, r8): ");
+//        System.out.println(isSameRec(r8, r8));
+//        System.out.print("Are the two trees the same" + " (r100, r100): ");
+//        System.out.println(isSameRec(r100, r100));
+//        System.out.print("Are the two trees the same" + " (r60, r40): ");
+//        System.out.println(isSameRec(r60, r40));
+//        System.out.print("Are the two trees the same" + " (r30, r30): ");
+//        System.out.println(isSameRec(r30, r30));
+//        /* 8.2 */
+//        System.out.println("********************** 8.2 **********************");
+//        System.out.print("Are the two trees the same" + " (r1, r1): ");
+//        System.out.println(isSameInorder(r1, r1));
+//        System.out.print("Are the two trees the same" + " (r2, r4): ");
+//        System.out.println(isSameInorder(r2, r4));
+//        System.out.print("Are the two trees the same" + " (r8, r8): ");
+//        System.out.println(isSameInorder(r8, r8));
+//        System.out.print("Are the two trees the same" + " (r100, r100): ");
+//        System.out.println(isSameInorder(r100, r100));
+//        System.out.print("Are the two trees the same" + " (r60, r40): ");
+//        System.out.println(isSameInorder(r60, r40));
+//        System.out.print("Are the two trees the same" + " (r30, r30): ");
+//        System.out.println(isSameInorder(r30, r30));
+//        /* 8.3 */
+//        System.out.println("********************** 8.3 **********************");
+//        System.out.print("Are the two trees the same" + " (r1, r1): ");
+//        System.out.println(isSamePreorder(r1, r1));
+//        System.out.print("Are the two trees the same" + " (r2, r4): ");
+//        System.out.println(isSamePreorder(r2, r4));
+//        System.out.print("Are the two trees the same" + " (r8, r8): ");
+//        System.out.println(isSamePreorder(r8, r8));
+//        System.out.print("Are the two trees the same" + " (r100, r100): ");
+//        System.out.println(isSamePreorder(r100, r100));
+//        System.out.print("Are the two trees the same" + " (r60, r40): ");
+//        System.out.println(isSamePreorder(r60, r40));
+//        System.out.print("Are the two trees the same" + " (r30, r30): ");
+//        System.out.println(isSamePreorder(r30, r30));
+//        /* 9.1 */
+//        System.out.println("********************** 9.1 **********************");
+//        System.out.print("The tree is an balanced binary tree: " + "(r1): " );
+//        System.out.println(isAVLRec(r1));
+//        System.out.print("The tree is an balanced binary tree: " + "(r2): " );
+//        System.out.println(isAVLRec(r2));
+//        System.out.print("The tree is an balanced binary tree: " + "(r3): " );
+//        System.out.println(isAVLRec(r3));
+//        System.out.print("The tree is an balanced binary tree: " + "(r4): " );
+//        System.out.println(isAVLRec(r4));
+//        System.out.print("The tree is an balanced binary tree: " + "(r5): " );
+//        System.out.println(isAVLRec(r5));
+//        System.out.print("The tree is an balanced binary tree: " + "(r6): " );
+//        System.out.println(isAVLRec(r6));
+//        System.out.print("The tree is an balanced binary tree: " + "(r100): " );
+//        System.out.println(isAVLRec(r100));
+//        /* 9.2 */
+//        System.out.println("********************** 9.2 **********************");
+//        System.out.print("The tree is an balanced binary tree: " + "(r1): " );
+//        System.out.println(isAVLResultType(r1));
+//        System.out.print("The tree is an balanced binary tree: " + "(r2): " );
+//        System.out.println(isAVLResultType(r2));
+//        System.out.print("The tree is an balanced binary tree: " + "(r3): " );
+//        System.out.println(isAVLResultType(r3));
+//        System.out.print("The tree is an balanced binary tree: " + "(r4): " );
+//        System.out.println(isAVLResultType(r4));
+//        System.out.print("The tree is an balanced binary tree: " + "(r5): " );
+//        System.out.println(isAVLResultType(r5));
+//        System.out.print("The tree is an balanced binary tree: " + "(r6): " );
+//        System.out.println(isAVLResultType(r6));
+//        System.out.print("The tree is an balanced binary tree: " + "(r100): " );
+//        System.out.println(isAVLResultType(r100));
+//        /* 10.1 */
+//        System.out.println("********************* 10.1 *********************");
+//        System.out.println("The original tree1 is : ");
+//        System.out.println(levelOrderBFS(r1));
+//        System.out.println("The mirror tree1 is : ");
+//        System.out.println(levelOrderBFS(mirrorRec(r1)));
+//        System.out.println("The original tree2 is : ");
+//        System.out.println(levelOrderBFS(r100));
+//        System.out.println("The mirror tree2 is : ");
+//        System.out.println(levelOrderBFS(mirrorRec(r100)));
+//        /* 10.2 */
+//        System.out.println("********************* 10.2 *********************");
+//        System.out.println("The original tree1 is : ");
+//        System.out.println(levelOrderBFS(r1));
+//        System.out.println("The mirror tree1 is : ");
+//        System.out.println(levelOrderBFS(mirror(r1)));
+//        System.out.println("The original tree2 is : ");
+//        System.out.println(levelOrderBFS(r100));
+//        System.out.println("The mirror tree2 is : ");
+//        System.out.println(levelOrderBFS(mirror(r100)));
+//        /* 10.3 */
+//        System.out.println("********************* 10.3 *********************");
+//        System.out.println("The original tree1 is : ");
+//        System.out.println(levelOrderBFS(r1));
+//        System.out.println("The mirror tree1 is : ");
+//        System.out.println(levelOrderBFS(mirrorCopyRec(r1)));
+//        System.out.println("The original tree2 is : ");
+//        System.out.println(levelOrderBFS(r100));
+//        System.out.println("The mirror tree2 is : ");
+//        System.out.println(levelOrderBFS(mirrorCopyRec(r100)));
+//        /* 10.4 */
+//        System.out.println("********************* 10.4 *********************");
+//        System.out.println("The original tree1 is : ");
+//        System.out.println(levelOrderBFS(r1));
+//        System.out.println("The mirror tree1 is : ");
+//        System.out.println(levelOrderBFS(mirrorCopy(r1)));
+//        System.out.println("The original tree2 is : ");
+//        System.out.println(levelOrderBFS(r100));
+//        System.out.println("The mirror tree2 is : ");
+//        System.out.println(levelOrderBFS(mirrorCopy(r100)));
+//        /* 10.1.1 */
+//        System.out.println("******************* 10.1.1 *******************");
+//        System.out.println("Comparing the tree 1 and its mirror copy : ");
+//        System.out.println(isMirror(r1,mirrorCopy(r1)));
+//        System.out.println("Comparing the tree 1 and tree 1 : ");
+//        System.out.println(isMirror(r1, r1));
+//        System.out.println("Comparing the tree 2 and its mirror copy : ");
+//        System.out.println(isMirror(r100,mirrorCopy(r100)));
+//        System.out.println("Comparing the tree 2 and tree 2 : ");
+//        System.out.println(isMirror(r100, r100));
+//        /* 10.1.2 */
+//        System.out.println("******************* 10.1.2 *******************");
+//        System.out.println("Comparing the tree 1 and its mirror copy : ");
+//        System.out.println(isMirrorRec(r1,mirrorCopyRec(r1)));
+//        System.out.println("Comparing the tree 1 and tree 1 : ");
+//        System.out.println(isMirrorRec(r1, r1));
+//        System.out.println("Comparing the tree 2 and its mirror copy : ");
+//        System.out.println(isMirrorRec(r100,mirrorCopyRec(r100)));
+//        System.out.println("Comparing the tree 2 and tree 2 : ");
+//        System.out.println(isMirrorRec(r100, r100));
+//        /* 11.1 */
+//        System.out.println("********************* 11.1 *********************");
+//        System.out.print("The Least Common Ancestor of r5 and r10: r");
+//        System.out.println(LCA(r1, r10, r5).val);
+//        System.out.print("The Least Common Ancestor of r30 and r60: r");
+//        System.out.println(LCA(r100, r30, r60).val);
+//        /* 11.2 */
+//        System.out.println("********************* 11.2 *********************");
+//        System.out.print("The Least Common Ancestor of r2 and r8: r");
+//        System.out.println(LCARec(r1, r2, r8).val);
+//        System.out.print("The Least Common Ancestor of r110 and r180: r");
+//        System.out.println(LCARec(r100, r110, r180).val);
+//        /* 11.3 */
+//        System.out.println("********************* 11.3 *********************");
+//        System.out.print("The Least Common Ancestor of r110 and r180: r");
+//        System.out.println(LCABstRec(r100, r110, r180).val);
+//        System.out.print("The Least Common Ancestor of r60 and r30: r");
+//        System.out.println(LCABstRec(r100, r60, r30).val);
+//        /* 12.1 */
+//        System.out.println("********************* 12.1 *********************");
+//        System.out.print("The max distance of Tree 1 is: ");
+//        System.out.println(getMaxDistanceRec(r1));
+//        System.out.print("The max distance of Tree 2 is: ");
+//        System.out.println(getMaxDistanceRec(r100));
+//        /* 13.1 */
+//        System.out.println("********************* 13.1 *********************");
+//        System.out.println("The newly built tree's preorder traversal is: ");
+//        preorderTraversalRec(rebuildBinaryTreeRec(preOrder, inOrder));
+//        System.out.println();
+//        System.out.println("The Tree1's preorder traversal is: ");
+//        preorderTraversalRec(r1);
+//        System.out.println();
+//        System.out.println();
+//        System.out.println("The newly built tree's inorder traversal is: ");
+//        inorderTraversalRec(rebuildBinaryTreeRec(preOrder, inOrder));
+//        System.out.println();
+//        System.out.println("The Tree1's inorder traversal is: ");
+//        inorderTraversalRec(r1);
+//        /* 14.1 14.2 14.3 */
+//        System.out.println("********************* 14 *********************");
+//        System.out.print("Tree 2 a complete BT : ");
+//        System.out.println(isCompleteBinaryTree(r100));
+//        System.out.print("Tree 1 a complete BT : ");
+//        System.out.println(isCompleteBinaryTree(r1));
+//        System.out.println();
+//        System.out.print("Tree 2 a complete BT : ");
+//        System.out.println(isCompleteBinaryTreeNoDummy(r100));
+//        System.out.print("Tree 1 a complete BT : ");
+//        System.out.println(isCompleteBinaryTreeNoDummy(r1));
+//        System.out.println();
+//        System.out.print("Tree 2 a complete BT : ");
+//        System.out.println(isCompleteBinaryTreeRec(r100));
+//        System.out.print("Tree 1 a complete BT : ");
+//        System.out.println(isCompleteBinaryTreeRec(r1));
+//        /* 15.1 */
+//        System.out.println("********************* 15.1 *********************");
+//        System.out.print("The longest path from root to leaf for Tree1 is: ");
+//        System.out.println(findLongest(r1));
+//        System.out.print("The longest path from root to leaf for Tree2 is: ");
+//        System.out.println(findLongest(r100));
+
+    }
+
+////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////
 // 1. Get all the nodes number  //
@@ -305,7 +604,7 @@ public class TreeDemo {
     public static int getNodeNumRec(TreeNode root) {
         if (root == null) {
             return 0;
-        }     
+        }
         return getNodeNumRec(root.left) + getNodeNumRec(root.right) + 1;
     }
 
@@ -313,19 +612,19 @@ public class TreeDemo {
     // 2) getNodeNum(iteration) //
     //////////////////////////////
 
-    /*  
-        The runtime would be O(n). 
+    /*
+        The runtime would be O(n).
         Use a ArrayDeque instead of the ArrayList.
-        Similar to LevelOrderTraversal 
-    */
+        Similar to LevelOrderTraversal
+     */
     public static int getNodeNum(TreeNode root) {
         if (root == null) {
             return 0;
         }
-        
-        ArrayDeque<TreeNode> queue = new ArrayDeque<TreeNode>(); 
+
+        ArrayDeque<TreeNode> queue = new ArrayDeque<TreeNode>();
         queue.offer(root);
-        
+
         int count = 0;
         while (!queue.isEmpty()) {
             TreeNode node = queue.poll();
@@ -336,13 +635,13 @@ public class TreeDemo {
             if (node.right != null) {
                 queue.offer(node.right);
             }
-    
+
             count++;
         }
-        
+
         return count;
     }
-    
+
 //////////////////////
 // 2. Get the depth //
 //////////////////////
@@ -354,7 +653,7 @@ public class TreeDemo {
 
         The depth of a node is the number of edges from the node to the tree’s root
         node. A root node will have a depth of 0.
-        
+
         The height of a node is the number of edges on the longest path from the
         node to a leaf. A leaf node will have a height of 0.
     */
@@ -369,7 +668,7 @@ public class TreeDemo {
             return -1; /* Refer to the definition */
         }
 
-        /* Divide */ 
+        /* Divide */
         int left = getDepthRec(root.left);
         int right = getDepthRec(root.right);
 
@@ -382,9 +681,9 @@ public class TreeDemo {
 
     /*
         Use level order traversal to record the 'depths' along the way.
-        Use a for loop instead of a dummy node to separate the levels. 
+        Use a for loop instead of a dummy node to separate the levels.
      */
-    public int getDepth(TreeNode root) {
+    public static int getDepth(TreeNode root) {
         /* Base */
         if (root == null) {
             return 0;
@@ -395,7 +694,7 @@ public class TreeDemo {
 
         ArrayDeque<TreeNode> queue = new ArrayDeque<TreeNode>();
         queue.offer(root);
-        
+
         /* Use queue since it requires the number of 'levels' */
         /* preorder */
         while (!queue.isEmpty()) {
@@ -411,24 +710,24 @@ public class TreeDemo {
                 }
             }
         }
-        
+
         return depth;
     }
 
     //////////////////////////////////////////
     // 3) getDepthTraverse(global variable) //
     //////////////////////////////////////////
-    
+
     /* global var */
-    private int depth;
-    public int getDepthTraverse(TreeNode root) {
+    private static int depth;
+    public static int getDepthTraverse(TreeNode root) {
         depth = 0;
         /* Current root is root, current depth is 0 */
         helper(root, 0);
 
         return depth;
     }
-    private void helper(TreeNode root, int curDepth) {
+    private static void helper(TreeNode root, int curDepth) {
         if (root == null) {
             return;
         }
@@ -449,7 +748,7 @@ public class TreeDemo {
     // 1) preorderTraversalRec //
     /////////////////////////////
 
-    /* 
+    /*
         Use str output, void method, null return;
         Root->Left->Right
     */
@@ -458,12 +757,12 @@ public class TreeDemo {
         if (root == null) {
             return;
         }
-        
+
         System.out.print(root.val + " ");
         preorderTraversalRec(root.left);
         preorderTraversalRec(root.right);
     }
-    
+
     //////////////////////////
     // 2) preorderTraversal //
     //////////////////////////
@@ -473,31 +772,31 @@ public class TreeDemo {
         if (root == null) {
             return;
         }
-        
+
         ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         s.push(root);
-        
+
         while (!s.isEmpty()) {
             TreeNode node = s.pop();
             System.out.print(node.val + " ");
-            /* 
+            /*
                 Remember to go right first and then go left,
                 so we can pop left first to satisfy the root left right order.
             */
-            if (node.right != null) { 
+            if (node.right != null) {
                 s.push(node.right);
             }
             if (node.left != null) {
                 s.push(node.left);
-            }                       
+            }
         }
     }
-    
+
     /////////////////////////////
     // 3) inorderTraversalRec  //
     /////////////////////////////
 
-    /* 
+    /*
         Use str output, void method, null return;
         Left->Root->Right
     */
@@ -505,17 +804,17 @@ public class TreeDemo {
         if (root == null) {
             return;
         }
-        
+
         inorderTraversalRec(root.left);
         System.out.print(root.val + " ");
         inorderTraversalRec(root.right);
     }
-    
+
     /////////////////////////
     // 4) inorderTraversal //
     /////////////////////////
-  
-    /* 
+
+    /*
         We add all the left children of the roots to the stack, then we pop from
         the stack and we deal with the right children at last.
     */
@@ -523,7 +822,7 @@ public class TreeDemo {
         if (root == null) {
             return;
         }
-        
+
         ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         /* Only one node variable throughout the process */
         TreeNode curt = root;
@@ -533,16 +832,16 @@ public class TreeDemo {
             while (curt != null) {
                 s.push(curt);
                 curt = curt.left;
-            }    
+            }
             /* Now the curt has no children so just pop the node out */
             curt = s.pop();
-            System.out.print(curt.val + " ");    
-            /* Go for the right side */  
-            curt = curt.right;            
+            System.out.print(curt.val + " ");
+            /* Go for the right side */
+            curt = curt.right;
         }
-        
-        /*  
-            If we use ArrayList as the result: 
+
+        /*
+            If we use ArrayList as the result:
             Peek pop add go to right.
         */
     }
@@ -551,25 +850,25 @@ public class TreeDemo {
     // 5) postorderTraversalRec //
     //////////////////////////////
 
-    /* 
+    /*
         Use str output, void method, null return;
         Left->Right->Root
-    */    
+    */
     public static void postorderTraversalRec(TreeNode root) {
         if (root == null) {
             return;
         }
-        
+
         postorderTraversalRec(root.left);
         postorderTraversalRec(root.right);
         System.out.print(root.val + " ");
     }
-    
+
     ///////////////////////////
     // 6) postorderTraversal //
     ///////////////////////////
 
-    /* 
+    /*
         The postorder is the same as the inverse of the preorder from the
         right-hand side. So we use two stacks
     */
@@ -577,7 +876,7 @@ public class TreeDemo {
         if (root == null) {
             return;
         }
-        
+
         ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         ArrayDeque<TreeNode> out = new ArrayDeque<TreeNode>();
         s.push(root);
@@ -585,7 +884,7 @@ public class TreeDemo {
         while(!s.isEmpty()) {
             TreeNode cur = s.pop();
             out.push(cur);
-            
+
             if (cur.left != null) {
                 s.push(cur.left);
             }
@@ -593,7 +892,7 @@ public class TreeDemo {
                 s.push(cur.right);
             }
         }
-        
+
         while(!out.isEmpty()) {
             System.out.print(out.pop().val + " ");
         }
@@ -601,7 +900,7 @@ public class TreeDemo {
 
 //////////////////////////////
 // 4. Level order traversal //
-//////////////////////////////  
+//////////////////////////////
 
     ///////////////////////
     // 1) levelTraversal //
@@ -613,16 +912,16 @@ public class TreeDemo {
         1. BFS, use queue
         2. Initialize the queue, offer the root to the queue.
         3. While the queue is not empty
-        4. Ask if the children are not empty, offer them to the queue  
+        4. Ask if the children are not empty, offer them to the queue
     */
     public static void levelTraversal(TreeNode root) {
         if (root == null) {
             return;
         }
-        
-        ArrayDeque<TreeNode> q = new ArrayDeque<TreeNode>();
+
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
         q.offer(root);
-        
+
         while (!q.isEmpty()) {
             TreeNode cur = q.poll();
 
@@ -637,35 +936,35 @@ public class TreeDemo {
             }
         }
     }
-    
+
     //////////////////////////
     // 2) levelTraversalRec //
     //////////////////////////
 
     /* Two level ArrayList Traversal */
     public static void levelTraversalRec(TreeNode root) {
-        ArrayList<ArrayList<Integer>> ret = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> ret = new ArrayList<>();
         levelTraversalVisit(root, 0, ret);
         System.out.println(ret);
     }
-    public static void levelTraversalVisit(TreeNode root, 
+    private static void levelTraversalVisit(TreeNode root,
                                            int level,
                                            ArrayList<ArrayList<Integer>> ret) {
-        
+
         if (root == null) {
             return;
         }
-            /* 
+            /*
                 If the node is in the new level, add one more layer.
                 Example: when size = 3, level: 0, 1, 2
             */
         if (level >= ret.size()) {
-            ret.add(new ArrayList<Integer>());
+            ret.add(new ArrayList<>());
         }
-        
+
         /* Go to the current level and add that node's val */
         ret.get(level).add(root.val);
-        
+
         /* Recursive part */
         levelTraversalVisit(root.left, level + 1, ret);
         levelTraversalVisit(root.right, level + 1, ret);
@@ -675,14 +974,14 @@ public class TreeDemo {
     // 3) Level order traversal BFS //
     //////////////////////////////////
 
-    public ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
-        
+    public static ArrayList<ArrayList<Integer>> levelOrderBFS(TreeNode root) {
+
         ArrayList<ArrayList<Integer>> result = new ArrayList<>();
         if (root == null) {
             return result;
         }
 
-        ArrayDeque<TreeNode> queue = new ArrayDeque<TreeNode>();
+        ArrayDeque<TreeNode> queue = new ArrayDeque<>();
         queue.offer(root);
 
         while (!queue.isEmpty()) {
@@ -697,7 +996,7 @@ public class TreeDemo {
                 }
                 if (head.right != null) {
                     queue.offer(head.right);
-                }                
+                }
             }
             result.add(level);
 
@@ -716,7 +1015,7 @@ public class TreeDemo {
              6     15
             / \   /  \
            3   8 11   18
-            
+
             8 <- 10 -> 15
             8 -> 10 <- 15
         Requirements: Convert the BST to DLL where you can't create new nodes,
@@ -725,12 +1024,12 @@ public class TreeDemo {
         First, we connect the root left pointer to the last node of the left
         children and then pointing the root with the right pointer of last node
         of the left children.
-        
+
         Second, we point the root's right pointer to the first node of the
         right children, then we use the left pointer of the first node of the
         right children to point to the root
     */
-   
+
     //////////////////////////
     // 1) convertBST2DLLRec //
     //////////////////////////
@@ -743,83 +1042,38 @@ public class TreeDemo {
         TreeNode[] ret = new TreeNode[2];
         ret[0] = null;
         ret[1] = null;
-                
+
         if (root == null) {
             return ret;
         }
-        
+
         if (root.left != null) {
             /* Go to the far left */
             TreeNode left[] = convertBST2DLLRecHelp(root.left);
             /* connect the last node of the left children to the root */
-            left[1].right = root;  
+            left[1].right = root;
             root.left = left[1];
-            
+
             ret[0] = left[0];
         } else {
             /* left node return back to root */
-            ret[0] = root;   
+            ret[0] = root;
         }
-        
+
         if (root.right != null) {
             /* Deal with the right */
             TreeNode right[] = convertBST2DLLRecHelp(root.right);
             /* connect the first node of the right children to the root */
             right[0].left = root;
             root.right = right[0];
-            
+
             ret[1] = right[1];
         } else {
             /* right node return back to root */
             ret[1] = root;
         }
-        
+
         return ret;
-    }
-
-    ///////////////////////
-    // 2) convertBST2DLL //
-    ///////////////////////
-
-    /* Similar to in-order traversal */ 
-    public static TreeNode convertBST2DLL(TreeNode root) {
-        while (root == null) {
-            return null;
-        }
-        
-        TreeNode pre = null;
-        ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
-        TreeNode cur = root;
-        TreeNode head = null;       // Head of the DLL
-        
-        while (true) {
-            while (cur != null) {
-                s.push(cur);
-                cur = cur.left;
-            }
-            
-            /* if stack is empty, just break; */
-            if (s.isEmpty()) {
-                break;
-            }
-            
-            cur = s.pop(); 
-            if (head == null) {
-                head = cur;
-            }
-
-            /* link pre and cur. */
-            cur.left = pre;
-            if (pre != null) {
-                pre.right = cur;
-            }
-            
-            /* Handle the right children */
-            cur = cur.right;
-            pre = cur;
-        }
-        
-        return root;
     }
 
 ///////////////////////////////////////////////
@@ -873,15 +1127,15 @@ public class TreeDemo {
         if (root == null || k <= 0) {
             return 0;
         }
-        
+
         /* One node */
         if (k == 1) {
             return 1;
         }
-        
+
         /* Get the sum of the nodes on the kth level from left and right */
-        return getNodeNumKthLevelRec(root.left, k - 1) 
-               + getNodeNumKthLevelRec(root.right, k - 1);
+        return getNodeNumKthLevelRec(root.left, k - 1)
+                + getNodeNumKthLevelRec(root.right, k - 1);
     }
 
 /////////////////////////////////////
@@ -897,30 +1151,30 @@ public class TreeDemo {
         if (root == null) {
             return 0;
         }
-        
+
         /* Only this situation can be called the leaf node */
         if (root.left == null && root.right == null) {
             return 1;
         }
-        
+
         return getNodeNumLeafRec(root.left) + getNodeNumLeafRec(root.right);
     }
-    
-    ///////////////////////
-    // 2) getNodeNumLeaf //
-    ///////////////////////
+
+    //////////////////////////////
+    // 2) getNodeNumLeafInorder //
+    //////////////////////////////
 
     /* We can use any one of those traversal method, for example in-order */
-    public static int getNodeNumLeaf(TreeNode root) {
+    public static int getNodeNumLeafInorder(TreeNode root) {
         if (root == null) {
             return 0;
         }
-        
+
         int cnt = 0;
-        
+
         ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         TreeNode cur = root;
-        
+
         while (cur != null || !s.isEmpty()) {
             /* Go to far left and add the cur node along the way */
 
@@ -942,8 +1196,72 @@ public class TreeDemo {
             // Go right
             cur = cur.right;
         }
-        
+
         return cnt;
+    }
+
+    ///////////////////////////////
+    // 3) getNodeNumLeafPreorder //
+    ///////////////////////////////
+
+    /* We can use any one of those traversal method, for example pre-order */
+    public static int getNodeNumLeafPreorder(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int count = 0;
+        ArrayDeque<TreeNode> s = new ArrayDeque<>();
+        s.push(root);
+
+        while (!s.isEmpty()) {
+            TreeNode node = s.pop();
+
+            if (node.left == null && node.right == null) {
+                count++;
+            }
+
+            if (node.right != null) {
+                s.push(node.right);
+            }
+            if (node.left != null) {
+                s.push(node.left);
+            }
+        }
+
+        return count;
+
+    }
+
+    ////////////////////////////////
+    // 4) getNodeNumLeafPostorder //
+    ////////////////////////////////
+
+    /* We can use any one of those traversal method, for example post-order */
+    public static int getNodeNumLeafPostorder(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        int count = 0;
+        ArrayDeque<TreeNode> s = new ArrayDeque<>();
+        ArrayDeque<TreeNode> out = new ArrayDeque<>();
+        s.push(root);
+
+        while (!s.isEmpty()) {
+            TreeNode node = s.pop();
+            if (node.left == null && node.right == null) {
+                count++;
+            }
+            if (node.left != null) {
+                s.push(node.left);
+            }
+            if (node.right != null) {
+                s.push(node.right);
+            }
+        }
+
+        return count;
     }
 
 //////////////////////////////
@@ -965,39 +1283,39 @@ public class TreeDemo {
         if (r1 == null && r2 == null) {
             return true;
         }
-        
+
         /* (2) */
         if (r1 == null || r2 == null) {
             return false;
         }
 
         /* (3) */
-        return r1.val == r2.val && 
+        return r1.val == r2.val &&
                 isSameRec(r1.left, r2.left) && isSameRec(r1.right, r2.right);
     }
 
-    ///////////////
-    // 2) isSame //
-    ///////////////
+    //////////////////////
+    // 2) isSameInorder //
+    //////////////////////
 
     /* We can use in-order traversal to compare with the two nodes */
-    public static boolean isSame(TreeNode r1, TreeNode r2) {
+    public static boolean isSameInorder(TreeNode r1, TreeNode r2) {
         if (r1 == null && r2 == null) {
             return true;
         }
-        
+
         if (r1 == null || r2 == null) {
             return false;
         }
-        
+
         ArrayDeque<TreeNode> s1 = new ArrayDeque<TreeNode>();
         ArrayDeque<TreeNode> s2 = new ArrayDeque<TreeNode>();
-        
+
         TreeNode cur1 = r1;
         TreeNode cur2 = r2;
-        
-        while ((cur1 != null && cur2 != null) || 
-              (!s1.isEmpty() && !s2.isEmpty())) {
+
+        while ((cur1 != null && cur2 != null) ||
+                (!s1.isEmpty() && !s2.isEmpty())) {
 
             /* Left side */
             while (cur1 != null && cur2 != null) {
@@ -1006,7 +1324,7 @@ public class TreeDemo {
                 cur1 = cur1.left;
                 cur2 = cur2.left;
             }
-            
+
             /* Solve problem */
             if (cur1 != null || cur2 != null) {
                 return false;
@@ -1018,20 +1336,25 @@ public class TreeDemo {
             cur2 = s2.peek();
             s2.pop();
 
-            /* Solve problem */            
+            /* Solve problem */
             if (cur1.val != cur2.val) {
                 return false;
             }
-            
+
             /* Right side */
             cur1 = cur1.right;
             cur2 = cur2.right;
         }
-        
+
         return true;
     }
+
+    ///////////////////////
+    // 3) isSamePreorder //
+    ///////////////////////
+
     /* This is the Preorder traversal */
-    public boolean isSame(TreeNode r1, TreeNode r2) {
+    public static boolean isSamePreorder(TreeNode r1, TreeNode r2) {
         if (r1 == null && r2 == null) {
             return true;
         }
@@ -1087,7 +1410,7 @@ public class TreeDemo {
     // 1) isAVLRec //
     /////////////////
 
-    /* 
+    /*
         (1) The height difference between left and right children should be < 1.
         (2) The left children and right children have to be all AVL.
      */
@@ -1095,78 +1418,78 @@ public class TreeDemo {
         if (root == null) {
             return true;
         }
-        
+
         /* (2) */
         if (!isAVLRec(root.left) || !isAVLRec(root.right)) {
             return false;
         }
-        
+
         /* (1) and refer to the method in 2. 1) */
 
         int dif = Math.abs(getDepthRec(root.left) - getDepthRec(root.right));
         if (dif > 1) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     ////////////////////////
     // 2) isAVLResultType //
     ////////////////////////
 
     /* When we need to return more than just one element, use ResultType */
-    class ResultType {
-        public boolean isBalanced;
-        public int maxDepth;
-        public ResultType(boolean isBalanced, int maxDepth) {
+    private static class ResultType9 {
+        boolean isBalanced;
+        int maxDepth;
+        public ResultType9(boolean isBalanced, int maxDepth) {
             this.isBalanced = isBalanced;
             this.maxDepth = maxDepth;
         }
     }
-
-    public boolean isBalanced(TreeNode root) {
+    public static boolean isAVLResultType(TreeNode root) {
         return helper(root).isBalanced;
     }
-    
-    private ResultType helper(TreeNode root) {
+    private static ResultType9 helper(TreeNode root) {
         if (root == null) {
-            return new ResultType(true, 0);
+            return new ResultType9(true, 0);
         }
-        
-        ResultType left = helper(root.left);
-        ResultType right = helper(root.right);
-        
+
+        ResultType9 left = helper(root.left);
+        ResultType9 right = helper(root.right);
+
         /* subtree not balance */
         /* see if the left and the right are balanced */
         if (!left.isBalanced || !right.isBalanced) {
-            return new ResultType(false, -1);
+            return new ResultType9(false, -1);
         }
-        
+
         /* root not balance */
         /* we can use 0 for the maxDepth */
         if (Math.abs(left.maxDepth - right.maxDepth) > 1) {
-            return new ResultType(false, -1);
+            return new ResultType9(false, -1);
         }
-        
-        return new ResultType(true, Math.max(left.maxDepth, right.maxDepth) + 1);
+
+        return new ResultType9(true,
+                Math.max(left.maxDepth, right.maxDepth) + 1);
     }
-    
+
 ///////////////////
 // 10. BT mirror //
 ///////////////////
-  
+
     //////////////////
     // 1) mirrorRec //
     //////////////////
 
-     // *      1               1
-     // *     /                 \
-     // *    2     ----->        2
-     // *     \                 /
-     // *      3               3
+    // *      1               1
+    // *     /                 \
+    // *    2     ----->        2
+    // *     \                 /
+    // *      3               3
+
     /* Break the original tree swap the left and right children recursively */
-    public static TreeNode mirrorRec(TreeNode root) {  
+    public static TreeNode mirrorRec(TreeNode root) {
         if (root == null) {
             return null;
         }
@@ -1174,71 +1497,83 @@ public class TreeDemo {
         TreeNode tmp = root.right;
         root.right = mirrorRec(root.left);
         root.left = mirrorRec(tmp);
-        
+
         return root;
-    }  
-    
-    /* Use the easiest preorder traversal */ 
-    public static TreeNode mirror(TreeNode root) {  
+    }
+
+    ///////////////
+    // 2) mirror //
+    ///////////////
+
+    /* Use the easiest preorder traversal */
+    public static TreeNode mirror(TreeNode root) {
         if (root == null) {
             return null;
         }
-        
+
         ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         s.push(root);
-        
+
         while (!s.isEmpty()) {
             TreeNode cur = s.pop();
-            
+
             /* Swap between 3 nodes */
             TreeNode tmp = cur.left;
             cur.left = cur.right;
             cur.right = tmp;
-            
+
             /* Go deeper if possible */
             if (cur.right != null) {
                 s.push(cur.right);
             }
-            
+
             if (cur.left != null) {
                 s.push(cur.left);
             }
         }
-        
+
         return root;
-    }  
-    
+    }
+
+    //////////////////////
+    // 3) mirrorCopyRec //
+    //////////////////////
+
     /* Copy the root, copy the children and connect them at the same time. */
-    public static TreeNode mirrorCopyRec(TreeNode root) {  
+    public static TreeNode mirrorCopyRec(TreeNode root) {
         if (root == null) {
             return null;
         }
-        
+
         /* Deep copy */
         TreeNode rootCopy = new TreeNode(root.val);
         rootCopy.left = mirrorCopyRec(root.right);
         rootCopy.right = mirrorCopyRec(root.left);
-        
+
         return rootCopy;
-    }  
+    }
+
+    ///////////////////
+    // 4) mirrorCopy //
+    ///////////////////
 
     /* Preorder Traversal; Pop the node and create and connect the nodes. */
-    public static TreeNode mirrorCopy(TreeNode root) {  
+    public static TreeNode mirrorCopy(TreeNode root) {
         if (root == null) {
             return null;
         }
-        
+
         ArrayDeque<TreeNode> s = new ArrayDeque<TreeNode>();
         ArrayDeque<TreeNode> sCopy = new ArrayDeque<TreeNode>();
         s.push(root);
-        
+
         TreeNode rootCopy = new TreeNode(root.val);
         sCopy.push(rootCopy);
-        
+
         while (!s.isEmpty()) {
             TreeNode cur = s.pop();
             TreeNode curCopy = sCopy.pop();
-            
+
             /* Copy original tree's right to new tree's left */
             if (cur.right != null) {
                 /* Easier to find the father for the children while copying. */
@@ -1248,7 +1583,7 @@ public class TreeDemo {
                 s.push(cur.right);
                 sCopy.push(curCopy.left);
             }
-            
+
             if (cur.left != null) {
                 /* Easier to find the father for the children while copying. */
                 TreeNode rightCopy = new TreeNode(cur.left.val);
@@ -1258,9 +1593,9 @@ public class TreeDemo {
                 sCopy.push(curCopy.right);
             }
         }
-        
+
         return rootCopy;
-    }  
+    }
 
 ////////////////////////////////
 // 10.1 Two trees are mirrors //
@@ -1276,23 +1611,23 @@ public class TreeDemo {
         (3) if two trees are both not empty if their val and their children are
         all the same to the opposite branch return true, else return false;
     */
-   
+
     /* Similar to isSameRec except altering the left and right children */
-    public static boolean isMirrorRec(TreeNode r1, TreeNode r2){  
+    public static boolean isMirrorRec(TreeNode r1, TreeNode r2){
         /* (1) */
         if (r1 == null && r2 == null) {
             return true;
         }
-        /* (2) */    
+        /* (2) */
         if (r1 == null || r2 == null) {
             return false;
         }
-        /* (3) */        
-        return r1.val == r2.val 
+        /* (3) */
+        return r1.val == r2.val
                 && isMirrorRec(r1.left, r2.right)
                 && isMirrorRec(r1.right, r2.left);
     }
-    
+
     /////////////////
     // 2) isMirror //
     /////////////////
@@ -1301,51 +1636,51 @@ public class TreeDemo {
         (1) if two tree are all empty return true.
         (2) if one of those is empty and the other is not, return false
         (3) compare tree_1's left children with tree_2's right children and vise
-        versa, they can be: 
+        versa, they can be:
             i.      both null (return true at the end)
             ii.     both be not null (go deeper)
             iii.    one of the children is null and the other is not
      */
-    public static boolean isMirror(TreeNode r1, TreeNode r2){  
+    public static boolean isMirror(TreeNode r1, TreeNode r2){
         /* (1) */
         if (r1 == null && r2 == null) {
             return true;
         }
-        
-        /* (2) */    
+
+        /* (2) */
         if (r1 == null || r2 == null) {
             return false;
         }
-        
+
         /* Use two stacks */
         ArrayDeque<TreeNode> s1 = new ArrayDeque<TreeNode>();
         ArrayDeque<TreeNode> s2 = new ArrayDeque<TreeNode>();
-        
+
         s1.push(r1);
         s2.push(r2);
-        
+
         while (!s1.isEmpty() && !s2.isEmpty()) {
             TreeNode cur1 = s1.pop();
             TreeNode cur2 = s2.pop();
-            
+
             /* Root */
             if (cur1.val != cur2.val) {
                 return false;
             }
-            
+
             /* Compare tree_1's left children with tree_2's right children */
             TreeNode left1 = cur1.left;
             TreeNode right1 = cur1.right;
             TreeNode left2 = cur2.left;
             TreeNode right2 = cur2.right;
-            
+
             if (left1 != null && right2 != null) {
                 s1.push(left1);
                 s2.push(right2);
             } else if (!(left1 == null && right2 == null)) {
                 return false;
             }
-            
+
             /* Compare tree_2's left children with tree_1's right children */
             if (right1 != null && left2 != null) {
                 s1.push(right1);
@@ -1354,9 +1689,9 @@ public class TreeDemo {
                 return false;
             }
         }
-        
+
         return true;
-    }  
+    }
 
 ///////////////////////////////
 // 11. Least common ancestor //
@@ -1372,67 +1707,67 @@ public class TreeDemo {
         if (root == null || r1 == null || r2 == null) {
             return null;
         }
-        
+
         /* Initialize two dynamic arrays */
         ArrayList<TreeNode> list1 = new ArrayList<TreeNode>();
         ArrayList<TreeNode> list2 = new ArrayList<TreeNode>();
-        
+
         /* See if we can find the path */
         boolean find1 = LCAPath(root, r1, list1);
         boolean find2 = LCAPath(root, r2, list2);
-        
+
         /* If didn't find any of the node, just return a null. */
         if (!find1 || !find2) {
             return null;
         }
-        
+
         /* Note that it would boot the performance if we use Iterator. */
         Iterator<TreeNode> iter1 = list1.iterator();
         Iterator<TreeNode> iter2 = list2.iterator();
-        
+
         /* Iterate and compare the node */
         TreeNode last = null;
         while (iter1.hasNext() && iter2.hasNext()) {
             TreeNode tmp1 = iter1.next();
             TreeNode tmp2 = iter2.next();
-            
+
             if (tmp1 != tmp2) {
                 return last;
             }
-            
+
             last = tmp1;
         }
-        
-        /* 
+
+        /*
             If we cannot find any node which is different, which means Node 1
             and Node 2 are the same node. So just return the last one.
          */
-        
+
         return last;
     }
-    public static boolean LCAPath(TreeNode root, 
-                                  TreeNode node, 
+    public static boolean LCAPath(TreeNode root,
+                                  TreeNode node,
                                   ArrayList<TreeNode> path) {
         /* if can't find the node in the tree, we should return a empty path. */
         if (root == null || node == null) {
             return false;
         }
-        
+
         /* Add the root node */
         path.add(root);
-        
-        if (root != node 
+
+        if (root != node
                 && !LCAPath(root.left, node, path)
                 && !LCAPath(root.right, node, path)
                 ) {
-            /* 
+            /*
                 Didn't find the node. We should remove the node added before.
-                AKA backtracking 
+                AKA backtracking
             */
             path.remove(root);
             return false;
         }
-        
+
         /* Found the node */
         return true;
     }
@@ -1441,7 +1776,7 @@ public class TreeDemo {
     // 2) LCARec //
     ///////////////
 
-    /* 
+    /*
         (1) null situation
         (2) root situation
         (3) left null and right null situation
@@ -1452,33 +1787,33 @@ public class TreeDemo {
         if (root == null || node1 == null || node2 == null) {
             return null;
         }
-        
+
         /* (2) */
         if (root == node1 || root == node2) {
             return root;
         }
-        
+
         /* (3) */
         TreeNode left = LCARec(root.left, node1, node2);
         TreeNode right = LCARec(root.right, node1, node2);
-        
+
         /* If didn't find LCA the left tree, then just return it from right. */
-        if (left == null) {  
+        if (left == null) {
             return right;
-        /* If didn't find LCA the right tree, then just return it from left. */  
-        } else if (right == null) { 
+        /* If didn't find LCA the right tree, then just return it from left. */
+        } else if (right == null) {
             return left;
-        } 
-        
+        }
+
         /* If we found LCA from both sides, just return the root */
         return root;
     }
-    
+
     //////////////////
     // 3) LCABstRec //
     //////////////////
 
-    /* 
+    /*
         We could also use 2) LCARec to solve this since BST's also BT. And this
         algorithm could be log(n) if it is an AVL. The runtime of LCARec is O(n).
      */
@@ -1487,16 +1822,16 @@ public class TreeDemo {
         if (root == null || node1 == null || node2 == null) {
             return null;
         }
-        
+
         /* Root work */
         if (root == node1 || root == node2) {
             return root;
         }
-        
+
         /* Got the min and max and compare */
         int min = Math.min(node1.val, node2.val);
         int max = Math.max(node1.val, node2.val);
-        
+
         /* If root val is larger than max, Go left */
         if (root.val > max) {
             return LCABstRec(root.left, node1, node2);
@@ -1504,11 +1839,11 @@ public class TreeDemo {
         /* If root val is smaller than min, Go right */
             return LCABstRec(root.right, node1, node2);
         }
-        
+
         /* if root is in the middle, just return the root */
         return root;
     }
-    
+
 ////////////////////////////////////
 // 12. Max distance between nodes //
 ////////////////////////////////////
@@ -1517,14 +1852,14 @@ public class TreeDemo {
     // 1) getMaxDistanceRec //
     //////////////////////////
 
-    /* 
+    /*
         What is the distance between two nodes: the edges between two nodes.
         Example:
                   1
                  / \
                 2   3
                / \   \
-              5  6    4        
+              5  6    4
         So the distance between 2 and 4 is 3 and the max distance for the tree
         is the distance(the distance between far left node and far right node)
         between 5 and 4 which is 4.
@@ -1543,40 +1878,38 @@ public class TreeDemo {
         3 -- Base case of the recursion:
             root == null, depth = -1, maxDistance = -1;
      */
-    private static class ResultType {
+    private static class ResultType12 {
         int depth;
         int maxDistance;
-        public Result(int depth, int maxDistance) {
+        public ResultType12(int depth, int maxDistance) {
             this.depth = depth;
             this.maxDistance = maxDistance;
         }
     }
-
     public static int getMaxDistanceRec(TreeNode root) {
         return getMaxDistanceRecHelp(root).maxDistance;
     }
-    
-    public static ResultType getMaxDistanceRecHelp(TreeNode root) {
+    private static ResultType12 getMaxDistanceRecHelp(TreeNode root) {
         /* Base */
-        ResultType ret = new ResultType(-1, -1);
+        ResultType12 ret = new ResultType12(-1, -1);
         if (root == null) {
             return ret;
         }
-        
-        ResultType left = getMaxDistanceRecHelp(root.left);
-        ResultType right = getMaxDistanceRecHelp(root.right);
-        
-         
+
+        ResultType12 left = getMaxDistanceRecHelp(root.left);
+        ResultType12 right = getMaxDistanceRecHelp(root.right);
+
+
         /* The depth from the subtree to the root. */
         ret.depth = Math.max(left.depth, right.depth) + 1;
-        
+
         /* If the path go through the root, it should add 2 */
         int crossLen = left.depth + right.depth + 2;
-        
+
         /* Calculate the largest between the 3 things */
         ret.maxDistance = Math.max(left.maxDistance, right.maxDistance);
         ret.maxDistance = Math.max(ret.maxDistance, crossLen);
-        
+
         return ret;
     }
 
@@ -1588,7 +1921,7 @@ public class TreeDemo {
     // 1) rebuildBinaryTreeRec //
     /////////////////////////////
 
-    /*        
+    /*
        We assume that there is no duplicate in the trees.
        For example:
                1
@@ -1597,41 +1930,41 @@ public class TreeDemo {
             / \   \
            4   5   6
                    /\
-                  7  8  
-                  
+                  7  8
+
        PreOrder should be: 1        2 4 5   3 6 7 8
-                           root     Left    right  
+                           root     Left    right
        InOrder should be:  4 2 5    1       3 7 6 8
                            Left     root    right
-     */                     
-    public static TreeNode rebuildBinaryTreeRec(List<Integer> preOrder, 
-                                                List<Integer> inOrder) 
+     */
+    public static TreeNode rebuildBinaryTreeRec(List<Integer> preOrder,
+                                                List<Integer> inOrder)
     {
         /* Null yeah */
         if (preOrder == null || inOrder == null) {
             return null;
         }
-        
+
         /* Size matters */
         if (preOrder.size() == 0 || inOrder.size() == 0) {
             return null;
         }
-        
+
         /* Create the root from the preorder list (first of the list) */
         TreeNode root = new TreeNode(preOrder.get(0));
-        
+
         List<Integer> preOrderLeft;
         List<Integer> preOrderRight;
         List<Integer> inOrderLeft;
         List<Integer> inOrderRight;
-        
+
         /* Get the root index in the inorder list */
         int rootInIndex = inOrder.indexOf(preOrder.get(0));
 
         /* LIST.sublist(a,b) behaves like String.substring(a,b) */
         preOrderLeft = preOrder.subList(1, rootInIndex + 1);
         preOrderRight = preOrder.subList(rootInIndex + 1, preOrder.size());
-        
+
         /* Get the 'left' and 'right' side of the tree */
         inOrderLeft = inOrder.subList(0, rootInIndex);
         inOrderRight = inOrder.subList(rootInIndex + 1, inOrder.size());
@@ -1639,8 +1972,8 @@ public class TreeDemo {
         /* Recursively build the tree by connecting to the right children */
         root.left = rebuildBinaryTreeRec(preOrderLeft, inOrderLeft);
         root.right = rebuildBinaryTreeRec(preOrderRight, inOrderRight);
-        
-        return root;        
+
+        return root;
     }
 
 ///////////////////////////////
@@ -1664,17 +1997,17 @@ public class TreeDemo {
         if (root == null) {
             return false;
         }
-        
+
         TreeNode dummyNode = new TreeNode(0);
         ArrayDeque<TreeNode> q = new ArrayDeque<TreeNode>();
-        
+
         q.offer(root);
         /* For separating the level; We can also use a loop to separate nodes */
         q.offer(dummyNode);
-        
+
         /* If this flag is true, no node should have any children. */
         boolean noChild = false;
-        
+
         while (!q.isEmpty()) {
             TreeNode cur = q.poll();
             if (cur == dummyNode) {
@@ -1684,9 +2017,9 @@ public class TreeDemo {
                 /* We do not need to process the dummy node. */
                 continue;
             }
-            
+
             if (cur.left != null) {
-                /* 
+                /*
                     Flag the node child again and there should be no children
                     for those nodes in the queue
                 */
@@ -1695,14 +2028,14 @@ public class TreeDemo {
                 }
                 q.offer(cur.left);
             } else {
-                /* 
+                /*
                     If the one of the nodes does not have the left or right
                     children, the rest of the nodes after that node should not
                     have any children. And this node can't have the right child
                 */
                 noChild = true;
             }
-            
+
             /* Same for the right side */
             if (cur.right != null) {
                 if (noChild) {
@@ -1713,7 +2046,7 @@ public class TreeDemo {
                 noChild = true;
             }
         }
-        
+
         return true;
     }
 
@@ -1774,7 +2107,7 @@ public class TreeDemo {
         boolean isCompleteBT;
         boolean isPerfectBT;
         int height;
-        
+
         ReturnBinaryTree(boolean isCompleteBT, boolean isPerfectBT, int height) {
             this.isCompleteBT = isCompleteBT;
             this.isPerfectBT = isPerfectBT;
@@ -1793,26 +2126,26 @@ public class TreeDemo {
         /* Divide */
         ReturnBinaryTree left = isCompleteBinaryTreeRecHelp(root.left);
         ReturnBinaryTree right = isCompleteBinaryTreeRecHelp(root.right);
-        
+
         /* Height */
         result.height = 1 + Math.max(left.height, right.height);
-        
+
         /* set the result isPerfectBT */
         result.isPerfectBT = false;
 
         /* Perfect */
-        if (left.isPerfectBT && 
-            right.isPerfectBT && 
-            left.height == right.height) {
+        if (left.isPerfectBT &&
+                right.isPerfectBT &&
+                left.height == right.height) {
 
             result.isPerfectBT = true;
         }
-        
+
         /* Complete -- the 3 conditions */
-        result.isCompleteBT = result.isPerfectBT 
+        result.isCompleteBT = result.isPerfectBT
                 || (left.isCompleteBT && right.isPerfectBT && left.height == right.height + 1)
                 || (left.isPerfectBT && right.isCompleteBT && left.height == right.height);
-        
+
         return result;
     }
 
@@ -1824,7 +2157,7 @@ public class TreeDemo {
     // 1) findLongest //
     ////////////////////
 
-    /* 
+    /*
         Count to the far left and count to the far right;
         Count the left child's Longest and right child's Longest;
         Find the max of them
@@ -1833,30 +2166,30 @@ public class TreeDemo {
         if (root == null) {
             return -1;
         }
-        
+
         TreeNode l = root;
         int cntL = 0;
         while (l.left != null) {
             cntL++;
             l = l.left;
         }
-        
+
         TreeNode r = root;
         int cntR = 0;
         while (r.right != null) {
             cntR++;
             r = r.right;
         }
-        
+
         int lmax = findLongest(root.left);
         int rmax = findLongest(root.right);
-        
+
         int max = Math.max(lmax, rmax);
         max = Math.max(max, cntR);
         max = Math.max(max, cntL);
-        
+
         return max;
     }
-    
-} 
+
+}
 
