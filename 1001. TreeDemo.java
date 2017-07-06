@@ -84,6 +84,11 @@ import java.util.*;
  * 17. Construct a string from BST
  *     1) tree2strRec
  *     2) tree2str
+ *
+ * 18. Minimum absolute difference between any nodes
+ *     1) getMinimumDifference
+ *     2) getMinimumDifferenceArrayList
+ *     3) getMinimumDifferenceTreeSet
  */
 
 public class TreeDemo {
@@ -622,6 +627,24 @@ public class TreeDemo {
 //        System.out.println();
 //        System.out.println("The string which is constructed by Tree 2: ");
 //        System.out.println(tree2str(r100));
+//        /* 18.1 Tree2 We can't test Tree1 since it's not a BST */
+//        System.out.println("********************* 18.1 *********************");
+//        System.out.print("The min abs distance between any nodes in Tree2: ");
+//        System.out.println(getMinimumDifference(r100));
+//        /* 18.2 */
+//        System.out.println("********************* 18.2 *********************");
+//        System.out.print("The min abs distance between any nodes in Tree1: ");
+//        System.out.println(getMinimumDifferenceArrayList(r1));
+//        System.out.print("The min abs distance between any nodes in Tree2: ");
+//        System.out.println(getMinimumDifferenceArrayList(r100));
+//        /* 18.3 Tree1 */
+//        System.out.println("********************* 18.3 *********************");
+//        System.out.print("The min abs distance between any nodes in Tree1: ");
+//        System.out.println(getMinimumDifferenceTreeSet(r1));
+//        /* 18.3 Tree2 */
+//        System.out.print("The min abs distance between any nodes in Tree2: ");
+//        System.out.println(getMinimumDifferenceTreeSet(r100));
+
 
     }
 
@@ -2323,5 +2346,137 @@ public class TreeDemo {
     }
 
 
+///////////////////////////////////////////////////////
+// 18. Minimum absolute difference between any nodes //
+///////////////////////////////////////////////////////
+
+
+
+    /////////////////////////////
+    // 1) getMinimumDifference //
+    /////////////////////////////
+
+    /*
+        The most common idea is to first inOrder traverse the tree and compare
+        the delta between each of the adjacent values. It's guaranteed to have
+        the correct answer because it is a BST thus inOrder traversal values are
+        sorted.
+     */
+
+    /* In-Order traverse, time O(N), space complexity O(1). */
+    public static int min1 = Integer.MAX_VALUE;
+    public static Integer prev = null;
+
+    public static int getMinimumDifference(TreeNode root) {
+    /* Base */
+        if (root == null) {
+            return min1;
+        }
+
+    /* Go far left */
+        getMinimumDifference(root.left);
+
+    /* Not leaf */
+        if (prev != null) {
+            min1 = Math.min(min1, root.val - prev);
+        }
+    /* Record the lastNode*/
+        prev = root.val;
+
+    /* After dealing with left, go right */
+        getMinimumDifference(root.right);
+
+        return min1;
+    }
+
+    //////////////////////////////////////
+    // 2) getMinimumDifferenceArrayList //
+    //////////////////////////////////////
+
+    /*
+        1. Get the list of the nodes value and sort it.
+        2. Get the abs by pairs and update the min.
+        3. Run time is n • log(n) since we used a sorting method.
+     */
+    public static int getMinimumDifferenceArrayList(TreeNode root) {
+        ArrayList<Integer> nodeList = getTheList(root);
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < nodeList.size(); i++) {
+            int temp = Math.abs(nodeList.get(i - 1) - nodeList.get(i));
+            if (temp < min) {
+                min = temp;
+            }
+        }
+        return min;
+    }
+    /* There arr at least two nodes so skip the checking */
+    private static ArrayList<Integer> getTheList(TreeNode root) {
+        ArrayList<Integer> nodeList = new ArrayList<>();
+    /* Preorder traversal */
+        ArrayDeque<TreeNode> s = new ArrayDeque<>();
+        s.push(root);
+        while (!s.isEmpty()) {
+            TreeNode node = s.pop();
+            nodeList.add(node.val);
+            if (node.right != null) {
+                s.push(node.right);
+            }
+            if (node.left != null) {
+                s.push(node.left);
+            }
+        }
+        Collections.sort(nodeList);
+        return nodeList;
+    }
+
+
+    ////////////////////////////////////
+    // 3) getMinimumDifferenceTreeSet //
+    ////////////////////////////////////
+
+    /*
+        The idea is to put values in a TreeSet and then every time we can use O(lgN)
+        time to lookup for the nearest values.
+     */
+
+    /* Preorder traverse, time O(NlgN), space O(N).*/
+    private static TreeSet<Integer> set = new TreeSet<>();
+    private static int min3 = Integer.MAX_VALUE;
+
+    public static int getMinimumDifferenceTreeSet(TreeNode root) {
+        if (root == null) {
+            return min3;
+        }
+    /*
+        The floor(E e) method is used to return the greatest element in this
+        set less than or equal to the given e, or null if there is no such
+        element.
+     */
+
+    /*
+        The ceiling(E e) method is used to return the least element in this
+        set greater than or equal to the given element, or null if there is
+        no such element.
+     */
+        if (!set.isEmpty()) {
+        /* The value is the closest among all the number that is <= root */
+            if (set.floor(root.val) != null) {
+                min3 = Math.min(min3, root.val - set.floor(root.val));
+            }
+        /* The value is the closest among all the number that is >= root */
+            if (set.ceiling(root.val) != null) {
+                min3 = Math.min(min3, set.ceiling(root.val) - root.val);
+            }
+        }
+
+        set.add(root.val);
+
+        getMinimumDifferenceTreeSet(root.left);
+        getMinimumDifferenceTreeSet(root.right);
+
+        return min3;
+    }
+
+    
 }
 
