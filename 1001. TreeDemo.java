@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayDeque;
+import java.util.*;
 
 
 /**
@@ -84,6 +81,9 @@ import java.util.ArrayDeque;
  * 16. Merge two BT
  *     1) mergeTreesRec (LeetCode 617)
  *
+ * 17. Construct a string from BST
+ *     1) tree2strRec
+ *     2) tree2str
  */
 
 public class TreeDemo {
@@ -596,6 +596,32 @@ public class TreeDemo {
 //        System.out.println(levelOrderBFS(r1));
 //        System.out.println("Merging Tree 1 and Tree 1: ");
 //        System.out.println(levelOrderBFS(mergeTrees(r1, r1)));
+//        /* 17.1 */
+//        System.out.println("********************* 17.1 *********************");
+//        System.out.println("The original Tree 1: ");
+//        preorderTraversal(r1);
+//        System.out.println();
+//        System.out.println("The string which is constructed by Tree 1: ");
+//        System.out.println(tree2strRec(r1));
+//        System.out.println();
+//        System.out.println("The original Tree 2: ");
+//        preorderTraversal(r100);
+//        System.out.println();
+//        System.out.println("The string which is constructed by Tree 2: ");
+//        System.out.println(tree2strRec(r100));
+//        /* 17.2 */
+//        System.out.println("********************* 17.2 *********************");
+//        System.out.println("The original Tree 1: ");
+//        preorderTraversal(r1);
+//        System.out.println();
+//        System.out.println("The string which is constructed by Tree 1: ");
+//        System.out.println(tree2str(r1));
+//        System.out.println();
+//        System.out.println("The original Tree 2: ");
+//        preorderTraversal(r100);
+//        System.out.println();
+//        System.out.println("The string which is constructed by Tree 2: ");
+//        System.out.println(tree2str(r100));
 
     }
 
@@ -2233,6 +2259,69 @@ public class TreeDemo {
         newRoot.right = right;
         return newRoot;
     }
+
+/////////////////////////////////////
+// 17. Construct a string from BST //
+/////////////////////////////////////
+
+    ////////////////////
+    // 1) tree2strRec //
+    ////////////////////
+
+    public static String tree2strRec(TreeNode t) {
+        if(t == null)
+            return "";
+        // 1
+        if(t.left == null && t.right == null)
+            return t.val + "";
+        //    1
+        //   /
+        //  2
+        if(t.right == null)
+            return t.val + "(" + tree2strRec(t.left) + ")";
+        //  1          1
+        //   \   or   / \
+        //    2      2   3
+        return t.val + "(" + tree2strRec(t.left) + ")(" + tree2strRec(t.right) + ")";
+    }
+
+    /////////////////
+    // 2) tree2str //
+    /////////////////
+
+    public static String tree2str(TreeNode t) {
+        if (t == null)
+            return "";
+
+        /* For traversal */
+        ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+        stack.push(t);
+        /* Mark the visited node */
+        Set<TreeNode> visited = new HashSet<>();
+        String s = "";
+        while (!stack.isEmpty()) {
+            t = stack.peek();
+            if (visited.contains(t)) {
+                stack.pop();
+                s += ")";
+            } else {
+                /* Solve the problem */
+                visited.add(t);
+                s += "(" + t.val;
+                if (t.left == null && t.right != null)
+                    s += "()";
+
+                /* Preorder traversal part */
+                if (t.right != null)
+                    stack.push(t.right);
+                if (t.left != null)
+                    stack.push(t.left);
+            }
+        }
+        /* Cut the unnecessary part */
+        return s.substring(1, s.length() - 1);
+    }
+
 
 }
 

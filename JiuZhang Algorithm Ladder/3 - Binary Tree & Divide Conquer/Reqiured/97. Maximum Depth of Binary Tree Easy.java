@@ -16,6 +16,7 @@
     The maximum depth is 3.
  */
 
+/* Same as LintCode 97.*/
 
 /////////////////////////
 // Solution 0 Traverse //
