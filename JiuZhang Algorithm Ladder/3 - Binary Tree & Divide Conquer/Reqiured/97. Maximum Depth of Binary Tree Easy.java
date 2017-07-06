@@ -1,5 +1,7 @@
 /**
  * Given a binary tree, find its maximum depth.
+ * -- LintCode 97
+ * -- LeetCode 104
  */
 
 /*
