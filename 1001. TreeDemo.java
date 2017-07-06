@@ -81,6 +81,9 @@ import java.util.ArrayDeque;
  * 15. Longest Path (root to leaf)
  *     1) findLongest
  *
+ * 16. Merge two BT
+ *     1) mergeTreesRec (LeetCode 617)
+ *
  */
 
 public class TreeDemo {
@@ -587,6 +590,12 @@ public class TreeDemo {
 //        System.out.println(findLongest(r1));
 //        System.out.print("The longest path from root to leaf for Tree2 is: ");
 //        System.out.println(findLongest(r100));
+//        /* 16.1 */
+//        System.out.println("********************* 16.1 *********************");
+//        System.out.println("The original Tree 1: ");
+//        System.out.println(levelOrderBFS(r1));
+//        System.out.println("Merging Tree 1 and Tree 1: ");
+//        System.out.println(levelOrderBFS(mergeTrees(r1, r1)));
 
     }
 
@@ -2189,6 +2198,40 @@ public class TreeDemo {
         max = Math.max(max, cntL);
 
         return max;
+    }
+
+//////////////////////
+// 16. Merge two BT //
+//////////////////////
+
+    //////////////////////
+    // 1) mergeTreesRec //
+    //////////////////////
+
+    /*
+        The merge rule is that if two nodes overlap, then sum node values up as
+        the new value of the merged node.
+     */
+
+    public static TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) {
+            return null;
+        }
+
+        if (t1 == null) {
+            return t2;
+        }
+        if (t2 == null) {
+            return t1;
+        }
+
+        TreeNode left = mergeTrees(t1.left, t2.left);
+        TreeNode right = mergeTrees(t1.right, t2.right);
+
+        TreeNode newRoot = new TreeNode(t1.val + t2.val);
+        newRoot.left  = left;
+        newRoot.right = right;
+        return newRoot;
     }
 
 }

@@ -1,6 +1,8 @@
 /*
     Your are given a binary tree in which each node contains a value. Design an
-    algorithm to get all paths which sum to a given value. The path does not need to start or end at the root or a leaf, but it must go in a straight line down.
+    algorithm to get all paths which sum to a given value. The path does not  
+    need to start or end at the root or a leaf, but it must go in a straight  
+    line down.
  */
 
 /*
@@ -51,7 +53,11 @@ public class Solution {
         return results;
     }
 
-    public void findSum(TreeNode head, int sum, ArrayList<Integer> buffer, int level, List<List<Integer>> results) {
+    public void findSum(TreeNode head, int sum, 
+                        ArrayList<Integer> buffer, 
+                        int level, 
+                        List<List<Integer>> results) {
+        
         if (head == null) return;
         int tmp = sum;
         buffer.add(head.val);
