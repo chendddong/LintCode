@@ -89,8 +89,13 @@ import java.util.*;
  *     1) getMinimumDifference
  *     2) getMinimumDifferenceArrayList
  *     3) getMinimumDifferenceTreeSet
+ *
  * 19. The tilt of a tree (LeetCode 563)
  *     1) findTilt
+ *
+ * 20. Convert BST to Greater Tree (LeetCode 538, LintCode 661)
+ *     1). convertBST
+ *     2). convertBSTRec
  */
 
 public class TreeDemo {
@@ -655,6 +660,19 @@ public class TreeDemo {
 //        System.out.print("The tilt of Tree 2 is: ");
 //        System.out.println(findTilt(r100));
 //        System.out.println("Expected Number is: " + (30 + 110 + 290 - 130));
+//       /* 20.1, 20.2 */
+//        System.out.println("********************* 20.1 *********************");
+//        System.out.println("The original Tree 2 is: ");
+//        inorderTraversal(r100);
+//        System.out.println();
+//        System.out.println("The Greater Tree of Tree 2 is: ");
+//        inorderTraversal(convertBST(r100));
+//        System.out.println("********************* 20.2 *********************");
+//        System.out.println("The Greater tree of Tree 2 is: ");
+//        inorderTraversal(r100);
+//        System.out.println();
+//        System.out.println("The Greater Greater Tree of Tree 2 is: ");
+//        inorderTraversal(convertBSTRec(r100));
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -712,7 +730,6 @@ public class TreeDemo {
 //////////////////////
 // 2. Get the depth //
 //////////////////////
-
 
 
     /*
@@ -2514,6 +2531,74 @@ public class TreeDemo {
         return left + right + root.val;
     }
 
+/////////////////////////////////////
+// 20. Convert BST to Greater Tree //
+/////////////////////////////////////
+
+    ////////////////////
+    // 1). convertBST //
+    ////////////////////
+
+    /* Funky order traversal */
+    private static int sum20_1 = 0;
+    public static TreeNode convertBST(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        ArrayDeque<TreeNode> s = new ArrayDeque<>();
+        TreeNode cur = root;
+
+        while (cur != null || !s.isEmpty()) {
+            while (cur != null) {
+                s.push(cur);
+                cur = cur.right;
+            }
+
+            cur = s.peek();
+            s.pop();
+
+            /* Solve the problem */
+
+            if (sum20_1 == 0) {
+                sum20_1 = cur.val;
+            } else {
+                cur.val += sum20_1;
+                sum20_1 = cur.val;
+            }
+            cur = cur.left;
+        }
+
+        return root;
+    }
+
+    ///////////////////////
+    // 2). convertBSTRec //
+    ///////////////////////
+
+    /* Recursive Helper */
+    private static int sum20_2 = 0;
+    public static TreeNode convertBSTRec(TreeNode root) {
+        convertBSTHelper(root);
+        return root;
+    }
+    private static void convertBSTHelper(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        /* Right */
+        if (root.right != null) {
+            convertBSTHelper(root.right);
+        }
+        /* Root */
+        root.val = (sum20_2 += root.val);
+
+        /* Left */
+        if (root.left != null) {
+            convertBSTHelper(root.left);
+        }
+
+    }
 
 
 
