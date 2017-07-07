@@ -89,6 +89,8 @@ import java.util.*;
  *     1) getMinimumDifference
  *     2) getMinimumDifferenceArrayList
  *     3) getMinimumDifferenceTreeSet
+ * 19. The tilt of a tree (LeetCode 563)
+ *     1) findTilt
  */
 
 public class TreeDemo {
@@ -151,7 +153,7 @@ public class TreeDemo {
                    40     180
                  /  \     /
                 30   60  110
-
+                30 + 110 + 290 - 130
              where r100 is the root
          */
 ////////////////////////////////////////////////////////////////////////////////
@@ -644,8 +646,15 @@ public class TreeDemo {
 //        /* 18.3 Tree2 */
 //        System.out.print("The min abs distance between any nodes in Tree2: ");
 //        System.out.println(getMinimumDifferenceTreeSet(r100));
-
-
+//        /* 19.1 Tree 1 */
+//        System.out.println("********************* 19.1 *********************");
+//        System.out.print("The tilt of Tree 1 is: ");
+//        System.out.println(findTilt(r1));
+//        System.out.println("Expected Number is: " + (1 + 11 + 1 + 7 + 21 + 17));
+//        /* 19.1 Tree 2 */
+//        System.out.print("The tilt of Tree 2 is: ");
+//        System.out.println(findTilt(r100));
+//        System.out.println("Expected Number is: " + (30 + 110 + 290 - 130));
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2366,7 +2375,6 @@ public class TreeDemo {
     /* In-Order traverse, time O(N), space complexity O(1). */
     public static int min1 = Integer.MAX_VALUE;
     public static Integer prev = null;
-
     public static int getMinimumDifference(TreeNode root) {
     /* Base */
         if (root == null) {
@@ -2442,7 +2450,6 @@ public class TreeDemo {
     /* Preorder traverse, time O(NlgN), space O(N).*/
     private static TreeSet<Integer> set = new TreeSet<>();
     private static int min3 = Integer.MAX_VALUE;
-
     public static int getMinimumDifferenceTreeSet(TreeNode root) {
         if (root == null) {
             return min3;
@@ -2477,6 +2484,38 @@ public class TreeDemo {
         return min3;
     }
 
-    
+////////////////////////////
+// 19. The tilt of a tree //
+////////////////////////////
+
+    /////////////////
+    // 1) findTilt //
+    /////////////////
+
+    private static int tiltSum = 0;
+    public static int findTilt(TreeNode root) {
+        findTilthelper(root);
+        return tiltSum;
+    }
+    //    1
+    //  /   \
+    // 2     3
+    //  \     \
+    //   4     5
+    private static int findTilthelper(TreeNode root) {
+        if (root == null) return 0;
+
+        int left = findTilthelper(root.left);
+        int right = findTilthelper(root.right);
+
+        /* Update the tilt for that certain root */
+        tiltSum += Math.abs(left - right);
+
+        return left + right + root.val;
+    }
+
+
+
+
 }
 
