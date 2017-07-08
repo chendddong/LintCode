@@ -40,7 +40,7 @@ import java.util.*;
  *     3) getNodeNumLeafPreorder
  *     4) getNodeNumLeafPostorder
  *
- * 8. Are those BT the same (LeetCode 100, LintCode 469)
+ * 8. Are those BT the same
  *     1) isSameRec
  *     2) isSameInorder
  *     3) isSamePreorder
@@ -97,10 +97,13 @@ import java.util.*;
  *     1) convertBST
  *     2) convertBSTRec
  *
- * 21. Sum of all LEFT leaves
+ * 21. Sum of all LEFT leaves (LeetCode 404)
  *     1) sumOfLeftLeavesRecVoid
  *     2) sumOfLeftLeavesRec
  *     3) sumOfLeftLeavesBFS
+ *
+ * 22. Convert Sorted Array to BST (108)
+ *     1) sortedArrayToBST
  */
 
 public class TreeDemo {
@@ -198,6 +201,7 @@ public class TreeDemo {
         preOrder.add(7);
         preOrder.add(8);
 
+        /* Make lists for 13. rebuildBinaryTreeRec */
         List<Integer> inOrder = new ArrayList<>();
         inOrder.add(9);
         inOrder.add(4);
@@ -210,6 +214,14 @@ public class TreeDemo {
         inOrder.add(7);
         inOrder.add(6);
         inOrder.add(8);
+
+        /* Make lists for 22. sortedArrayToBST */
+        int[] sortedArray = new int[11];
+        for (int i = 0; i < sortedArray.length; i++) {
+            sortedArray[i] = i + 1;
+        }
+//        /* Test for the inorderArray */
+//        System.out.print(Arrays.toString(sortedArray));
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -698,6 +710,12 @@ public class TreeDemo {
 //        System.out.println(sumOfLeftLeavesBFS(r1));
 //        System.out.print("All the sum of Tree2's LEFT leaves is: ");
 //        System.out.println(sumOfLeftLeavesBFS(r100));
+//        /* 22.1 */
+//        System.out.println("********************* 22.1 *********************");
+//        System.out.println("The converted BST by 'sortedArray' is : ");
+//        System.out.println(levelOrderBFS(sortedArrayToBST(sortedArray)));
+//        System.out.println("Test the inorder traversal for the new BST:  ");
+//        inorderTraversal(sortedArrayToBST(sortedArray));
 
 
     }
@@ -2730,6 +2748,44 @@ public class TreeDemo {
         }
 
         return sumLeft;
+    }
+
+
+/////////////////////////////////////
+// 22. Convert Sorted Array to BST //
+/////////////////////////////////////
+
+    /////////////////////////
+    // 1) sortedArrayToBST //
+    /////////////////////////
+
+    /* We can use 'binary divide' which I just gave a name to */
+    public static TreeNode sortedArrayToBST(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return null;
+        }
+        TreeNode root = sortedArrayToBSTHelper(nums, 0, nums.length - 1);
+        return root;
+    }
+    private static TreeNode sortedArrayToBSTHelper(int[] nums, int start, int
+            end) {
+        if (start > end) {
+            return null;
+        }
+
+        /* start, end are not necessary but would be useful in other problem */
+        int left = start;
+        int right = end;
+
+        /* Create the node */
+        int mid = (left + right) / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+
+        /* Divide (Remember to use mid - 1 and mid + 1 since no duplicates) */
+        node.left = sortedArrayToBSTHelper(nums, start, mid - 1);
+        node.right = sortedArrayToBSTHelper(nums, mid + 1, end);
+
+        return node;
     }
 
 
