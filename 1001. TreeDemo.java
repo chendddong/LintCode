@@ -25,7 +25,8 @@ import java.util.*;
  *     1) levelTraversal
  *     2) levelTraversalRec
  *     3) levelOrderBFS
- *     refer to LintCode 69 for more solutions
+ *         -- LeetCode 102, 107 
+ *         -- LintCode 69, 70
  *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
