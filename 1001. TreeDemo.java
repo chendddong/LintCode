@@ -102,8 +102,11 @@ import java.util.*;
  *     2) sumOfLeftLeavesRec
  *     3) sumOfLeftLeavesBFS
  *
- * 22. Convert Sorted Array to BST (108)
+ * 22. Convert Sorted Array to BST (LeetCode 108, LintCode 177)
  *     1) sortedArrayToBST
+ *
+ * 23. Tree 1 is subtree of Tree2 (LeetCode 572, LintCode 245)
+ *     1) isSubtree
  */
 
 public class TreeDemo {
@@ -716,6 +719,20 @@ public class TreeDemo {
 //        System.out.println(levelOrderBFS(sortedArrayToBST(sortedArray)));
 //        System.out.println("Test the inorder traversal for the new BST:  ");
 //        inorderTraversal(sortedArrayToBST(sortedArray));
+//        /* 23.1 */
+//        System.out.println("********************* 23.1 *********************");
+//        System.out.print("r1 is the subtree of r1 : ");
+//        System.out.println(isSubtree(r1, r1));
+//        System.out.print("r5 is the subtree of r1 : ");
+//        System.out.println(isSubtree(r1, r5));
+//        System.out.print("r1 is the subtree of r5 : ");
+//        System.out.println(isSubtree(r5, r1));
+//        System.out.print("r1 is the subtree of r100 : ");
+//        System.out.println(isSubtree(r1, r100));
+//        System.out.print("r110 is the subtree of r100 : ");
+//        System.out.println(isSubtree(r100, r110));
+
+
 
 
     }
@@ -2787,6 +2804,40 @@ public class TreeDemo {
 
         return node;
     }
+
+
+////////////////////////////////////
+// 23. Tree 1 is subtree of Tree2 //
+////////////////////////////////////
+
+    //////////////////
+    // 1) isSubtree //
+    //////////////////
+
+    /* Use Recursion */
+    public static boolean isSubtree(TreeNode s, TreeNode t) {
+        /* Edge cases */
+        if (s == null) {
+            return false;
+        }
+        if (t == null) {
+            return true;
+        }
+
+        return helper(s, t);
+    }
+    /* Recursively traverse node s */
+    private static boolean helper(TreeNode s, TreeNode t) {
+        if (s == null) {
+            return false;
+        }
+        /* TreeDemo 10*/
+        return isSameRec(s, t) || helper(s.left, t) || helper(s.right, t);
+
+    }
+
+
+
 
 
 
