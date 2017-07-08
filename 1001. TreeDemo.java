@@ -94,8 +94,13 @@ import java.util.*;
  *     1) findTilt
  *
  * 20. Convert BST to Greater Tree (LeetCode 538, LintCode 661)
- *     1). convertBST
- *     2). convertBSTRec
+ *     1) convertBST
+ *     2) convertBSTRec
+ *
+ * 21. Sum of all LEFT leaves
+ *     1) sumOfLeftLeavesRecVoid
+ *     2) sumOfLeftLeavesRec
+ *     3) sumOfLeftLeavesBFS
  */
 
 public class TreeDemo {
@@ -158,7 +163,7 @@ public class TreeDemo {
                    40     180
                  /  \     /
                 30   60  110
-                30 + 110 + 290 - 130
+
              where r100 is the root
          */
 ////////////////////////////////////////////////////////////////////////////////
@@ -660,7 +665,7 @@ public class TreeDemo {
 //        System.out.print("The tilt of Tree 2 is: ");
 //        System.out.println(findTilt(r100));
 //        System.out.println("Expected Number is: " + (30 + 110 + 290 - 130));
-//       /* 20.1, 20.2 */
+//        /* 20.1, 20.2 */
 //        System.out.println("********************* 20.1 *********************");
 //        System.out.println("The original Tree 2 is: ");
 //        inorderTraversal(r100);
@@ -673,6 +678,28 @@ public class TreeDemo {
 //        System.out.println();
 //        System.out.println("The Greater Greater Tree of Tree 2 is: ");
 //        inorderTraversal(convertBSTRec(r100));
+//        /* 21.1 */
+//        System.out.println("********************* 21.1 *********************");
+//        /* 21.1 Tree 1 */
+//        System.out.print("All the sum of Tree1's LEFT leaves is: ");
+//        System.out.println(sumOfLeftLeavesRecVoid(r1));
+//        /* 21.1 Tree 2 */
+//        System.out.print("All the sum of Tree2's LEFT leaves is: ");
+//        System.out.println(sumOfLeftLeavesRecVoid(r100));
+//        /* 21.2 */
+//        System.out.println("********************* 21.2 *********************");
+//        System.out.print("All the sum of Tree1's LEFT leaves is: ");
+//        System.out.println(sumOfLeftLeavesRec(r1));
+//        System.out.print("All the sum of Tree2's LEFT leaves is: ");
+//        System.out.println(sumOfLeftLeavesRec(r100));
+//        /* 21.3 */
+//        System.out.println("********************* 21.3 *********************");
+//        System.out.print("All the sum of Tree1's LEFT leaves is: ");
+//        System.out.println(sumOfLeftLeavesBFS(r1));
+//        System.out.print("All the sum of Tree2's LEFT leaves is: ");
+//        System.out.println(sumOfLeftLeavesBFS(r100));
+
+
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1032,8 +1059,8 @@ public class TreeDemo {
         System.out.println(ret);
     }
     private static void levelTraversalVisit(TreeNode root,
-                                           int level,
-                                           ArrayList<ArrayList<Integer>> ret) {
+                                            int level,
+                                            ArrayList<ArrayList<Integer>> ret) {
 
         if (root == null) {
             return;
@@ -2599,6 +2626,113 @@ public class TreeDemo {
         }
 
     }
+
+////////////////////////////////
+// 21. Sum of all LEFT leaves //
+////////////////////////////////
+
+    ///////////////////////////////
+    // 1) sumOfLeftLeavesRecVoid //
+    ///////////////////////////////
+
+    /* Using a variable to control if it's leaf */
+    private static int leftSum1 = 0;
+    private static int level1 = 0;  /* Make sure it's leaf */
+    public static int sumOfLeftLeavesRecVoid(TreeNode root) {
+        sumOfLeftLeavesRecVoidHelper(root);
+        return leftSum1;
+    }
+    public static void sumOfLeftLeavesRecVoidHelper(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        if (root.left == null && root.right == null && level1 != 0) {
+            leftSum1 += root.val;
+            return;
+        }
+
+        if (root.left != null) {
+            level1++;
+            sumOfLeftLeavesRecVoidHelper(root.left);
+        }
+
+        level1 = 0;
+        if (root.right != null) {
+            sumOfLeftLeavesRecVoidHelper(root.right);
+        }
+
+    }
+
+    ///////////////////////////
+    // 2) sumOfLeftLeavesRec //
+    ///////////////////////////
+
+    /*
+        For given node we check whether its left child is a leaf. If it is the
+        case, we add its value to answer, otherwise recursively call method on
+        left child. For right child we call method only if it has at least one
+        non-null child.
+     */
+    public static int sumOfLeftLeavesRec(TreeNode root) {
+        if(root == null) return 0;
+
+        int leftSum = 0;
+
+        /* Core part */
+        if(root.left != null) {
+            if(root.left.left == null && root.left.right == null) {
+                leftSum += root.left.val;
+            } else {
+                leftSum += sumOfLeftLeavesRec(root.left);
+            }
+        }
+
+        leftSum += sumOfLeftLeavesRec(root.right);
+        return leftSum;
+    }
+
+    ///////////////////////////
+    // 3) sumOfLeftLeavesBFS //
+    ///////////////////////////
+
+    /* Core part is the same as the second solution */
+    public static int sumOfLeftLeavesBFS(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        //   3
+        //  / \
+        // 9  20
+        //   /  \
+        //  15   7
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        TreeNode cur = root;
+        q.offer(cur);
+        int sumLeft = 0;
+
+        while (!q.isEmpty()) {
+            cur = q.poll();
+
+            /* Solve the problem */
+            if (cur.left != null) {
+                if (cur.left.left == null && cur.left.right == null) {
+                    sumLeft += cur.left.val;
+                }
+            }
+
+            if (cur.left != null) {
+                q.offer(cur.left);
+            }
+            if (cur.right != null) {
+                q.offer(cur.right);
+            }
+        }
+
+        return sumLeft;
+    }
+
+
 
 
 
