@@ -40,7 +40,7 @@ import java.util.*;
  *     3) getNodeNumLeafPreorder
  *     4) getNodeNumLeafPostorder
  *
- * 8. Are those BT the same
+ * 8. Are those BT the same (LeetCode 100, LintCode 469)
  *     1) isSameRec
  *     2) isSameInorder
  *     3) isSamePreorder

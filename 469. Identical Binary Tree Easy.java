@@ -1,6 +1,8 @@
 /**
  * Check if two binary trees are identical. Identical means the two binary tree 
  * shave the same structure and every identical position has the same value.
+ * -- LintCode 469
+ * -- LeetCode 100
  */
 
 /*
@@ -32,7 +34,7 @@
         all the same return true, else return false;
     */
 public class Solution {
-    public static boolean isSameRec(TreeNode r1, TreeNode r2) {
+    public static boolean isIdentical(TreeNode r1, TreeNode r2) {
         /* (1) */
         if (r1 == null && r2 == null) {
             return true;
@@ -45,7 +47,7 @@ public class Solution {
 
         /* (3) */
         return r1.val == r2.val && 
-                isSameRec(r1.left, r2.left) && isSameRec(r1.right, r2.right);
+                isIdentical(r1.left, r2.left) && isIdentical(r1.right, r2.right);
     }
 }
 
