@@ -25,7 +25,7 @@ import java.util.*;
  *     1) levelTraversal
  *     2) levelTraversalRec
  *     3) levelOrderBFS
- *         -- LeetCode 102, 107 
+ *         -- LeetCode 102, 107
  *         -- LintCode 69, 70
  *
  * 5. Convert BST to Doubly LinkedList
@@ -108,6 +108,12 @@ import java.util.*;
  *
  * 23. Tree 1 is subtree of Tree2 (LeetCode 572, LintCode 245)
  *     1) isSubtree
+ *
+ * 24. Path Sum
+ *     1) hasPathSum (root to leaf LeetCode 112)
+ *     2) binaryTreePathSumList (root to leaf)
+ *         -- LeetCode 113
+ *         -- LintCode 376
  */
 
 public class TreeDemo {
@@ -732,11 +738,44 @@ public class TreeDemo {
 //        System.out.println(isSubtree(r1, r100));
 //        System.out.print("r110 is the subtree of r100 : ");
 //        System.out.println(isSubtree(r100, r110));
+//        /* 24.1 */
+//        System.out.println("********************* 24.1 *********************");
+//        System.out.print("Tree 1 has a path sum of 17 : ");
+//        System.out.println(hasPathSum(r1, 17));
+//        System.out.print("Tree 1 has a path sum of 55 : ");
+//        System.out.println(hasPathSum(r1, 55));
+//        System.out.print("Tree 2 has a path sum of 200 : ");
+//        System.out.println(hasPathSum(r100, 200));
+//        System.out.print("Tree 2 has a path sum of  300 : ");
+//        System.out.println(hasPathSum(r100, 300));
+//        /* 24.2 */
+//        System.out.println("********************* 24.2 *********************");
+//        System.out.println("The Path Sum of Tree 1 equals 17 is : ");
+//        List<List<Integer>> result = binaryTreePathSumList(r1, 17);
+//        for (List list : result) {
+//            for (Object element : list) {
+//                System.out.print(element + " ");
+//            }
+//            System.out.println();
+//        }
+//        System.out.println("The Path Sum of Tree 2 equals 200 is : ");
+//        List<List<Integer>> result2 = binaryTreePathSumList(r100, 200);
+//        for (List list : result2) {
+//            for (Object element : list) {
+//                System.out.print(element + " ");
+//            }
+//            System.out.println();
+//        }
 
 
 
 
-    }
+
+
+
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1581,19 +1620,19 @@ public class TreeDemo {
         return true;
     }
 
-    ////////////////////////
-    // 2) isAVLResultType //
-    ////////////////////////
+////////////////////////
+// 2) isAVLResultType //
+////////////////////////
 
-    /* When we need to return more than just one element, use ResultType */
-    private static class ResultType9 {
-        boolean isBalanced;
-        int maxDepth;
-        public ResultType9(boolean isBalanced, int maxDepth) {
-            this.isBalanced = isBalanced;
-            this.maxDepth = maxDepth;
-        }
+/* When we need to return more than just one element, use ResultType */
+private static class ResultType9 {
+    boolean isBalanced;
+    int maxDepth;
+    public ResultType9(boolean isBalanced, int maxDepth) {
+        this.isBalanced = isBalanced;
+        this.maxDepth = maxDepth;
     }
+}
     public static boolean isAVLResultType(TreeNode root) {
         return helper(root).isBalanced;
     }
@@ -1995,44 +2034,44 @@ public class TreeDemo {
 // 12. Max distance between nodes //
 ////////////////////////////////////
 
-    //////////////////////////
-    // 1) getMaxDistanceRec //
-    //////////////////////////
+//////////////////////////
+// 1) getMaxDistanceRec //
+//////////////////////////
 
-    /*
-        What is the distance between two nodes: the edges between two nodes.
-        Example:
-                  1
-                 / \
-                2   3
-               / \   \
-              5  6    4
-        So the distance between 2 and 4 is 3 and the max distance for the tree
-        is the distance(the distance between far left node and far right node)
-        between 5 and 4 which is 4.
+/*
+    What is the distance between two nodes: the edges between two nodes.
+    Example:
+              1
+             / \
+            2   3
+           / \   \
+          5  6    4
+    So the distance between 2 and 4 is 3 and the max distance for the tree
+    is the distance(the distance between far left node and far right node)
+    between 5 and 4 which is 4.
 
-        We will use ResultType to keep track of:
-        1 -- the Depth of the node.
-        2 -- the maxDistance of the current branch.
+    We will use ResultType to keep track of:
+    1 -- the Depth of the node.
+    2 -- the maxDistance of the current branch.
 
-        Algorithm:
-        1 -- calculate the Depth of left and right side, respectively;
-             calculate the Distance of left and right side, respectively;
-        2 -- Max distance is the max between the three:
-            a. If it goes through the root, depth + 2
-            b. Left side distance
-            c. Right side distance
-        3 -- Base case of the recursion:
-            root == null, depth = -1, maxDistance = -1;
-     */
-    private static class ResultType12 {
-        int depth;
-        int maxDistance;
-        public ResultType12(int depth, int maxDistance) {
-            this.depth = depth;
-            this.maxDistance = maxDistance;
-        }
+    Algorithm:
+    1 -- calculate the Depth of left and right side, respectively;
+         calculate the Distance of left and right side, respectively;
+    2 -- Max distance is the max between the three:
+        a. If it goes through the root, depth + 2
+        b. Left side distance
+        c. Right side distance
+    3 -- Base case of the recursion:
+        root == null, depth = -1, maxDistance = -1;
+ */
+private static class ResultType12 {
+    int depth;
+    int maxDistance;
+    public ResultType12(int depth, int maxDistance) {
+        this.depth = depth;
+        this.maxDistance = maxDistance;
     }
+}
     public static int getMaxDistanceRec(TreeNode root) {
         return getMaxDistanceRecHelp(root).maxDistance;
     }
@@ -2237,30 +2276,30 @@ public class TreeDemo {
         return true;
     }
 
-    ////////////////////////////////
-    // 3) isCompleteBinaryTreeRec //
-    ////////////////////////////////
+////////////////////////////////
+// 3) isCompleteBinaryTreeRec //
+////////////////////////////////
 
-    /*
-        There are 3 conditions:
-        • Left branch and right branch are all Perfect with the same Height.
-        • Left branch is Complete; Right branch is Perfect; Height differs 1.
-        • Left branch is Perfect; Right branch is Complete; Same height.
+/*
+    There are 3 conditions:
+    • Left branch and right branch are all Perfect with the same Height.
+    • Left branch is Complete; Right branch is Perfect; Height differs 1.
+    • Left branch is Perfect; Right branch is Complete; Same height.
 
-        Base case:
-        root = null, both Perfect and Complete, Height = -1;
-     */
-    private static class ReturnBinaryTree {
-        boolean isCompleteBT;
-        boolean isPerfectBT;
-        int height;
+    Base case:
+    root = null, both Perfect and Complete, Height = -1;
+ */
+private static class ReturnBinaryTree {
+    boolean isCompleteBT;
+    boolean isPerfectBT;
+    int height;
 
-        ReturnBinaryTree(boolean isCompleteBT, boolean isPerfectBT, int height) {
-            this.isCompleteBT = isCompleteBT;
-            this.isPerfectBT = isPerfectBT;
-            this.height = height;
-        }
+    ReturnBinaryTree(boolean isCompleteBT, boolean isPerfectBT, int height) {
+        this.isCompleteBT = isCompleteBT;
+        this.isPerfectBT = isPerfectBT;
+        this.height = height;
     }
+}
     public static boolean isCompleteBinaryTreeRec(TreeNode root) {
         return isCompleteBinaryTreeRecHelp(root).isCompleteBT;
     }
@@ -2839,7 +2878,87 @@ public class TreeDemo {
 
 
 
+///////////////////
+//  24. Path Sum //
+///////////////////
 
+    //////////////////////////////////
+    // 1) hasPathSum (root to leaf) //
+    //////////////////////////////////
+
+    /*
+        The basic idea is to subtract the value of current node from sum until it reaches a leaf node and the subtraction equals 0, then we know that we got a hit. Otherwise the subtraction at the end could not be 0.
+     */
+    public static boolean hasPathSum(TreeNode root, int sum) {
+        /* Edge Case */
+        if (root == null) {
+            return false;
+        }
+
+        /* Only true situation */
+        int newSum = sum - root.val;
+        if (newSum == 0 && root.left == null && root.right == null) {
+            return true;
+        }
+
+        /* Go deeper */
+        boolean left  = hasPathSum(root.left, newSum);
+        boolean right = hasPathSum(root.right, newSum);
+
+        /* See if one of the two sides is true */
+        return left || right;
+
+    }
+
+    /////////////////////////////////////////////
+    // 2) binaryTreePathSumList (root to leaf) //
+    /////////////////////////////////////////////
+
+    /*
+     Since we need the total sum from root to leaf, it's could not be more
+     obvious that it's DFS
+    */
+    public static List<List<Integer>> binaryTreePathSumList(TreeNode root, int sum) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        List<Integer> path = new ArrayList<>();
+        path.add(root.val);
+
+        /* We need both single path the final result */
+        binaryTreePathSumListHelper(root, root.val, sum, path, result);
+        return result;
+    }
+    private static void binaryTreePathSumListHelper (TreeNode root,
+                                                     int sum,
+                                                     int target,
+                                                     List<Integer> path,
+                                                     List<List<Integer>> result) {
+
+        /* Base case; Down to the leaf node and solve the problem */
+        if (root.left == null && root.right == null) {
+            if (sum == target) {
+                result.add(new ArrayList<Integer>(path)); /* Deep copy */
+            }
+            return;
+        }
+
+        /* Go left */
+        if (root.left != null) {
+            path.add(root.left.val);
+            binaryTreePathSumListHelper(root.left, sum + root.left.val, target, path, result);
+            path.remove(path.size() - 1); /* Backtracking */
+        }
+
+        /* Go right (identical to the left side )*/
+        if (root.right != null) {
+            path.add(root.right.val);
+            binaryTreePathSumListHelper(root.right, sum + root.right.val, target, path, result);
+            path.remove(path.size() - 1); /* Backtracking */
+        }
+
+    }
 
 
 
