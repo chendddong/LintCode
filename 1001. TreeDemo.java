@@ -28,6 +28,10 @@ import java.util.*;
  *         -- LeetCode 102, 107
  *         -- LintCode 69, 70
  *
+ * 4.1 Average of Levels in Binary Tree
+ *     1) averageOfLevels
+ *         -- LeetCode 637
+ *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
  *
@@ -353,6 +357,11 @@ public class TreeDemo {
 //        System.out.print("The Level Order Traversal of Tree 2 is: ");
 //        System.out.println();
 //        System.out.println(levelOrderBFS(r100));
+//        /* 4.1.1 */
+//        System.out.println("Tree 1's level order traversal is: ");
+//        System.out.println(levelOrderBFS(r1));
+//        System.out.println("The average value of each level for tree 1 is: ");
+//        System.out.println(averageOfLevels(r1));
 //        /* 5.1 */
 //        System.out.println("********************** 5.1 **********************");
 //        System.out.println("Converting Tree 1 to DDL: ");
@@ -774,7 +783,9 @@ public class TreeDemo {
 
 
 
-}
+
+
+    }
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1188,6 +1199,50 @@ public class TreeDemo {
 
         }
 
+        return result;
+    }
+
+//////////////////////////////////////////
+// 4.1 Average of Levels in Binary Tree //
+//////////////////////////////////////////
+
+    ////////////////////////
+    // 1) averageOfLevels //
+    ////////////////////////
+
+    /* We can use DFS to traverse each level and use sum and size to get the avg.*/
+    public static List<Double> averageOfLevels(TreeNode root) {
+        List<Double> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            long sum = 0;
+            /* For a certain level */
+            for (int i = 0; i < size; i++) {
+                TreeNode node = q.poll();
+                sum += node.val;
+                if (node.left != null) {
+                    q.offer(node.left);
+                }
+                if (node.right != null) {
+                    q.offer(node.right);
+                }
+            }
+
+            /* Deal with the edge cases */
+            double avg = (double) sum / size;
+            if (avg > Integer.MAX_VALUE) {
+                result.add((double) Integer.MAX_VALUE);
+            } else {
+                result.add(avg);
+            }
+        }
         return result;
     }
 
@@ -1624,15 +1679,15 @@ public class TreeDemo {
 // 2) isAVLResultType //
 ////////////////////////
 
-/* When we need to return more than just one element, use ResultType */
-private static class ResultType9 {
-    boolean isBalanced;
-    int maxDepth;
-    public ResultType9(boolean isBalanced, int maxDepth) {
-        this.isBalanced = isBalanced;
-        this.maxDepth = maxDepth;
+    /* When we need to return more than just one element, use ResultType */
+    private static class ResultType9 {
+        boolean isBalanced;
+        int maxDepth;
+        public ResultType9(boolean isBalanced, int maxDepth) {
+            this.isBalanced = isBalanced;
+            this.maxDepth = maxDepth;
+        }
     }
-}
     public static boolean isAVLResultType(TreeNode root) {
         return helper(root).isBalanced;
     }
@@ -2038,40 +2093,40 @@ private static class ResultType9 {
 // 1) getMaxDistanceRec //
 //////////////////////////
 
-/*
-    What is the distance between two nodes: the edges between two nodes.
-    Example:
-              1
-             / \
-            2   3
-           / \   \
-          5  6    4
-    So the distance between 2 and 4 is 3 and the max distance for the tree
-    is the distance(the distance between far left node and far right node)
-    between 5 and 4 which is 4.
+    /*
+        What is the distance between two nodes: the edges between two nodes.
+        Example:
+                  1
+                 / \
+                2   3
+               / \   \
+              5  6    4
+        So the distance between 2 and 4 is 3 and the max distance for the tree
+        is the distance(the distance between far left node and far right node)
+        between 5 and 4 which is 4.
 
-    We will use ResultType to keep track of:
-    1 -- the Depth of the node.
-    2 -- the maxDistance of the current branch.
+        We will use ResultType to keep track of:
+        1 -- the Depth of the node.
+        2 -- the maxDistance of the current branch.
 
-    Algorithm:
-    1 -- calculate the Depth of left and right side, respectively;
-         calculate the Distance of left and right side, respectively;
-    2 -- Max distance is the max between the three:
-        a. If it goes through the root, depth + 2
-        b. Left side distance
-        c. Right side distance
-    3 -- Base case of the recursion:
-        root == null, depth = -1, maxDistance = -1;
- */
-private static class ResultType12 {
-    int depth;
-    int maxDistance;
-    public ResultType12(int depth, int maxDistance) {
-        this.depth = depth;
-        this.maxDistance = maxDistance;
+        Algorithm:
+        1 -- calculate the Depth of left and right side, respectively;
+             calculate the Distance of left and right side, respectively;
+        2 -- Max distance is the max between the three:
+            a. If it goes through the root, depth + 2
+            b. Left side distance
+            c. Right side distance
+        3 -- Base case of the recursion:
+            root == null, depth = -1, maxDistance = -1;
+     */
+    private static class ResultType12 {
+        int depth;
+        int maxDistance;
+        public ResultType12(int depth, int maxDistance) {
+            this.depth = depth;
+            this.maxDistance = maxDistance;
+        }
     }
-}
     public static int getMaxDistanceRec(TreeNode root) {
         return getMaxDistanceRecHelp(root).maxDistance;
     }
@@ -2280,26 +2335,26 @@ private static class ResultType12 {
 // 3) isCompleteBinaryTreeRec //
 ////////////////////////////////
 
-/*
-    There are 3 conditions:
-    • Left branch and right branch are all Perfect with the same Height.
-    • Left branch is Complete; Right branch is Perfect; Height differs 1.
-    • Left branch is Perfect; Right branch is Complete; Same height.
+    /*
+        There are 3 conditions:
+        • Left branch and right branch are all Perfect with the same Height.
+        • Left branch is Complete; Right branch is Perfect; Height differs 1.
+        • Left branch is Perfect; Right branch is Complete; Same height.
 
-    Base case:
-    root = null, both Perfect and Complete, Height = -1;
- */
-private static class ReturnBinaryTree {
-    boolean isCompleteBT;
-    boolean isPerfectBT;
-    int height;
+        Base case:
+        root = null, both Perfect and Complete, Height = -1;
+     */
+    private static class ReturnBinaryTree {
+        boolean isCompleteBT;
+        boolean isPerfectBT;
+        int height;
 
-    ReturnBinaryTree(boolean isCompleteBT, boolean isPerfectBT, int height) {
-        this.isCompleteBT = isCompleteBT;
-        this.isPerfectBT = isPerfectBT;
-        this.height = height;
+        ReturnBinaryTree(boolean isCompleteBT, boolean isPerfectBT, int height) {
+            this.isCompleteBT = isCompleteBT;
+            this.isPerfectBT = isPerfectBT;
+            this.height = height;
+        }
     }
-}
     public static boolean isCompleteBinaryTreeRec(TreeNode root) {
         return isCompleteBinaryTreeRecHelp(root).isCompleteBT;
     }
