@@ -3,12 +3,15 @@ import java.util.*;
 
 /**
  * MENU:
+ * 0. Get the max value node (LintCode 632)
+ *     1) maxNodeRec
+ *     2) maxNode
  *
- * 1. Get all the nodes number:
+ * 1. Get all the nodes number
  *     1) getNodeNumRec
  *     2) getNodeNum
  *
- * 2. Get the depth:
+ * 2. Get the depth
  *     1) getDepthRec
  *     2) getDepth
  *     3) getDepthTraverse (with global variable)
@@ -243,7 +246,18 @@ public class TreeDemo {
 ////////////////////////////////////////////////////////////////////////////////
 
         /* Test all the methods */
-
+//        /* 0.1 */
+//        System.out.println("********************* 0.1 *********************");
+//        System.out.print("The max value node of Tree 1 is node: ");
+//        System.out.println(maxNodeRec(r1).val);
+//        System.out.print("The max value node of Tree 2 is node: ");
+//        System.out.println(maxNodeRec(r100).val);
+//        /* 0.2 */
+//        System.out.println("********************* 0.2 *********************");
+//        System.out.print("The max value node of Tree 1 is node: ");
+//        System.out.println(maxNode(r1).val);
+//        System.out.print("The max value node of Tree 2 is node: ");
+//        System.out.println(maxNode(r100).val);
 //        /* 1.1 */
 //        System.out.println("********************** 1.1 **********************");
 //        System.out.print("The total number of nodes of Tree 1 is: ");
@@ -778,16 +792,12 @@ public class TreeDemo {
 //            }
 //            System.out.println();
 //        }
-
-
-        /* 24.3 */
-        System.out.print("The total number of paths for sum 16 for T1 is: ");
-        System.out.println(pathSumIII(r1, 16));
-        System.out.print("The total number of paths for sum 100 for T1 is: ");
-        System.out.println(pathSumIII(r100, 100));
-
-
-
+//        /* 24.3 */
+//        System.out.println("********************* 24.3 *********************");
+//        System.out.print("The total number of paths for sum 16 for T1 is: ");
+//        System.out.println(pathSumIII(r1, 16));
+//        System.out.print("The total number of paths for sum 100 for T1 is: ");
+//        System.out.println(pathSumIII(r100, 100));
 
 
 
@@ -797,6 +807,69 @@ public class TreeDemo {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////
+// 0. Get the max value node  //
+////////////////////////////////
+
+    ///////////////////
+    // 1) maxNodeRec //
+    ///////////////////
+
+    /* Two variables to store the temp results */
+    private static int maxValue = Integer.MIN_VALUE;
+    private static TreeNode maxNode = null;
+    public static TreeNode maxNodeRec(TreeNode root) {
+        maxNodeRecHelper(root);
+        return maxNode;
+    }
+
+    private static void maxNodeRecHelper(TreeNode root) {
+        /* Base */
+        if (root == null) {
+            return;
+        }
+        /* Update the result */
+        if (root.val > maxValue) {
+            maxNode = root;
+            maxValue = root.val;
+        }
+        maxNodeRecHelper(root.left);
+        maxNodeRecHelper(root.right);
+    }
+
+    ////////////////
+    // 2) maxNode //
+    ////////////////
+
+    /* Use preorder traversal */
+    public static TreeNode maxNode(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        int maxValue = Integer.MIN_VALUE;
+        TreeNode result = null;
+
+        ArrayDeque<TreeNode> s = new ArrayDeque<>();
+        s.push(root);
+
+        while (!s.isEmpty()) {
+            TreeNode node = s.pop();
+            if (node.val > maxValue) {
+                result = node;
+                maxValue = node.val;
+            }
+            if (node.right != null) {
+                s.push(node.right);
+            }
+            if (node.left != null) {
+                s.push(node.left);
+            }
+        }
+
+        return result;
+    }
 
 //////////////////////////////////
 // 1. Get all the nodes number  //
