@@ -633,6 +633,30 @@ public class TreeDemo {
 //        System.out.println(isMirrorRec(r100,mirrorCopyRec(r100)));
 //        System.out.println("Comparing the tree 2 and tree 2 : ");
 //        System.out.println(isMirrorRec(r100, r100));
+//        /* 10.2.1 */
+//        System.out.println("******************** 10.2.1 ********************");
+//        System.out.print("Tree 1 is symmetric: ");
+//        System.out.println(isSymmetricCS(r1));
+//        System.out.print("Tree 2 is symmetric: ");
+//        System.out.println(isSymmetricCS(r100));
+//        System.out.print("Tree 3 is symmetric: ");
+//        System.out.println(isSymmetricCS(r12));
+//        /* 10.2.2 */
+//        System.out.println("******************** 10.2.2 ********************");
+//        System.out.print("Tree 1 is symmetric: ");
+//        System.out.println(isSymmetricMR(r1));
+//        System.out.print("Tree 2 is symmetric: ");
+//        System.out.println(isSymmetricMR(r100));
+//        System.out.print("Tree 3 is symmetric: ");
+//        System.out.println(isSymmetricMR(r12));
+//        /* 10.2.3 */
+//        System.out.println("******************** 10.2.3 ********************");
+//        System.out.print("Tree 1 is symmetric: ");
+//        System.out.println(isSymmetricM(r1));
+//        System.out.print("Tree 2 is symmetric: ");
+//        System.out.println(isSymmetricM(r100));
+//        System.out.print("Tree 3 is symmetric: ");
+//        System.out.println(isSymmetricM(r12));
 //        /* 11.1 */
 //        System.out.println("********************* 11.1 *********************");
 //        System.out.print("The Least Common Ancestor of r5 and r10: r");
@@ -842,30 +866,7 @@ public class TreeDemo {
 //        System.out.println(closestValue(r1, 6.7));
 //        System.out.print("The closest value in Tree1 comparing to 55.0 is: ");
 //        System.out.println(closestValue(r100, 55.0));
-//        /* 10.2.1 */
-//        System.out.println("******************** 10.2.1 ********************");
-//        System.out.print("Tree 1 is symmetric: ");
-//        System.out.println(isSymmetricCS(r1));
-//        System.out.print("Tree 2 is symmetric: ");
-//        System.out.println(isSymmetricCS(r100));
-//        System.out.print("Tree 3 is symmetric: ");
-//        System.out.println(isSymmetricCS(r12));
-//        /* 10.2.2 */
-//        System.out.println("******************** 10.2.2 ********************");
-//        System.out.print("Tree 1 is symmetric: ");
-//        System.out.println(isSymmetricMR(r1));
-//        System.out.print("Tree 2 is symmetric: ");
-//        System.out.println(isSymmetricMR(r100));
-//        System.out.print("Tree 3 is symmetric: ");
-//        System.out.println(isSymmetricMR(r12));
-//        /* 10.2.3 */
-//        System.out.println("******************** 10.2.3 ********************");
-//        System.out.print("Tree 1 is symmetric: ");
-//        System.out.println(isSymmetricM(r1));
-//        System.out.print("Tree 2 is symmetric: ");
-//        System.out.println(isSymmetricM(r100));
-//        System.out.print("Tree 3 is symmetric: ");
-//        System.out.println(isSymmetricM(r12));
+
 
 
     }
