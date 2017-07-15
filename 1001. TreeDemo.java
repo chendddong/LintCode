@@ -118,6 +118,9 @@ import java.util.*;
  *     2) binaryTreePathSumList (root to leaf)
  *         -- LeetCode 113
  *         -- LintCode 376
+ *     3) pathSumIII (how many paths from up to down not limited from root to
+ *                    leaf)
+ *         -- LeetCode 437
  */
 
 public class TreeDemo {
@@ -777,6 +780,11 @@ public class TreeDemo {
 //        }
 
 
+        /* 24.3 */
+        System.out.print("The total number of paths for sum 16 for T1 is: ");
+        System.out.println(pathSumIII(r1, 16));
+        System.out.print("The total number of paths for sum 100 for T1 is: ");
+        System.out.println(pathSumIII(r100, 100));
 
 
 
@@ -3015,7 +3023,27 @@ public class TreeDemo {
 
     }
 
+    ///////////////////
+    // 3) pathSumIII //
+    ///////////////////
 
+
+    /* Only need to consider the root and the left and right */
+    public static int pathSumIII(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        return pathSumFrom(root, sum) + pathSumIII(root.left, sum) + pathSumIII(root.right, sum);
+    }
+    /* Base case null return 0 */
+    private static int pathSumFrom(TreeNode node, int sum) {
+        if (node == null) {
+            return 0;
+        }
+        /* If there is a perfect sum, plus 1 for the result */
+        return (node.val == sum ? 1 : 0)
+                + pathSumFrom(node.left, sum - node.val) + pathSumFrom(node.right, sum - node.val);
+    }
 
 
 }
