@@ -67,6 +67,11 @@ import java.util.*;
  *     1) isMirrorRec
  *     2) isMirror
  *
+ * 10.2 The Tree is symmetric
+ *     1) isSymmetricCS (copy mirror, compare with the root)
+ *     2) isSymmetricMR (root and root isMirror Recursion)
+ *     3) isSymmetricM  (root and root isMirror)
+ *
  * 11. Least common ancestor
  *     1) LCA*
  *     2) LCARec
@@ -207,6 +212,36 @@ public class TreeDemo {
         r40.left =  r30;
         r40.right = r60;
         r180.left = r110;
+
+////////////////////////////////////////////////////////////////////////////////
+
+        /*
+            Tree 3: Symmetric tree
+                       12
+                    /     \
+                   13      13
+                 /  \     /  \
+                14   15  15  14
+
+             where r12 is the root
+         */
+////////////////////////////////////////////////////////////////////////////////
+
+        /* Making Tree 3: */
+        TreeNode r12 = new TreeNode(12);
+        TreeNode r13 = new TreeNode(13);
+        TreeNode r13_1 = new TreeNode(13);
+        TreeNode r14 = new TreeNode(14);
+        TreeNode r14_1 = new TreeNode(14);
+        TreeNode r15 = new TreeNode(15);
+        TreeNode r15_1 = new TreeNode(15);
+
+        r12.left  = r13;
+        r12.right = r13_1;
+        r13.left = r14;
+        r13.right = r15;
+        r13_1.left = r15_1;
+        r13_1.right = r14_1;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -807,9 +842,30 @@ public class TreeDemo {
 //        System.out.println(closestValue(r1, 6.7));
 //        System.out.print("The closest value in Tree1 comparing to 55.0 is: ");
 //        System.out.println(closestValue(r100, 55.0));
-
-
-
+//        /* 10.2.1 */
+//        System.out.println("******************** 10.2.1 ********************");
+//        System.out.print("Tree 1 is symmetric: ");
+//        System.out.println(isSymmetricCS(r1));
+//        System.out.print("Tree 2 is symmetric: ");
+//        System.out.println(isSymmetricCS(r100));
+//        System.out.print("Tree 3 is symmetric: ");
+//        System.out.println(isSymmetricCS(r12));
+//        /* 10.2.2 */
+//        System.out.println("******************** 10.2.2 ********************");
+//        System.out.print("Tree 1 is symmetric: ");
+//        System.out.println(isSymmetricMR(r1));
+//        System.out.print("Tree 2 is symmetric: ");
+//        System.out.println(isSymmetricMR(r100));
+//        System.out.print("Tree 3 is symmetric: ");
+//        System.out.println(isSymmetricMR(r12));
+//        /* 10.2.3 */
+//        System.out.println("******************** 10.2.3 ********************");
+//        System.out.print("Tree 1 is symmetric: ");
+//        System.out.println(isSymmetricM(r1));
+//        System.out.print("Tree 2 is symmetric: ");
+//        System.out.println(isSymmetricM(r100));
+//        System.out.print("Tree 3 is symmetric: ");
+//        System.out.println(isSymmetricM(r12));
 
 
     }
@@ -2022,6 +2078,39 @@ public class TreeDemo {
         }
 
         return true;
+    }
+
+////////////////////////////////
+// 10.2 The Tree is symmetric //
+////////////////////////////////
+
+    //////////////////////
+    // 1) isSymmetricCS //
+    //////////////////////
+
+    public static boolean isSymmetricCS(TreeNode root) {
+        /* Get the mirror tree 10.4 */
+        TreeNode rootMirror = mirrorCopy(root);
+        /* See if the mirror is the same as the original tree 8.1 */
+        return isSameRec(root, rootMirror);
+    }
+
+    //////////////////////
+    // 2) isSymmetricMR //
+    //////////////////////
+
+    public static boolean isSymmetricMR(TreeNode root) {
+        /* See if the root are mirrors 10.1.1*/
+        return isMirrorRec(root, root);
+    }
+
+    /////////////////////
+    // 3) isSymmetricM //
+    /////////////////////
+
+    public static boolean isSymmetricM(TreeNode root) {
+        /* See if the root are mirrors 10.1.2*/
+        return isMirror(root, root);
     }
 
 ///////////////////////////////
