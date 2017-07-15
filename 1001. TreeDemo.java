@@ -124,6 +124,9 @@ import java.util.*;
  *     3) pathSumIII (how many paths from up to down not limited from root to
  *                    leaf)
  *         -- LeetCode 437
+ * 25. Closest BST value
+ *     1) closestValueRec
+ *     2) closestValue
  */
 
 public class TreeDemo {
@@ -798,6 +801,12 @@ public class TreeDemo {
 //        System.out.println(pathSumIII(r1, 16));
 //        System.out.print("The total number of paths for sum 100 for T1 is: ");
 //        System.out.println(pathSumIII(r100, 100));
+//       /* 25.1 */
+//        System.out.println("********************* 25.1 *********************");
+//        System.out.print("The closest value in Tree1 comparing to 6.7 is: ");
+//        System.out.println(closestValue(r1, 6.7));
+//        System.out.print("The closest value in Tree1 comparing to 55.0 is: ");
+//        System.out.println(closestValue(r100, 55.0));
 
 
 
@@ -3117,6 +3126,75 @@ public class TreeDemo {
         return (node.val == sum ? 1 : 0)
                 + pathSumFrom(node.left, sum - node.val) + pathSumFrom(node.right, sum - node.val);
     }
+
+
+///////////////////////////
+// 25. Closest BST value //
+///////////////////////////
+
+    ////////////////////////
+    // 1) closestValueRec //
+    ////////////////////////
+
+    /*
+        Interesting recursive method and it reduce the runtime if the tree is
+        extremely large and the answer is just near the root
+     */
+    public static int closestValueRec(TreeNode root, double target) {
+        int a = root.val;
+
+        TreeNode kid = null;
+        /* Go left */
+        if (target < a) {
+            kid = root.left;
+        /* Go right */
+        } else {
+            kid = root.right;
+        }
+        /* Halt point */
+        if (kid == null) {
+            return a;
+        }
+
+        int b = closestValueRec(kid, target);
+        return Math.abs(a - target) < Math.abs(b - target) ? a : b;
+    }
+
+    /////////////////////
+    // 2) closestValue //
+    /////////////////////
+
+    /* Time: O(n) too slow */
+    /* Use inorder traversal; Use a two variables to store some temp values */
+    public static int closestValue(TreeNode root, double target) {
+        if (root == null) {
+            return Integer.MAX_VALUE;
+        }
+
+        ArrayDeque<TreeNode> s = new ArrayDeque<>();
+        TreeNode cur = root;
+        double MAX = Double.MAX_VALUE;
+        int result = 0;
+        while (cur != null || !s.isEmpty()) {
+            while (cur != null) {
+                s.push(cur);
+                cur = cur.left;
+            }
+
+            cur = s.peek();
+            s.pop();
+
+            /* Solve the problem; Always update two when concerning the MAX */
+            if (Math.abs((double) cur.val - target) < MAX) {
+                result = cur.val;
+                MAX = Math.abs((double) cur.val - target);
+            }
+
+            cur = cur.right;
+        }
+        return result;
+    }
+
 
 
 }
