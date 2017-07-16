@@ -132,6 +132,10 @@ import java.util.*;
  * 25. Closest BST value
  *     1) closestValueRec
  *     2) closestValue
+ *
+ * 26. Mode in a loosely BST
+ *     1) findModeHashMap
+ *     2) findMode2Trav
  */
 
 public class TreeDemo {
@@ -245,6 +249,38 @@ public class TreeDemo {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+
+        /*
+            Tree 4: Loosely BST  
+
+                       16
+                    /     \
+                   16      17
+                 /  \     /  \
+                16   17  17  17
+
+             where r16 is the root
+         */
+////////////////////////////////////////////////////////////////////////////////
+
+        /* Making Tree 4: */
+        TreeNode r16 = new TreeNode(16);
+        TreeNode r16_1 = new TreeNode(16);
+        TreeNode r16_2 = new TreeNode(16);        
+        TreeNode r17 = new TreeNode(17);
+        TreeNode r17_1 = new TreeNode(17);
+        TreeNode r17_2 = new TreeNode(17);
+        TreeNode r17_3 = new TreeNode(17);
+
+
+        r16.left = r16_1;
+        r16.right = r17;
+        r16_1.left = r16_2;
+        r16_1.right = r17_1;
+        r17.left = r17_2;
+        r17.right = r17_3;
+
+////////////////////////////////////////////////////////////////////////////////
         /* Make lists for 13. rebuildBinaryTreeRec */
         List<Integer> preOrder = new ArrayList<>();
         preOrder.add(1);
@@ -283,7 +319,8 @@ public class TreeDemo {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-        /* Test all the methods */
+                    /* Test all the methods */
+
 //        /* 0.1 */
 //        System.out.println("********************* 0.1 *********************");
 //        System.out.print("The max value node of Tree 1 is node: ");
@@ -866,7 +903,18 @@ public class TreeDemo {
 //        System.out.println(closestValue(r1, 6.7));
 //        System.out.print("The closest value in Tree1 comparing to 55.0 is: ");
 //        System.out.println(closestValue(r100, 55.0));
-
+        /* 26.1 */
+        System.out.println("********************* 26.1 *********************");
+        System.out.println("The mode for Tree 4 is: ");
+        int[] arr = findModeHashMap(r16);
+        for (int mode : arr) {
+            System.out.print(mode + " ");
+        }
+        System.out.println("The mode for Tree 2 is: ");
+        int[] arr_1 = findModeHashMap(r100);
+        for (int mode : arr_1) {
+            System.out.print(mode + " ");
+        }        
 
 
     }
@@ -3283,6 +3331,114 @@ public class TreeDemo {
             cur = cur.right;
         }
         return result;
+    }
+
+///////////////////////////////
+// 26. Mode in a loosely BST //
+///////////////////////////////
+
+    ////////////////////////
+    // 1) findModeHashMap //
+    ////////////////////////
+
+    /* Inorder traversal; Using hashMap and its functions */
+    public static int[] findModeHashMap(TreeNode root) {
+        if (root == null) {
+            return new int[0];
+        }
+
+        /* Use a hashMap -- Extra space */
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        /* Preorder traversal */
+        ArrayDeque<TreeNode> s = new ArrayDeque<>();
+        TreeNode cur = root;
+        while (!s.isEmpty() || cur != null) {
+            while (cur != null) {
+                s.push(cur);
+                cur = cur.left;
+            }
+
+            cur = s.peek();
+            s.pop();
+
+            /* Solve problem */
+            map.merge(cur.val, 1, Integer::sum);
+
+            cur = cur.right;
+        }
+
+        ArrayList<Integer> temp = new ArrayList<>();
+
+
+        /* Get the max value of the key */
+        Map.Entry<Integer, Integer> maxEntry = null;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+          if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
+            maxEntry = entry;
+          }
+        }
+        Integer maxValue = maxEntry.getValue(); 
+
+        /* Get all the keys that has the same maxValue */
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+          if (entry.getValue() == maxValue) {
+            temp.add(entry.getKey());
+          }
+        } 
+
+        /* Get the answer */
+        int[] result = new int[temp.size()];
+        int index = 0;
+        for (Integer key : temp) {
+            result[index++] = key;
+        }
+        return result;
+    }
+
+    //////////////////////
+    // 2) findMode2Trav //
+    //////////////////////
+
+    /*
+        I think the way to do it properly is to do two passes. One to find the
+        highest number of occurrences of any value, and then a second pass to collect all values occurring that often.
+     */   
+    public static int[] findMode2Trav(TreeNode root) {
+        inorder(root);
+        modes = new int[modeCount];
+        modeCount = 0;
+        currCount = 0;
+        inorder(root);
+        return modes;
+    }
+
+    private static int currVal;
+    private static int currCount = 0;
+    private static int maxCount = 0;
+    private static int modeCount = 0;
+    private static int[] modes;
+
+    private static void handleValue(int val) {
+        if (val != currVal) {
+            currVal = val;
+            currCount = 0;
+        }
+        currCount++;
+        if (currCount > maxCount) {
+            maxCount = currCount;
+            modeCount = 1;
+        } else if (currCount == maxCount) {
+            if (modes != null)
+                modes[modeCount] = currVal;
+            modeCount++;
+        }
+    }
+    private static void inorder(TreeNode root) {
+        if (root == null) return;
+        inorder(root.left);
+        handleValue(root.val);
+        inorder(root.right);
     }
 
 
