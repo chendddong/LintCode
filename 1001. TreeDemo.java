@@ -16,6 +16,9 @@ import java.util.*;
  *     2) getDepth
  *     3) getDepthTraverse (with global variable)
  *
+ * 2.1 Get minimum depth
+ *     1) minDepth
+ *
  * 3. Binary tree traversal
  *     1) preorderTraversalRec
  *     2) preorderTraversal
@@ -367,6 +370,16 @@ public class TreeDemo {
 //        System.out.println(getDepthTraverse(r1));
 //        System.out.print("The Depth of Tree 2 is: ");
 //        System.out.println(getDepthTraverse(r100));
+//        /* 2.1.1 */
+//        System.out.println("******************** 2.1.1 ********************");
+//        System.out.print("The minimum depth of Tree 1 is: ");
+//        System.out.println(minDepth(r1));
+//        System.out.print("The minimum depth of Tree 2 is: ");
+//        System.out.println(minDepth(r100));
+//        System.out.print("The minimum depth of Tree 3 is: ");
+//        System.out.println(minDepth(r12));
+//        System.out.print("The minimum depth of Tree 4 is: ");
+//        System.out.println(minDepth(r16));
 //        /* 3.1 */
 //        System.out.println("********************** 3.1 **********************");
 //        System.out.print("The Preorder Traversal of Tree 1 is: ");
@@ -758,6 +771,26 @@ public class TreeDemo {
 //        System.out.println(findLongest(r1));
 //        System.out.print("The longest path from root to leaf for Tree2 is: ");
 //        System.out.println(findLongest(r100));
+//        /* 15.1.1 */
+//        System.out.println("******************** 15.1.1 ********************");
+//        System.out.println("All the root to leaf paths for Tree 1 are: ");
+//        for (String s : binaryTreePathsWithHelp(r1)) {
+//            System.out.println(s);
+//        }
+//        System.out.println("All the root to leaf paths for Tree 2 are: ");
+//        for (String s : binaryTreePathsWithHelp(r100)) {
+//            System.out.println(s);
+//        }
+//        /* 15.1.2 */
+//        System.out.println("******************** 15.1.2 ********************");
+//        System.out.println("All the root to leaf paths for Tree 3 are: ");
+//        for (String s : binaryTreePaths(r12)) {
+//            System.out.println(s);
+//        }
+//        System.out.println("All the root to leaf paths for Tree 4 are: ");
+//        for (String s : binaryTreePaths(r16)) {
+//            System.out.println(s);
+//        }
 //        /* 16.1 */
 //        System.out.println("********************* 16.1 *********************");
 //        System.out.println("The original Tree 1: ");
@@ -934,32 +967,9 @@ public class TreeDemo {
 //        for (int mode : arr_1) {
 //            System.out.print(mode + " ");
 //        }
-//        /* 15.1.1 */
-//        System.out.println("******************** 15.1.1 ********************");
-//        System.out.println("All the root to leaf paths for Tree 1 are: ");
-//        for (String s : binaryTreePathsWithHelp(r1)) {
-//            System.out.println(s);
-//        }
-//        System.out.println("All the root to leaf paths for Tree 2 are: ");
-//        for (String s : binaryTreePathsWithHelp(r100)) {
-//            System.out.println(s);
-//        }
-//        /* 15.1.2 */
-//        System.out.println("******************** 15.1.2 ********************");
-//        System.out.println("All the root to leaf paths for Tree 3 are: ");
-//        for (String s : binaryTreePaths(r12)) {
-//            System.out.println(s);
-//        }
-//        System.out.println("All the root to leaf paths for Tree 4 are: ");
-//        for (String s : binaryTreePaths(r16)) {
-//            System.out.println(s);
-//        }
+//
 
 
-
-
-
-        
 
     }
 
@@ -1174,6 +1184,40 @@ public class TreeDemo {
 
         helper(root.left, curDepth + 1);
         helper(root.right, curDepth + 1);
+    }
+
+///////////////////////////
+// 2.1 Get minimum depth //
+///////////////////////////
+
+    /////////////////
+    // 1) minDepth //
+    /////////////////
+
+    /*
+        Pay attention to the definition of minimum depth; The 1 we are adding
+        is the root node itself.
+     */
+    public static int minDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        //      1
+        //       \
+        //        3
+        if (root.left == null) {
+            return minDepth(root.right) + 1;
+        }
+        //      1
+        //     /
+        //    2
+        if (root.right == null) {
+            return minDepth(root.left) + 1;
+        }
+        //      1
+        //     / \
+        //    2   3
+        return Math.min(minDepth(root.left), minDepth(root.right)) + 1;
     }
 
 //////////////////////////////
