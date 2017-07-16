@@ -91,6 +91,10 @@ import java.util.*;
  * 15. Longest Path (root to leaf)
  *     1) findLongest
  *
+ * 15.1 Root to leaf paths (String)
+ *     1) binaryTreePathsWithHelp
+ *     2) binaryTreePaths
+ *
  * 16. Merge two BT
  *     1) mergeTreesRec (LeetCode 617)
  *
@@ -251,7 +255,7 @@ public class TreeDemo {
 
 
         /*
-            Tree 4: Loosely BST  
+            Tree 4: Loosely BST
 
                        16
                     /     \
@@ -266,7 +270,7 @@ public class TreeDemo {
         /* Making Tree 4: */
         TreeNode r16 = new TreeNode(16);
         TreeNode r16_1 = new TreeNode(16);
-        TreeNode r16_2 = new TreeNode(16);        
+        TreeNode r16_2 = new TreeNode(16);
         TreeNode r17 = new TreeNode(17);
         TreeNode r17_1 = new TreeNode(17);
         TreeNode r17_2 = new TreeNode(17);
@@ -903,19 +907,59 @@ public class TreeDemo {
 //        System.out.println(closestValue(r1, 6.7));
 //        System.out.print("The closest value in Tree1 comparing to 55.0 is: ");
 //        System.out.println(closestValue(r100, 55.0));
-        /* 26.1 */
-        System.out.println("********************* 26.1 *********************");
-        System.out.println("The mode for Tree 4 is: ");
-        int[] arr = findModeHashMap(r16);
-        for (int mode : arr) {
-            System.out.print(mode + " ");
-        }
-        System.out.println("The mode for Tree 2 is: ");
-        int[] arr_1 = findModeHashMap(r100);
-        for (int mode : arr_1) {
-            System.out.print(mode + " ");
-        }        
+//        /* 26.1 */
+//        System.out.println("********************* 26.1 *********************");
+//        System.out.println("The mode for Tree 4 is: ");
+//        int[] arr = findModeHashMap(r16);
+//        for (int mode : arr) {
+//            System.out.print(mode + " ");
+//        }
+//        System.out.println("");
+//        System.out.println("The mode for Tree 2 is: ");
+//        int[] arr_1 = findModeHashMap(r100);
+//        for (int mode : arr_1) {
+//            System.out.print(mode + " ");
+//        }
+//        /* 26.2 */
+//        System.out.println("********************* 26.2 *********************");
+//        /* Tree 4 */
+//        System.out.println("The mode for Tree 4 is: ");
+//        int[] arr = findMode2Trav(r16);
+//        for (int mode : arr) {
+//            System.out.print(mode + " ");
+//        }
+//        /* Tree 2 */
+//        System.out.println("The mode for Tree 2 is: ");
+//        int[] arr_1 = findMode2Trav(r100);
+//        for (int mode : arr_1) {
+//            System.out.print(mode + " ");
+//        }
+//        /* 15.1.1 */
+//        System.out.println("******************** 15.1.1 ********************");
+//        System.out.println("All the root to leaf paths for Tree 1 are: ");
+//        for (String s : binaryTreePathsWithHelp(r1)) {
+//            System.out.println(s);
+//        }
+//        System.out.println("All the root to leaf paths for Tree 2 are: ");
+//        for (String s : binaryTreePathsWithHelp(r100)) {
+//            System.out.println(s);
+//        }
+//        /* 15.1.2 */
+//        System.out.println("******************** 15.1.2 ********************");
+//        System.out.println("All the root to leaf paths for Tree 3 are: ");
+//        for (String s : binaryTreePaths(r12)) {
+//            System.out.println(s);
+//        }
+//        System.out.println("All the root to leaf paths for Tree 4 are: ");
+//        for (String s : binaryTreePaths(r16)) {
+//            System.out.println(s);
+//        }
 
+
+
+
+
+        
 
     }
 
@@ -2559,9 +2603,9 @@ public class TreeDemo {
         return true;
     }
 
-////////////////////////////////
-// 3) isCompleteBinaryTreeRec //
-////////////////////////////////
+    ////////////////////////////////
+    // 3) isCompleteBinaryTreeRec //
+    ////////////////////////////////
 
     /*
         There are 3 conditions:
@@ -2658,6 +2702,77 @@ public class TreeDemo {
         max = Math.max(max, cntL);
 
         return max;
+    }
+
+//////////////////////////////////////
+    // 15.1 Root to leaf paths (String) //
+    //////////////////////////////////////
+
+    ////////////////////////////////
+    // 1) binaryTreePathsWithHelp //
+    ////////////////////////////////
+
+    /* DFS Recursive by using a helper */
+    public static List<String> binaryTreePathsWithHelp(TreeNode root) {
+        /* Edge */
+        List<String> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        /* Pass those things we need */
+        String branch = "";
+        binaryTreePathsHelper(root, result, branch);
+        return result;
+    }
+    private static void binaryTreePathsHelper(TreeNode root, List<String> result,
+                                              String branch) {
+        if (root == null) {
+            return;
+        }
+        /* Leaf */
+        if (root.left == null && root.right == null) {
+            branch = branch + root.val;
+            result.add(branch);
+            /* backtracking */
+            branch = "";
+        } else {
+            branch = branch + root.val + "->";
+        }
+
+        /* Go deeper */
+        binaryTreePathsHelper(root.left, result, branch);
+        binaryTreePathsHelper(root.right, result, branch);
+    }
+
+    ////////////////////////
+    // 2) binaryTreePaths //
+    ////////////////////////
+
+    /* Use for loop to get all the paths from left and right side; No helper */
+    public static List<String> binaryTreePaths(TreeNode root) {
+        List<String> paths = new LinkedList<>();
+
+        if(root == null) {
+            return paths;
+        }
+
+        /* Leaf */
+        if(root.left == null && root.right == null){
+            paths.add(root.val + "");
+            return paths;
+        }
+
+        for (String path : binaryTreePaths(root.left)) {
+            paths.add(root.val + "->" + path);
+        }
+
+        for (String path : binaryTreePaths(root.right)) {
+            paths.add(root.val + "->" + path);
+        }
+
+        return paths;
+
     }
 
 //////////////////////
@@ -3374,18 +3489,18 @@ public class TreeDemo {
         /* Get the max value of the key */
         Map.Entry<Integer, Integer> maxEntry = null;
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-          if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
-            maxEntry = entry;
-          }
+            if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
+                maxEntry = entry;
+            }
         }
-        Integer maxValue = maxEntry.getValue(); 
+        Integer maxValue = maxEntry.getValue();
 
         /* Get all the keys that has the same maxValue */
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-          if (entry.getValue() == maxValue) {
-            temp.add(entry.getKey());
-          }
-        } 
+            if (entry.getValue() == maxValue) {
+                temp.add(entry.getKey());
+            }
+        }
 
         /* Get the answer */
         int[] result = new int[temp.size()];
@@ -3403,7 +3518,7 @@ public class TreeDemo {
     /*
         I think the way to do it properly is to do two passes. One to find the
         highest number of occurrences of any value, and then a second pass to collect all values occurring that often.
-     */   
+     */
     public static int[] findMode2Trav(TreeNode root) {
         inorder(root);
         modes = new int[modeCount];
