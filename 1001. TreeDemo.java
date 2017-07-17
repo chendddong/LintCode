@@ -122,6 +122,10 @@ import java.util.*;
  *     2) sumOfLeftLeavesRec
  *     3) sumOfLeftLeavesBFS
  *
+ * 21.1 Collect and remove leaves
+ *     1) findLeavesHeight
+ *     2) findLeavesIsLeave
+ *
  * 22. Convert Sorted Array to BST (LeetCode 108, LintCode 177)
  *     1) sortedArrayToBST
  *
@@ -882,6 +886,27 @@ public class TreeDemo {
 //        System.out.println(sumOfLeftLeavesBFS(r1));
 //        System.out.print("All the sum of Tree2's LEFT leaves is: ");
 //        System.out.println(sumOfLeftLeavesBFS(r100));
+//        /* 21.1.1 ~ 21.1.2 */
+//        System.out.println("******************** 21.1.1 ********************");
+//        System.out.println("The Collected leaves for Tree 1 is: ");
+//        for (List list : findLeavesHeight(r1)) {
+//            System.out.print(Arrays.toString(list.toArray()) + " ");
+//        }
+//        System.out.println();
+//        System.out.println("The Collected leaves for Tree 2 is: ");
+//        for (List list : findLeavesHeight(r100)) {
+//            System.out.print(Arrays.toString(list.toArray()) + " ");
+//        }
+//        System.out.println();
+//        System.out.println("The Collected leaves for Tree 3 is: ");
+//        for (List list : findLeavesIsLeave(r12)) {
+//            System.out.print(Arrays.toString(list.toArray()) + " ");
+//        }
+//        System.out.println();
+//        System.out.println("The Collected leaves for Tree 4 is: ");
+//        for (List list : findLeavesIsLeave(r16)) {
+//            System.out.print(Arrays.toString(list.toArray()) + " ");
+//        }
 //        /* 22.1 */
 //        System.out.println("********************* 22.1 *********************");
 //        System.out.println("The converted BST by 'sortedArray' is : ");
@@ -967,11 +992,20 @@ public class TreeDemo {
 //        for (int mode : arr_1) {
 //            System.out.print(mode + " ");
 //        }
-//
-
-
 
     }
+
+
+
+
+// ---------------------------- test helper -------------------------------- //
+
+
+
+
+// ------------------------------------------------------------------------- //
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3249,6 +3283,109 @@ public class TreeDemo {
         return sumLeft;
     }
 
+////////////////////////////////////
+// 21.1 Collect and remove leaves //
+////////////////////////////////////
+
+    /////////////////////////
+    // 1) findLeavesHeight //
+    /////////////////////////
+
+    /*
+        For this question we need to take bottom-up approach. The key is to find the height of each node. Here the definition of height is:
+
+        The height of a node is the number of edges from the node to the deepest leaf. --CMU 15-121 Binary Trees
+
+        I used a helper function to return the height of current node. According to the definition, the height of leaf is 0. h(node) = 1 + max(h(node.left), h(node.right)).
+
+        The height of a node is also the its index in the result list (result). For example, leaves, whose heights are 0, are stored in result[0]. Once we find the height of a node, we can put it directly into the result.
+     */
+    public static List<List<Integer>> findLeavesHeight(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        height(root, result);
+        return result;
+    }
+    private static int height(TreeNode node, List<List<Integer>> result){
+        if(null == node)  {
+            return -1;
+        }
+
+        /*
+            Bottom-up; Go deeper to the tree and solve the problem while coming
+            back.
+
+            Use the height of the node and associate it with the size of the
+            result.
+         */
+        int level = 1 + Math.max(height(node.left, result),
+                height(node.right, result));
+
+        /* A MUST KNOW TECHNIQUE -- Brilliant as hell */
+        if(result.size() < level + 1) {
+            result.add(new ArrayList<>());
+        }
+
+        result.get(level).add(node.val);
+
+        /*
+            'Delete' the node; We can omit this since it won't affect the answer.
+         */
+        node.left = null;
+        node.right = null;
+
+        return level;
+    }
+
+    //////////////////////////
+    // 2) findLeavesIsLeave //
+    //////////////////////////
+
+    /*
+        Solving the problem by using the isLeave function;
+        Add leaves while deleting the tree!
+     */
+    public static List<List<Integer>> findLeavesIsLeave(TreeNode root) {
+
+        List<List<Integer>> leavesList = new ArrayList<>();
+        List<Integer> leaves = new ArrayList<>();
+
+        while (root != null) {
+            /* Handle the root */
+            if (isLeave(root, leaves)) {
+                root = null;
+            }
+            leavesList.add(leaves);
+            leaves = new ArrayList<Integer>();
+        }
+
+        return leavesList;
+    }
+    private static boolean isLeave(TreeNode node, List<Integer> leaves) {
+
+        /* Leaf */
+        if (node.left == null && node.right == null) {
+            leaves.add(node.val);
+            return true;
+        }
+
+        /* Add leaves while deleting the tree */
+
+        /* Go deeper to left */
+        if (node.left != null) {
+            if (isLeave(node.left, leaves)) {
+                node.left = null;
+            }
+        }
+
+        /* Go deeper to right */
+        if (node.right != null) {
+            if (isLeave(node.right, leaves)) {
+                node.right = null;
+            }
+        }
+
+        return false;
+    }
 
 /////////////////////////////////////
 // 22. Convert Sorted Array to BST //
