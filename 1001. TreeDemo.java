@@ -126,6 +126,10 @@ import java.util.*;
  *     1) findLeavesHeight
  *     2) findLeavesIsLeave
  *
+ * 21.2 Find the value of the LeftMost node
+ *     1) findBottomLeftValueBFS
+ *     2) findBottomLeftValueRec
+ *
  * 22. Convert Sorted Array to BST (LeetCode 108, LintCode 177)
  *     1) sortedArrayToBST
  *
@@ -993,7 +997,23 @@ public class TreeDemo {
 //            System.out.print(mode + " ");
 //        }
 
+//        /* 21.2.1*/
+//        System.out.println("******************** 21.2.1 ********************");
+//        System.out.print("The leftmost node's value is: ");
+//        System.out.println(findBottomLeftValueBFS(r1));
+//        System.out.print("The leftmost node's value is: ");
+//        System.out.println(findBottomLeftValueBFS(r100));
+//        /* 21.2.2*/
+//        System.out.println("******************* 21.2.2 *******************");
+//        /* Tree 3 */
+//        System.out.print("The leftmost node's value is: ");
+//        System.out.println(findBottomLeftValueRec(r12));
+//        /* Tree 4 */
+//        System.out.print("The leftmost node's value is: ");
+//        System.out.println(findBottomLeftValueRec(r16));
+
     }
+
 
 
 
@@ -3385,6 +3405,61 @@ public class TreeDemo {
         }
 
         return false;
+    }
+
+//////////////////////////////////////////////
+    // 21.2 Find the value of the LeftMost node //
+    //////////////////////////////////////////////
+
+
+    ///////////////////////////////
+    // 1) findBottomLeftValueBFS //
+    ///////////////////////////////
+
+    /* BFS right to left scan */
+    public static int findBottomLeftValueBFS(TreeNode root) {
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+        TreeNode lastNode = null;
+        while (!q.isEmpty()) {
+            lastNode = q.poll();
+            if (lastNode.right != null) {
+                q.offer(lastNode.right);
+            }
+            if (lastNode.left != null) {
+                q.offer(lastNode.left);
+            }
+        }
+
+        return lastNode.val;
+    }
+
+    ///////////////////////////////
+    // 2) findBottomLeftValueRec //
+    ///////////////////////////////
+
+    /* Pass the level to the helper and Update the answer in the recursion */
+    public static int findBottomLeftValueRec(TreeNode root) {
+        findBottomLeftValueRechelper(root,0);
+        return val;
+    }
+    private static int maxLevel = Integer.MIN_VALUE;
+    private static int val = 0;
+    private static void findBottomLeftValueRechelper(TreeNode root, int level){
+        /* Base */
+        if(root == null) {
+            return;
+        }
+
+        /* Update the answer */
+        if(level > maxLevel){
+            val = root.val;
+            maxLevel = level;
+        }
+
+        /* When going down, we have to increment the level */
+        findBottomLeftValueRechelper(root.left, level + 1);
+        findBottomLeftValueRechelper(root.right, level + 1);
     }
 
 /////////////////////////////////////
