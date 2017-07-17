@@ -140,6 +140,9 @@ import java.util.*;
  * 23. Tree 1 is subtree of Tree2 (LeetCode 572, LintCode 245)
  *     1) isSubtree
  *
+ * 23.1 Most frequent subtree sum
+ *     1) findFrequentTreeSum
+ *
  * 24. Path Sum
  *     1) hasPathSum (root to leaf LeetCode 112)
  *     2) binaryTreePathSumList (root to leaf)
@@ -959,6 +962,14 @@ public class TreeDemo {
 //        System.out.println(isSubtree(r1, r100));
 //        System.out.print("r110 is the subtree of r100 : ");
 //        System.out.println(isSubtree(r100, r110));
+//        /* 23.1.1 */
+//        System.out.println("******************** 23.1.1 ********************");
+//        /* Tree 3 */
+//        System.out.println("The most frequent subtree sum for Tree 3 is: ");
+//        System.out.println(Arrays.toString(findFrequentTreeSum(r12)));
+//        /* Tree 4 */
+//        System.out.println("The most frequent subtree sum for Tree 4 is: ");
+//        System.out.println(Arrays.toString(findFrequentTreeSum(r16)));
 //        /* 24.1 */
 //        System.out.println("********************* 24.1 *********************");
 //        System.out.print("Tree 1 has a path sum of 17 : ");
@@ -1026,6 +1037,7 @@ public class TreeDemo {
 //        for (int mode : arr_1) {
 //            System.out.print(mode + " ");
 //        }
+
 
     }
 
@@ -3405,8 +3417,8 @@ public class TreeDemo {
         height(root, result);
         return result;
     }
-    private static int height(TreeNode node, List<List<Integer>> result){
-        if(null == node)  {
+    private static int height(TreeNode node, List<List<Integer>> result) {
+        if (null == node) {
             return -1;
         }
 
@@ -3421,24 +3433,24 @@ public class TreeDemo {
                 height(node.right, result));
 
         /* A MUST KNOW TECHNIQUE -- Brilliant as hell */
-        if(result.size() < level + 1) {
+        if (result.size() < level + 1) {
             result.add(new ArrayList<>());
-        }
 
-        result.get(level).add(node.val);
+            result.get(level).add(node.val);
 
         /*
             'Delete' the node; We can omit this since it won't affect the answer.
          */
-        node.left = null;
-        node.right = null;
+            node.left = null;
+            node.right = null;
+        }
 
-        return level;
+            return level;
     }
 
-    //////////////////////////
-    // 2) findLeavesIsLeave //
-    //////////////////////////
+        //////////////////////////
+        // 2) findLeavesIsLeave //
+        //////////////////////////
 
     /*
         Solving the problem by using the isLeave function;
@@ -3450,14 +3462,13 @@ public class TreeDemo {
         List<Integer> leaves = new ArrayList<>();
 
         while (root != null) {
-            /* Handle the root */
+        /* Handle the root */
             if (isLeave(root, leaves)) {
                 root = null;
             }
             leavesList.add(leaves);
             leaves = new ArrayList<Integer>();
         }
-
         return leavesList;
     }
     private static boolean isLeave(TreeNode node, List<Integer> leaves) {
@@ -3487,7 +3498,7 @@ public class TreeDemo {
         return false;
     }
 
-//////////////////////////////////////////////
+    //////////////////////////////////////////////
     // 21.2 Find the value of the LeftMost node //
     //////////////////////////////////////////////
 
@@ -3610,7 +3621,58 @@ public class TreeDemo {
 
     }
 
+////////////////////////////////////
+// 23.1 Most frequent subtree sum //
+////////////////////////////////////
 
+    ////////////////////////////
+    // 1) findFrequentTreeSum //
+    ////////////////////////////
+
+    static Map<Integer, Integer> sumToCount;
+    static int maxCnt;
+
+    public static int[] findFrequentTreeSum(TreeNode root) {
+        maxCnt = 0;
+        sumToCount = new HashMap<Integer, Integer>();
+
+        postOrder(root);
+
+        /* Find the key of the keyValue that is the maxCnt */
+        List<Integer> res = new ArrayList<>();
+        for (int key : sumToCount.keySet()) {
+            if (sumToCount.get(key) == maxCnt) {
+                res.add(key);
+            }
+        }
+
+        /* Convert vector to array */
+        int[] result = new int[res.size()];
+        for (int i = 0; i < res.size(); i++) {
+            result[i] = res.get(i);
+        }
+        return result;
+    }
+    /* Access all the nodes by postOrder */
+    private static int postOrder(TreeNode root) {
+        if (root == null) return 0;
+
+        int left = postOrder(root.left);
+        int right = postOrder(root.right);
+        int sum = left + right + root.val;
+
+        /*
+            Solve the problem;
+            This is new: getOrDefault.
+         */
+        int count = sumToCount.getOrDefault(sum, 0) + 1;
+        sumToCount.put(sum, count);
+
+        /* For the convenience of using the map later */
+        maxCnt = Math.max(maxCnt, count);
+
+        return sum;
+    }
 
 ///////////////////
 //  24. Path Sum //
