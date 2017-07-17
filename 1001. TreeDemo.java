@@ -38,6 +38,10 @@ import java.util.*;
  *     1) averageOfLevels
  *         -- LeetCode 637
  *
+ * 4.2 Largest node val of each level
+ *     1) largestValuesBFS
+ *     2) largestValuesDFS
+ *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
  *
@@ -479,6 +483,18 @@ public class TreeDemo {
 //        System.out.println(levelOrderBFS(r1));
 //        System.out.println("The average value of each level for tree 1 is: ");
 //        System.out.println(averageOfLevels(r1));
+//        /* 4.2.1 */
+//        System.out.println("******************** 4.2.1 ********************");
+//        System.out.println("The largest node val of each level for T1: ");
+//        System.out.println(Arrays.toString(largestValuesBFS(r1).toArray()));
+//        System.out.println("The largest node val of each level for T2: ");
+//        System.out.println(Arrays.toString(largestValuesBFS(r100).toArray()));
+//        /* 4.2.2 */
+//        System.out.println("******************** 4.2.2 ********************");
+//        System.out.println("The largest node val of each level for T3: ");
+//        System.out.println(Arrays.toString(largestValuesBFS(r12).toArray()));
+//        System.out.println("The largest node val of each level for T4: ");
+//        System.out.println(Arrays.toString(largestValuesBFS(r16).toArray()));
 //        /* 5.1 */
 //        System.out.println("********************** 5.1 **********************");
 //        System.out.println("Converting Tree 1 to DDL: ");
@@ -911,6 +927,20 @@ public class TreeDemo {
 //        for (List list : findLeavesIsLeave(r16)) {
 //            System.out.print(Arrays.toString(list.toArray()) + " ");
 //        }
+//        /* 21.2.1*/
+//        System.out.println("******************** 21.2.1 ********************");
+//        System.out.print("The leftmost node's value for Tree 1 is: ");
+//        System.out.println(findBottomLeftValueBFS(r1));
+//        System.out.print("The leftmost node's value for Tree 2 is: ");
+//        System.out.println(findBottomLeftValueBFS(r100));
+//        /* 21.2.2*/
+//        System.out.println("******************* 21.2.2 *******************");
+//        /* Tree 3 */
+//        System.out.print("The leftmost node's value for Tree 3 is: ");
+//        System.out.println(findBottomLeftValueRec(r12));
+//        /* Tree 4 */
+//        System.out.print("The leftmost node's value for Tree 4 is: ");
+//        System.out.println(findBottomLeftValueRec(r16));
 //        /* 22.1 */
 //        System.out.println("********************* 22.1 *********************");
 //        System.out.println("The converted BST by 'sortedArray' is : ");
@@ -996,21 +1026,6 @@ public class TreeDemo {
 //        for (int mode : arr_1) {
 //            System.out.print(mode + " ");
 //        }
-
-//        /* 21.2.1*/
-//        System.out.println("******************** 21.2.1 ********************");
-//        System.out.print("The leftmost node's value is: ");
-//        System.out.println(findBottomLeftValueBFS(r1));
-//        System.out.print("The leftmost node's value is: ");
-//        System.out.println(findBottomLeftValueBFS(r100));
-//        /* 21.2.2*/
-//        System.out.println("******************* 21.2.2 *******************");
-//        /* Tree 3 */
-//        System.out.print("The leftmost node's value is: ");
-//        System.out.println(findBottomLeftValueRec(r12));
-//        /* Tree 4 */
-//        System.out.print("The leftmost node's value is: ");
-//        System.out.println(findBottomLeftValueRec(r16));
 
     }
 
@@ -1581,6 +1596,71 @@ public class TreeDemo {
             }
         }
         return result;
+    }
+
+////////////////////////////////////////
+// 4.2 Largest node val of each level //
+////////////////////////////////////////
+
+    /////////////////////////
+    // 1) largestValuesBFS //
+    /////////////////////////
+
+    /* Straightforward BFS */
+    public static List<Integer> largestValuesBFS(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            int max = Integer.MIN_VALUE;
+            for (int i = 0; i < size; i++) {
+                TreeNode node = q.poll();
+                if (node.left != null) {
+                    q.offer(node.left);
+                }
+                if (node.right != null) {
+                    q.offer(node.right);
+                }
+                if (node.val > max) {
+                    max = node.val;
+                }
+            }
+            result.add(max);
+        }
+
+        return result;
+    }
+
+    /////////////////////////
+    // 2) largestValuesDFS //
+    /////////////////////////
+
+    /* DFS */
+    public static List<Integer> largestValuesDFS(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        helper(root, res, 0);
+        return res;
+    }
+    private static void helper(TreeNode root, List<Integer> res, int d){
+        if(root == null){
+            return;
+        }
+        /* Expand the list */
+        if(d == res.size()){
+            res.add(root.val);
+        }
+        else{
+        /* Or Update the value */
+            res.set(d, Math.max(res.get(d), root.val));
+        }
+        helper(root.left, res, d + 1);
+        helper(root.right, res, d + 1);
     }
 
 /////////////////////////////////////////
