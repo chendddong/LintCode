@@ -42,6 +42,10 @@ import java.util.*;
  *     1) largestValuesBFS
  *     2) largestValuesDFS
  *
+ * 4.3 Add one row to a BT
+ *     1) addOneRowDFS
+ *     2) addOneRowBFS
+ *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
  *
@@ -525,6 +529,18 @@ public class TreeDemo {
 //        System.out.println(Arrays.toString(largestValuesBFS(r12).toArray()));
 //        System.out.println("The largest node val of each level for T4: ");
 //        System.out.println(Arrays.toString(largestValuesBFS(r16).toArray()));
+//        /* 4.3.1 */
+//        System.out.println("******************** 4.3.1 ********************");
+//        System.out.println("The new tree for T1 add '16' to '3rd' level");
+//        System.out.println(levelOrderBFS(addOneRowDFS(r1, 16, 3)));
+//        System.out.println("The new tree for T2 add '100' to '1st' level");
+//        System.out.println(levelOrderBFS(addOneRowDFS(r100, 100, 1)));
+//        /* 4.3.2 */
+//        System.out.println("******************** 4.3.2 ********************");
+//        System.out.println("The new tree for T3 add '1' to '3rd' level");
+//        System.out.println(levelOrderBFS(addOneRowDFS(r12, 1, 3)));
+//        System.out.println("The new tree for T4 add '3' to '2nd' level");
+//        System.out.println(levelOrderBFS(addOneRowDFS(r16, 3, 2)));
 //        /* 5.1 */
 //        System.out.println("********************** 5.1 **********************");
 //        System.out.println("Converting Tree 1 to DDL: ");
@@ -1074,6 +1090,12 @@ public class TreeDemo {
 //        System.out.println("******************** 27.1 ********************");
 //        System.out.println("The processes we need to kill for pid 10 are: ");
 //        System.out.println(Arrays.toString(killProcess(pid, ppid, kill10).toArray()));
+
+
+
+
+
+
 
     }
 
@@ -1709,6 +1731,113 @@ public class TreeDemo {
         }
         helper(root.left, res, d + 1);
         helper(root.right, res, d + 1);
+    }
+
+/////////////////////////////
+// 4.3 Add one row to a BT //
+/////////////////////////////
+
+    /////////////////////
+    // 1) addOneRowDFS //
+    /////////////////////
+
+    /*
+        Complexity Analysis
+
+        Time complexity : O(n). A total of n nodes of the given tree will be considered.
+
+        Space complexity : O(n). The depth of the recursion tree can go up
+        to n in the worst case(skewed tree).
+     */
+
+    public static TreeNode addOneRowDFS(TreeNode root, int v, int d) {
+
+        /* What's-the-pointedly weird; Edge case */
+        if (d == 1) {
+            TreeNode node = new TreeNode(v);
+            node.left = root;
+            return node;
+        }
+        addOneRowInsert(d,v,root,1);
+        return root;
+    }
+    private static void addOneRowInsert(int maxD,
+                                        int insertVal,
+                                        TreeNode root,
+                                        int curD) {
+        /* Base case */
+        if (root == null) {
+            return;
+        }
+
+        /* Solve problem: Store the original to temp and reconnect them */
+        if (curD == maxD - 1) {
+            TreeNode temp = root.left;
+            root.left = new TreeNode(insertVal);
+            root.left.left = temp;
+            temp = root.right;
+            root.right = new TreeNode(insertVal);
+            root.right.right = temp;
+        } else {
+            addOneRowInsert(maxD, insertVal, root.left, curD + 1);
+            addOneRowInsert(maxD, insertVal, root.right, curD + 1);
+        }
+
+    }
+
+    /////////////////////
+    // 2) addOneRowBFS //
+    /////////////////////
+
+    /*
+        Complexity Analysis
+
+        Time complexity : O(n)O. A total of n nodes of the given tree will be considered in the worst case.
+
+        Space complexity : O(x). The size of the queue or temp queue can grow up to x only. Here, x refers to the number of maximum number of nodes at any level in the given tree.
+     */
+    public static TreeNode addOneRowBFS(TreeNode root, int v, int d) {
+        if (d == 1) {
+            TreeNode node = new TreeNode(v);
+            node.left = root;
+            return node;
+        }
+
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+        int depth = 0;
+
+        while (!q.isEmpty()) {
+            depth++;
+            /* Get size beforehand */
+            int size = q.size();
+
+            /* We found the right level */
+            if (depth == d - 1) {
+                /* Reconnect nodes for every node on d - 1 level */
+                for (int i = 0; i < size; i++) {
+                    TreeNode node = q.poll();
+
+                    TreeNode temp = node.left;
+                    node.left = new TreeNode(v);
+                    node.left.left = temp;
+                    temp = node.right;
+                    node.right = new TreeNode(v);
+                    node.right.right = temp;
+                }
+            } else { /* Normal DFS go deeper */
+                for (int i = 0; i < size; i++) {
+                    TreeNode node = q.poll();
+                    if (node.left != null) {
+                        q.offer(node.left);
+                    }
+                    if (node.right != null) {
+                        q.offer(node.right);
+                    }
+                }
+            }
+        }
+        return root;
     }
 
 /////////////////////////////////////////
