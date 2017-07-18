@@ -158,6 +158,9 @@ import java.util.*;
  * 26. Mode in a loosely BST
  *     1) findModeHashMap
  *     2) findMode2Trav
+ *
+ * 27. Tree Simulation
+ *     1) killProcess
  */
 
 public class TreeDemo {
@@ -338,6 +341,30 @@ public class TreeDemo {
         }
 //        /* Test for the inorderArray */
 //        System.out.print(Arrays.toString(sortedArray));
+
+        /* Make lists for 27.1 */
+
+        //    3
+        //  /   \
+        // 1     5
+        //      /
+        //     10
+
+        ArrayList<Integer> pid = new ArrayList<>();
+        ArrayList<Integer> ppid = new ArrayList<>();
+        int kill5 = 5;
+        int kill3 = 3;
+        int kill10 = 10;
+
+        pid.add(1);
+        pid.add(3);
+        pid.add(10);
+        pid.add(5);
+
+        ppid.add(3);
+        ppid.add(0);
+        ppid.add(5);
+        ppid.add(3);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1037,7 +1064,16 @@ public class TreeDemo {
 //        for (int mode : arr_1) {
 //            System.out.print(mode + " ");
 //        }
-
+//        /* 27.1 */
+//        System.out.println("******************** 27.1 ********************");
+//        System.out.println("The processes we need to kill for pid 5 are: ");
+//        System.out.println(Arrays.toString(killProcess(pid, ppid, kill5).toArray()));
+//        System.out.println("******************** 27.1 ********************");
+//        System.out.println("The processes we need to kill for pid 3 are: ");
+//        System.out.println(Arrays.toString(killProcess(pid, ppid, kill3).toArray()));
+//        System.out.println("******************** 27.1 ********************");
+//        System.out.println("The processes we need to kill for pid 10 are: ");
+//        System.out.println(Arrays.toString(killProcess(pid, ppid, kill10).toArray()));
 
     }
 
@@ -3445,12 +3481,12 @@ public class TreeDemo {
             node.right = null;
         }
 
-            return level;
+        return level;
     }
 
-        //////////////////////////
-        // 2) findLeavesIsLeave //
-        //////////////////////////
+    //////////////////////////
+    // 2) findLeavesIsLeave //
+    //////////////////////////
 
     /*
         Solving the problem by using the isLeave function;
@@ -3953,6 +3989,59 @@ public class TreeDemo {
         handleValue(root.val);
         inorder(root.right);
     }
+
+/////////////////////////
+// 27. Tree Simulation //
+/////////////////////////
+
+    ////////////////////
+    // 1) killProcess //
+    ////////////////////
+
+    /*
+        Simulate the tree by creating the B-tree like tree with multiChildren.
+
+        Time complexity : O(n). We need to traverse over the ppid and pid
+        array of size n once. The getAllChildren function also takes n time, since no node can be a child of two nodes.
+
+        Space complexity : O(n)O(n). map of size n is used.
+     */
+    private static class Node {
+        int val;
+        List<Node> children = new ArrayList<>();
+    }
+    public static List<Integer> killProcess(List<Integer> pid,
+                                            List<Integer> ppid,
+                                            int kill) {
+        /* id <-> TreeNode */
+        HashMap<Integer, Node> map = new HashMap<>();
+        for (int id : pid) {
+            Node node = new Node();
+            node.val = id;
+            map.put(id, node);
+        }
+
+        /* Traverse the parent id and add pid to its children list */
+        for (int i = 0; i < ppid.size(); i++) {
+            if (ppid.get(i) > 0) {
+                Node par = map.get(ppid.get(i));
+                par.children.add(map.get(pid.get(i)));
+            }
+        }
+
+        /* Recursively get all the children and add them to the result */
+        List<Integer> result = new ArrayList<>();
+        result.add(kill);
+        getAllChildren(map.get(kill), result);
+        return result;
+    }
+    private static void getAllChildren(Node node, List<Integer> result) {
+        for (Node n : node.children) {
+            result.add(n.val);
+            getAllChildren(n, result);
+        }
+    }
+
 
 
 
