@@ -155,9 +155,15 @@ import java.util.*;
  *     3) pathSumIII (how many paths from up to down not limited from root to
  *                    leaf)
  *         -- LeetCode 437
+ *
  * 25. Closest BST value
  *     1) closestValueRec
  *     2) closestValue
+ *
+ * 25.1 Kth Smallest Element in a BST
+ *     1) kthSmallestBS (Binary Search)
+ *     2) kthSmallestCarry
+ *         -- LeetCode 230
  *
  * 26. Mode in a loosely BST
  *     1) findModeHashMap
@@ -1053,6 +1059,12 @@ public class TreeDemo {
 //        System.out.println(closestValue(r1, 6.7));
 //        System.out.print("The closest value in Tree1 comparing to 55.0 is: ");
 //        System.out.println(closestValue(r100, 55.0));
+//        /* 25.1.1 */
+//        System.out.println("******************** 25.1.1 ********************");
+//        System.out.print("5th Smallest Element in Tree 2 is: ");
+//        System.out.println(kthSmallestBS(r100, 5));
+//        System.out.print("3rd Smallest Element in Tree 2 is: ");
+//        System.out.println(kthSmallestBS(r100, 3));
 //        /* 26.1 */
 //        System.out.println("********************* 26.1 *********************");
 //        System.out.println("The mode for Tree 4 is: ");
@@ -4009,6 +4021,56 @@ public class TreeDemo {
             cur = cur.right;
         }
         return result;
+    }
+
+    ////////////////////////////////////////
+    // 25.1 Kth Smallest Element in a BST //
+    ////////////////////////////////////////
+
+    //////////////////////////////////////
+    // 1) kthSmallestBS (Binary Search) //
+    //////////////////////////////////////
+
+    /*
+        Tree 2: Binary Search Tree
+                  100
+                /    \
+               40     180
+             /  \     /
+            30   60  110
+
+         where r100 is the root
+     */
+    /* Interesting solution, narrow down and k to get to the target point */
+    public static int kthSmallestBS(TreeNode root, int k) {
+        int count = getNodeNumRec(root.left); /* Reuse method 1.1 */
+        if (k <= count) {
+            return kthSmallestBS(root.left, k);
+        } else if (k > count + 1) {
+            return kthSmallestBS(root.right, k - 1 - count); /* 1 is counted as
+            current node */
+        }
+        return root.val;
+    }
+
+    /////////////////////////
+    // 2) kthSmallestCarry //
+    /////////////////////////
+
+    /* Got all the Inorder list and return the k - 1 the in the list */
+    public static int kthSmallestCarry(TreeNode root, int k) {
+        List<Integer> list = new ArrayList<>();
+        kthSmallestCarryHelper(root, list);
+        return list.get(k - 1);
+    }
+    private static void kthSmallestCarryHelper(TreeNode root,
+                                               List<Integer> list) {
+        if (root == null) {
+            return;
+        }
+        kthSmallestCarryHelper(root.left, list);
+        list.add(root.val);
+        kthSmallestCarryHelper(root.right, list);
     }
 
 ///////////////////////////////
