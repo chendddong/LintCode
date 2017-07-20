@@ -141,6 +141,9 @@ import java.util.*;
  * 22. Convert Sorted Array to BST (LeetCode 108, LintCode 177)
  *     1) sortedArrayToBST
  *
+ * 22.1 Serialize and deserialize BST
+ *     1) serialize/deserialize
+ *
  * 23. Tree 1 is subtree of Tree2 (LeetCode 572, LintCode 245)
  *     1) isSubtree
  *
@@ -999,6 +1002,12 @@ public class TreeDemo {
 //        System.out.println(levelOrderBFS(sortedArrayToBST(sortedArray)));
 //        System.out.println("Test the inorder traversal for the new BST:  ");
 //        inorderTraversal(sortedArrayToBST(sortedArray));
+//        /* 22.1.1 */
+//        System.out.println("******************** 22.1.1 ********************");
+//        System.out.println("Tree 2 after serialization: ");
+//        System.out.println(serialize(r100));
+//        System.out.println("Tree 2 after deserialization: ");
+//        System.out.println(levelOrderBFS(deserialize(serialize(r100))));
 //        /* 23.1 */
 //        System.out.println("********************* 23.1 *********************");
 //        System.out.print("r1 is the subtree of r1 : ");
@@ -3767,6 +3776,112 @@ public class TreeDemo {
         return node;
     }
 
+////////////////////////////////////////
+    // 22.1 Serialize and deserialize BST //
+    ////////////////////////////////////////
+
+    ////////////////////////////////
+    // 1) serialize / deserialize //
+    ////////////////////////////////
+
+    /* Very Important problem; Using two queues BFS */
+    public static String serialize(TreeNode root) {
+        if (root == null) {
+            return "{}";
+        }
+
+        ArrayList<TreeNode> queue = new ArrayList<>();
+        queue.add(root);
+
+        /* Add all the nodes to queue as well as nulls BFS */
+        for (int i = 0; i < queue.size(); i++) {
+            TreeNode node = queue.get(i);
+            if (node == null) {
+                continue;
+            }
+
+            queue.add(node.left);
+            queue.add(node.right);
+        }
+
+        /* Remove all the last 'nulls' */
+        while (queue.get(queue.size() - 1) == null) {
+            queue.remove(queue.size() - 1);
+        }
+
+        /* Serialization */
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        /* Offer root to the sb */
+        sb.append(queue.get(0).val);
+
+        for (int i = 1; i < queue.size(); i++) {
+            if (queue.get(i) == null) {
+                sb.append(",#");
+            } else {
+                sb.append(",");
+                /* Can append int directly */
+                sb.append(queue.get(i).val);
+            }
+        }
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    public static TreeNode deserialize(String data) {
+        if (data.equals("{}")) {
+            return null;
+        }
+
+        /* Split data and get the String array; Don't forget to cut the '{' */
+        String[] vals = data.substring(1, data.length() - 1).split(",");
+
+        /* Creating queue and root node */
+        ArrayList<TreeNode> queue = new ArrayList<>();
+        TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
+        queue.add(root);
+
+        int index = 0;
+        boolean isLeftChild = true;
+
+        /*
+            Tree 2: Binary Search Tree
+                      100
+                    /    \
+                   40     180
+                 /  \     /
+                30   60  110
+
+             where r100 is the root
+            String = "{100,40,180,30,60,110}"
+         */
+
+        /* BFS process; Using index to access the parent one by one */
+        for (int i = 1; i < vals.length; i++) {
+            /* We got numbers */
+            if (!vals[i].equals("#")) {
+                TreeNode node = new TreeNode(Integer.parseInt(vals[i]));
+                /* Connecting the tree */
+                if (isLeftChild) {
+                    queue.get(index).left = node;
+                } else {
+                    queue.get(index).right = node;
+                }
+
+                /* Offer it to the queue as well */
+                queue.add(node);
+            }
+
+            if (!isLeftChild) {
+                index++;
+            }
+            isLeftChild = !isLeftChild;
+        }
+
+        return root;
+
+    }
 
 ////////////////////////////////////
 // 23. Tree 1 is subtree of Tree2 //
