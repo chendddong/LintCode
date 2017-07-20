@@ -150,6 +150,12 @@ import java.util.*;
  * 23.1 Most frequent subtree sum
  *     1) findFrequentTreeSum
  *
+ * 23.2 The number of Univalue subtrees
+ *     1) countUnivalSubtreesGlobal
+ *     2) countUnivalSubtreesRec
+ *          -- TreeDemo 23.2
+ *          -- LeetCode 250
+ *
  * 24. Path Sum
  *     1) hasPathSum (root to leaf LeetCode 112)
  *     2) binaryTreePathSumList (root to leaf)
@@ -1028,6 +1034,15 @@ public class TreeDemo {
 //        /* Tree 4 */
 //        System.out.println("The most frequent subtree sum for Tree 4 is: ");
 //        System.out.println(Arrays.toString(findFrequentTreeSum(r16)));
+        /* 23.2.1 */
+        System.out.println("******************** 23.2.1 ********************");
+        System.out.print("The number of Univalue subtree for T4 is: ");
+        System.out.println(countUnivalSubtreesGlobal(r16));
+        /* 23.2.2 */
+        System.out.println("******************** 23.2.2 ********************");
+        System.out.print("The number of Univalue subtree for T4 is: ");
+        System.out.println(countUnivalSubtreesRec(r16));
+
 //        /* 24.1 */
 //        System.out.println("********************* 24.1 *********************");
 //        System.out.print("Tree 1 has a path sum of 17 : ");
@@ -3964,6 +3979,75 @@ public class TreeDemo {
         maxCnt = Math.max(maxCnt, count);
 
         return sum;
+    }
+
+//////////////////////////////////////////
+// 23.2 The number of Univalue subtrees //
+//////////////////////////////////////////
+
+    //////////////////////////////////
+    // 1) countUnivalSubtreesGlobal //
+    //////////////////////////////////
+
+    private static int res_23_2_1 = 0;
+    public static int countUnivalSubtreesGlobal(TreeNode root) {
+        isUnival(root, 0);
+        return res_23_2_1;
+    }
+    private static boolean isUnival(TreeNode root, int val) {
+        if (root == null) {
+            return true;
+        }
+
+        /* Go deeper then deal with the root; Use the bit OR!!! */
+        if (!isUnival(root.left, root.val)
+                | !isUnival(root.right, root.val)) {
+            return false;
+        }
+
+        res_23_2_1++;
+
+        return root.val == val;
+
+    }
+
+    ///////////////////////////////
+    // 2) countUnivalSubtreesRec //
+    ///////////////////////////////
+
+    /*
+        Note: All parameters are passed by value. So we can not pass
+        integer to the function and hope to return the value we want. As an
+        alteration, we can use a single-element array, and the return it.
+     */
+    public static int countUnivalSubtreesRec(TreeNode root) {
+        int[] count = new int[1];
+        countUnivalSubtreesHelper(root, count);
+        return count[0];
+    }
+    private static boolean countUnivalSubtreesHelper(TreeNode node, int[] count)
+    {
+        if (node == null) {
+            return true;
+        }
+
+        boolean left = countUnivalSubtreesHelper(node.left, count);
+        boolean right = countUnivalSubtreesHelper(node.right, count);
+
+        /* Basic logic; Go over the example above */
+        if (left && right) {
+            if (node.left != null && node.left.val != node.val) {
+                return false;
+            }
+            if (node.right != null && node.right.val != node.val) {
+                return false;
+            }
+            count[0]++;
+            return true;
+        }
+
+        return false;
+
     }
 
 ///////////////////
