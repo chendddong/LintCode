@@ -200,6 +200,9 @@ import java.util.*;
  *
  * 27. Tree Simulation
  *     1) killProcess
+ *
+ * 28. Graph Valid Tree
+ *     1) validTree
  */
 
 public class TreeDemo {
@@ -422,6 +425,11 @@ public class TreeDemo {
         ppid.add(0);
         ppid.add(5);
         ppid.add(3);
+
+        /* Make treeNumber and edges for 28.1 */
+        int treeNumber = 5;
+        int[][] edges = {{0, 1}, {0, 2}, {0, 3}, {1, 4}};
+        int[][] edges1 = {{0, 1}, {1, 2}, {2, 3}, {1, 3}, {1,4}};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1222,7 +1230,12 @@ public class TreeDemo {
 //        System.out.println("******************** 27.1 ********************");
 //        System.out.println("The processes we need to kill for pid 10 are: ");
 //        System.out.println(Arrays.toString(killProcess(pid, ppid, kill10).toArray()));
-
+//        /* 28.1 */
+//        System.out.println("******************** 28.1 ********************");
+//        System.out.print("Is the given n and edges a valid tree ? ");
+//        System.out.println(validTree(treeNumber, edges));
+//        System.out.print("Is the given n and edges a valid tree ? ");
+//        System.out.println(validTree(treeNumber, edges1));
 
 
 
@@ -4863,6 +4876,69 @@ public class TreeDemo {
             getAllChildren(n, result);
         }
     }
+
+//////////////////////////
+// 28. Graph Valid Tree //
+//////////////////////////
+
+    //////////////////
+    // 1) validTree //
+    //////////////////
+
+    /* Intuitive BFS solution */
+    public static boolean validTree(int n, int[][] edges) {
+        if (n == 0) {
+            return false;
+        }
+
+        /* What makes a tree */
+        if (edges.length != n - 1) {
+            return false;
+        }
+
+        /* There are no duplicates so we can use a Set */
+        Map<Integer, Set<Integer>> graph = initializeGraph(n, edges);
+
+        /* BFS */
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+
+        /* For checking as well as speeding the algorithm */
+        Set<Integer> hash = new HashSet<>();
+
+        q.offer(0);
+        hash.add(0);
+
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            for (Integer connectedNode : graph.get(node)) {
+                if (hash.contains(connectedNode)) {
+                    continue;
+                }
+                hash.add(connectedNode);
+                q.offer(connectedNode);
+            }
+        }
+
+        return hash.size() == n;
+
+    }
+    private static Map<Integer, Set<Integer>> initializeGraph(int n, int[][]
+            edges) {
+        Map<Integer, Set<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            graph.put(i, new HashSet<>());
+        }
+
+        for (int[] a : edges) {
+            int first = a[0];
+            int second = a[1];
+            graph.get(first).add(second);
+            graph.get(second).add(first);
+        }
+
+        return graph;
+    }
+
 
 
 
