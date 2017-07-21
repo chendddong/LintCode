@@ -106,6 +106,11 @@ import java.util.*;
  *     1) binaryTreePathsWithHelp
  *     2) binaryTreePaths
  *
+ * 15.2 Length of the longest consecutive sequence path (parent to child)
+ *     1) longestConsecutivePreDFS
+ *     2) longestConsecutivePostDFS
+ *         -- LeetCode 298
+ *
  * 16. Merge two BT
  *     1) mergeTreesRec (LeetCode 617)
  *
@@ -153,8 +158,6 @@ import java.util.*;
  * 23.2 The number of Univalue subtrees
  *     1) countUnivalSubtreesGlobal
  *     2) countUnivalSubtreesRec
- *          -- TreeDemo 23.2
- *          -- LeetCode 250
  *
  * 24. Path Sum
  *     1) hasPathSum (root to leaf LeetCode 112)
@@ -876,6 +879,18 @@ public class TreeDemo {
 //        for (String s : binaryTreePaths(r16)) {
 //            System.out.println(s);
 //        }
+//        /* 15.2.1 */
+//        System.out.println("******************** 15.2.1 ********************");
+//        System.out.print("The number of longest consecutive path for T1 is: ");
+//        System.out.println(longestConsecutivePreDFS(r1));
+//        System.out.print("The number of longest consecutive path for T3 is: ");
+//        System.out.println(longestConsecutivePreDFS(r12));
+//        System.out.print("The number of longest consecutive path for T4 is: ");
+//        System.out.println(longestConsecutivePreDFS(r16));
+//        /* 15.2.2 */
+//        System.out.println("******************** 15.2.2 ********************");
+//        System.out.print("The number of longest consecutive path for T3 is: ");
+//        System.out.println(longestConsecutivePostDFS(r12));
 //        /* 16.1 */
 //        System.out.println("********************* 16.1 *********************");
 //        System.out.println("The original Tree 1: ");
@@ -1034,14 +1049,14 @@ public class TreeDemo {
 //        /* Tree 4 */
 //        System.out.println("The most frequent subtree sum for Tree 4 is: ");
 //        System.out.println(Arrays.toString(findFrequentTreeSum(r16)));
-        /* 23.2.1 */
-        System.out.println("******************** 23.2.1 ********************");
-        System.out.print("The number of Univalue subtree for T4 is: ");
-        System.out.println(countUnivalSubtreesGlobal(r16));
-        /* 23.2.2 */
-        System.out.println("******************** 23.2.2 ********************");
-        System.out.print("The number of Univalue subtree for T4 is: ");
-        System.out.println(countUnivalSubtreesRec(r16));
+//        /* 23.2.1 */
+//        System.out.println("******************** 23.2.1 ********************");
+//        System.out.print("The number of Univalue subtree for T4 is: ");
+//        System.out.println(countUnivalSubtreesGlobal(r16));
+//        /* 23.2.2 */
+//        System.out.println("******************** 23.2.2 ********************");
+//        System.out.print("The number of Univalue subtree for T4 is: ");
+//        System.out.println(countUnivalSubtreesRec(r16));
 
 //        /* 24.1 */
 //        System.out.println("********************* 24.1 *********************");
@@ -3095,7 +3110,7 @@ public class TreeDemo {
         return max;
     }
 
-//////////////////////////////////////
+    //////////////////////////////////////
     // 15.1 Root to leaf paths (String) //
     //////////////////////////////////////
 
@@ -3164,6 +3179,70 @@ public class TreeDemo {
 
         return paths;
 
+    }
+
+//////////////////////////////////////////////////////////
+// 15.2 Length of the longest consecutive sequence path //
+//////////////////////////////////////////////////////////
+
+    /////////////////////////////////
+    // 1) longestConsecutivePreDFS //
+    /////////////////////////////////
+
+    /* Important problem */
+    public static int longestConsecutivePreDFS(TreeNode root) {
+        return longestConsecutiveHelper(root, null, 0);
+    }
+
+    private static int longestConsecutiveHelper(TreeNode root,
+                                                TreeNode parent,
+                                                int length) {
+        if (root == null) {
+            return length;
+        }
+
+        if (parent != null && root.val == parent.val + 1) {
+            length++;
+        } else {
+            length = 1;
+        }
+
+        int left  = longestConsecutiveHelper(root.left, root, length);
+        int right = longestConsecutiveHelper(root.right, root, length);
+
+        return Math.max(length, Math.max(left, right));
+
+    }
+
+    //////////////////////////////////
+    // 2) longestConsecutivePostDFS //
+    //////////////////////////////////
+
+    private static int maxL = 0;
+    public static int longestConsecutivePostDFS(TreeNode root) {
+        postOrderDFS(root);
+        return maxL;
+    }
+    private static int postOrderDFS(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        /* Add the 1 beforehand assuming they are consecutive */
+        int left = postOrderDFS(root.left) + 1;
+        int right = postOrderDFS(root.right) + 1;
+
+        /* Where we set the length to 1 again */
+        if (root.left != null && root.val + 1 != root.left.val) {
+            left = 1;
+        }
+        if (root.right != null && root.val + 1 != root.right.val) {
+            right = 1;
+        }
+
+        int tempL = Math.max(left, right);
+        maxL = Math.max(maxL, tempL);
+        return tempL;
     }
 
 //////////////////////
