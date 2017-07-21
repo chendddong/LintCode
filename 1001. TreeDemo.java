@@ -190,6 +190,11 @@ import java.util.*;
  *     1) findModeHashMap
  *     2) findMode2Trav
  *
+ * 26.1 Verify preorder traversal sequence of BST
+ *     1) verifyPreorderStack
+ *     2) verifyPreorder
+ *         -- LeetCode 255
+ *
  * 27. Tree Simulation
  *     1) killProcess
  */
@@ -372,6 +377,24 @@ public class TreeDemo {
         }
 //        /* Test for the inorderArray */
 //        System.out.print(Arrays.toString(sortedArray));
+
+
+        /* Make array for 26.1.1 - 26.1.2 */
+        int[] inorderArray = {100, 40, 30, 60, 180, 110};
+        int[] randomArray = {17, 23, 123, 492, 1,98};
+        /*
+            Tree 2: Binary Search Tree
+                      100
+                    /    \
+                   40     180
+                 /  \     /
+                30   60  110
+
+             where r100 is the root
+         */
+
+
+
 
         /* Make lists for 27.1 */
 
@@ -1164,6 +1187,18 @@ public class TreeDemo {
 //        for (int mode : arr_1) {
 //            System.out.print(mode + " ");
 //        }
+        /* 26.1.1 */
+        System.out.println("******************** 26.1.1 ********************");
+        System.out.print("Preorder traversal sequence inorderArray :");
+        System.out.println(verifyPreorderStack(inorderArray));
+        System.out.print("Preorder traversal sequence randomArray :");
+        System.out.println(verifyPreorderStack(randomArray));
+        /* 26.1.2 */
+        System.out.println("******************** 26.1.2 ********************");
+        System.out.print("Preorder traversal sequence inorderArray :");
+        System.out.println(verifyPreorder(inorderArray));
+        System.out.print("Preorder traversal sequence randomArray :");
+        System.out.println(verifyPreorder(randomArray));
 //        /* 27.1 */
 //        System.out.println("******************** 27.1 ********************");
 //        System.out.println("The processes we need to kill for pid 5 are: ");
@@ -4063,8 +4098,8 @@ public class TreeDemo {
     }
 
 ////////////////////////////////////////
-    // 22.1 Serialize and deserialize BST //
-    ////////////////////////////////////////
+// 22.1 Serialize and deserialize BST //
+////////////////////////////////////////
 
     ////////////////////////////////
     // 1) serialize / deserialize //
@@ -4649,6 +4684,51 @@ public class TreeDemo {
         inorder(root.left);
         handleValue(root.val);
         inorder(root.right);
+    }
+
+////////////////////////////////////////////////////
+// 26.1 Verify preorder traversal sequence of BST //
+////////////////////////////////////////////////////
+
+    ////////////////////////////
+    // 1) verifyPreorderStack //
+    ////////////////////////////
+
+    /* Concept is import ! Simulate a stack */
+    public static boolean verifyPreorderStack(int[] preorder) {
+        int low = Integer.MIN_VALUE;
+        /* As a stack */
+        ArrayDeque<Integer> path = new ArrayDeque<>();
+        for (int p : preorder) {
+            if (p < low) {
+                return false;
+            }
+            while (!path.isEmpty() && p > path.peek()) {
+                low = path.pop();
+            }
+            path.push(p);
+        }
+        return true;
+
+    }
+
+    ///////////////////////
+    // 2) verifyPreorder //
+    ///////////////////////
+
+    /* Same as above, but abusing the given array for the stack. */
+    public static boolean verifyPreorder(int[] preorder) {
+        int low = Integer.MIN_VALUE, i = -1;
+        for (int p : preorder) {
+            if (p < low) {
+                return false;
+            }
+            while (i >= 0 && p > preorder[i]) {
+                low = preorder[i--];
+            }
+            preorder[++i] = p;
+        }
+        return true;
     }
 
 /////////////////////////
