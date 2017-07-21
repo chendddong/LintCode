@@ -46,6 +46,10 @@ import java.util.*;
  *     1) addOneRowDFS
  *     2) addOneRowBFS
  *
+ * 4.4 Right view of BT
+ *     1) rightSideViewBFS
+ *     2) rightSideViewDFS
+ *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
  *
@@ -559,6 +563,27 @@ public class TreeDemo {
 //        System.out.println(levelOrderBFS(addOneRowDFS(r12, 1, 3)));
 //        System.out.println("The new tree for T4 add '3' to '2nd' level");
 //        System.out.println(levelOrderBFS(addOneRowDFS(r16, 3, 2)));
+        /* 4.4.1 */
+        System.out.println("******************** 4.4.1 ********************");
+        System.out.println("The right view of the Tree 1 is: ");
+        System.out.println(Arrays.toString(rightSideViewBFS(r1).toArray));
+        System.out.println("The right view of the Tree 2 is: ");
+        System.out.println(Arrays.toString(rightSideViewBFS(r100).toArray));
+        System.out.println("The right view of the Tree 3 is: ");
+        System.out.println(Arrays.toString(rightSideViewBFS(r12).toArray));
+        System.out.println("The right view of the Tree 4 is: ");
+        System.out.println(Arrays.toString(rightSideViewBFS(r16).toArray));
+        /* 4.4.2 */
+        System.out.println("******************** 4.4.2 ********************");
+        System.out.println("The right view of the Tree 1 is: ");
+        System.out.println(Arrays.toString(rightSideViewDFS(r1).toArray));
+        System.out.println("The right view of the Tree 2 is: ");
+        System.out.println(Arrays.toString(rightSideViewDFS(r100).toArray));
+        System.out.println("The right view of the Tree 3 is: ");
+        System.out.println(Arrays.toString(rightSideViewDFS(r12).toArray));
+        System.out.println("The right view of the Tree 4 is: ");
+        System.out.println(Arrays.toString(rightSideViewDFS(r16).toArray));                                
+
 //        /* 5.1 */
 //        System.out.println("********************** 5.1 **********************");
 //        System.out.println("Converting Tree 1 to DDL: ");
@@ -1891,6 +1916,74 @@ public class TreeDemo {
         return root;
     }
 
+//////////////////////////
+// 4.4 Right view of BT //
+//////////////////////////
+
+    /////////////////////////
+    // 1) rightSideViewBFS //
+    /////////////////////////
+
+    /* Use BFS right from left add the first element */
+    public static List<Integer> rightSideViewBFS(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }    
+
+        /* BFS */
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+        int level = 0;
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                /* Use node */
+                TreeNode node = q.poll();
+                if (level == result.size()) {
+                    result.add(node.val);
+                }
+
+                if (node.right != null) {
+                    q.offer(node.right);
+                }
+                if (node.left != null) {
+                    q.offer(node.left);
+                }
+            }
+            level++;
+        }
+
+        return result;
+    }
+
+    /////////////////////////
+    // 2) rightSideViewDFS //
+    /////////////////////////
+
+    /* DFS top to bottom compare the size of the result and the level */
+    public static List<Integer> rightSideViewDFS(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        rightSideViewHepler(root, result, 0);
+        return result;
+    }
+
+    private static void rightSideViewHepler(TreeNode root, 
+                                     List<Integer> result, 
+                                     int level) {
+        if (root == null) {
+            return;
+        }
+
+        if (level == result.size()) {
+            result.add(root.val);
+        }        
+
+        rightSideViewHepler(root.right, result, level + 1);
+        rightSideViewHepler(root.left,  result, level + 1);
+    }
+    
 /////////////////////////////////////////
 // 5. Convert BST to Doubly LinkedList //
 /////////////////////////////////////////
@@ -3218,7 +3311,7 @@ public class TreeDemo {
     //////////////////////////////////
     // 2) longestConsecutivePostDFS //
     //////////////////////////////////
-    
+
     /* Global max; Add 1 by default just handle the non-consecutive one */
     private static int maxL = 0;
     public static int longestConsecutivePostDFS(TreeNode root) {
