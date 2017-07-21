@@ -115,6 +115,9 @@ import java.util.*;
  *     2) longestConsecutivePostDFS
  *         -- LeetCode 298
  *
+ * 15.3 Length of the longest consecutive sequence path (any to any)
+ *     1) longestConsecutiveII
+ *
  * 16. Merge two BT
  *     1) mergeTreesRec (LeetCode 617)
  *
@@ -943,6 +946,16 @@ public class TreeDemo {
 //        System.out.println("******************** 15.2.2 ********************");
 //        System.out.print("The number of longest consecutive path for T3 is: ");
 //        System.out.println(longestConsecutivePostDFS(r12));
+//        /* 15.3.1 */
+//        System.out.println("******************** 15.3.1 ********************");
+//        System.out.println("Length of the longest consecutive sequence path of tree 1 (any to any) is: ");
+//        System.out.println(longestConsecutiveII(r1));
+//        System.out.println("Length of the longest consecutive sequence path of tree 2 (any to any) is: ");
+//        System.out.println(longestConsecutiveII(r100));
+//        System.out.println("Length of the longest consecutive sequence path of tree 3 (any to any) is: ");
+//        System.out.println(longestConsecutiveII(r12));
+//        System.out.println("Length of the longest consecutive sequence path of tree 4 (any to any) is: ");
+//        System.out.println(longestConsecutiveII(r16));
 //        /* 16.1 */
 //        System.out.println("********************* 16.1 *********************");
 //        System.out.println("The original Tree 1: ");
@@ -1187,18 +1200,18 @@ public class TreeDemo {
 //        for (int mode : arr_1) {
 //            System.out.print(mode + " ");
 //        }
-        /* 26.1.1 */
-        System.out.println("******************** 26.1.1 ********************");
-        System.out.print("Preorder traversal sequence inorderArray :");
-        System.out.println(verifyPreorderStack(inorderArray));
-        System.out.print("Preorder traversal sequence randomArray :");
-        System.out.println(verifyPreorderStack(randomArray));
-        /* 26.1.2 */
-        System.out.println("******************** 26.1.2 ********************");
-        System.out.print("Preorder traversal sequence inorderArray :");
-        System.out.println(verifyPreorder(inorderArray));
-        System.out.print("Preorder traversal sequence randomArray :");
-        System.out.println(verifyPreorder(randomArray));
+//        /* 26.1.1 */
+//        System.out.println("******************** 26.1.1 ********************");
+//        System.out.print("Preorder traversal sequence inorderArray :");
+//        System.out.println(verifyPreorderStack(inorderArray));
+//        System.out.print("Preorder traversal sequence randomArray :");
+//        System.out.println(verifyPreorderStack(randomArray));
+//        /* 26.1.2 */
+//        System.out.println("******************** 26.1.2 ********************");
+//        System.out.print("Preorder traversal sequence inorderArray :");
+//        System.out.println(verifyPreorder(inorderArray));
+//        System.out.print("Preorder traversal sequence randomArray :");
+//        System.out.println(verifyPreorder(randomArray));
 //        /* 27.1 */
 //        System.out.println("******************** 27.1 ********************");
 //        System.out.println("The processes we need to kill for pid 5 are: ");
@@ -3381,6 +3394,74 @@ public class TreeDemo {
         int tempL = Math.max(left, right);
         maxL = Math.max(maxL, tempL);
         return tempL;
+    }
+
+///////////////////////////////////////////////////////////////////////
+// 15.3 Length of the longest consecutive sequence path (any to any) //
+///////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////
+    // 1) longestConsecutiveII //
+    /////////////////////////////
+    private static class ResultType15_3 {
+        public int max_length;
+        public int max_down;
+        public int max_up;
+        ResultType15_3(int l, int d, int u) {
+            max_length = l;
+            max_down = d;
+            max_up = u;
+        }
+    }
+    public static int longestConsecutiveII(TreeNode root) {
+        return longestConsecutiveIIHelper(root).max_length;
+    }
+
+    private static ResultType15_3 longestConsecutiveIIHelper(TreeNode root) {
+        if (root == null) {
+            return new ResultType15_3(0, 0, 0);
+        }
+
+        /* bottom up */
+        ResultType15_3 left = longestConsecutiveIIHelper(root.left);
+        ResultType15_3 right = longestConsecutiveIIHelper(root.right);
+
+        int down = 0, up = 0;
+
+        /* Four situations */
+        //   2
+        //  /
+        // 1
+
+        if (root.left != null && root.left.val + 1 == root.val)
+            down = Math.max(down, left.max_down + 1);
+
+        //   1
+        //  /
+        // 2
+
+        if (root.left != null && root.left.val - 1 == root.val)
+            up = Math.max(up, left.max_up + 1);
+
+        //   2
+        //    \
+        //     1
+
+        if (root.right != null && root.right.val + 1 == root.val)
+            down = Math.max(down, right.max_down + 1);
+
+        //   1
+        //    \
+        //     2
+
+        if (root.right != null && root.right.val - 1 == root.val)
+            up = Math.max(up, right.max_up + 1);
+
+        /* Solve the problem */
+        int len = down + 1 + up;
+        len = Math.max(len, Math.max(left.max_length, right.max_length));
+
+        return new ResultType15_3(len, down, up);
     }
 
 //////////////////////
