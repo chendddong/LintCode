@@ -3110,9 +3110,9 @@ public class TreeDemo {
         return max;
     }
 
-    //////////////////////////////////////
-    // 15.1 Root to leaf paths (String) //
-    //////////////////////////////////////
+//////////////////////////////////////
+// 15.1 Root to leaf paths (String) //
+//////////////////////////////////////
 
     ////////////////////////////////
     // 1) binaryTreePathsWithHelp //
@@ -3190,6 +3190,7 @@ public class TreeDemo {
     /////////////////////////////////
 
     /* Important problem */
+    /* Use a parent node to keep track of the previous node */
     public static int longestConsecutivePreDFS(TreeNode root) {
         return longestConsecutiveHelper(root, null, 0);
     }
@@ -3217,7 +3218,8 @@ public class TreeDemo {
     //////////////////////////////////
     // 2) longestConsecutivePostDFS //
     //////////////////////////////////
-
+    
+    /* Global max; Add 1 by default just handle the non-consecutive one */
     private static int maxL = 0;
     public static int longestConsecutivePostDFS(TreeNode root) {
         postOrderDFS(root);
