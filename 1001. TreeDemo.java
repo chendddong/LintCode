@@ -122,6 +122,11 @@ import java.util.*;
  *     1) tree2strRec
  *     2) tree2str
  *
+ * 17.1 Construct a BT from String
+ *     1) str2treeRec
+ *     2) str2tree
+ *         -- LeetCode 536
+ *
  * 18. Minimum absolute difference between any nodes (LeetCode 530)
  *     1) getMinimumDifference
  *     2) getMinimumDifferenceArrayList
@@ -563,27 +568,26 @@ public class TreeDemo {
 //        System.out.println(levelOrderBFS(addOneRowDFS(r12, 1, 3)));
 //        System.out.println("The new tree for T4 add '3' to '2nd' level");
 //        System.out.println(levelOrderBFS(addOneRowDFS(r16, 3, 2)));
-        /* 4.4.1 */
-        System.out.println("******************** 4.4.1 ********************");
-        System.out.println("The right view of the Tree 1 is: ");
-        System.out.println(Arrays.toString(rightSideViewBFS(r1).toArray));
-        System.out.println("The right view of the Tree 2 is: ");
-        System.out.println(Arrays.toString(rightSideViewBFS(r100).toArray));
-        System.out.println("The right view of the Tree 3 is: ");
-        System.out.println(Arrays.toString(rightSideViewBFS(r12).toArray));
-        System.out.println("The right view of the Tree 4 is: ");
-        System.out.println(Arrays.toString(rightSideViewBFS(r16).toArray));
-        /* 4.4.2 */
-        System.out.println("******************** 4.4.2 ********************");
-        System.out.println("The right view of the Tree 1 is: ");
-        System.out.println(Arrays.toString(rightSideViewDFS(r1).toArray));
-        System.out.println("The right view of the Tree 2 is: ");
-        System.out.println(Arrays.toString(rightSideViewDFS(r100).toArray));
-        System.out.println("The right view of the Tree 3 is: ");
-        System.out.println(Arrays.toString(rightSideViewDFS(r12).toArray));
-        System.out.println("The right view of the Tree 4 is: ");
-        System.out.println(Arrays.toString(rightSideViewDFS(r16).toArray));                                
-
+//        /* 4.4.1 */
+//        System.out.println("******************** 4.4.1 ********************");
+//        System.out.println("The right view of the Tree 1 is: ");
+//        System.out.println(Arrays.toString(rightSideViewBFS(r1).toArray()));
+//        System.out.println("The right view of the Tree 2 is: ");
+//        System.out.println(Arrays.toString(rightSideViewBFS(r100).toArray()));
+//        System.out.println("The right view of the Tree 3 is: ");
+//        System.out.println(Arrays.toString(rightSideViewBFS(r12).toArray()));
+//        System.out.println("The right view of the Tree 4 is: ");
+//        System.out.println(Arrays.toString(rightSideViewBFS(r16).toArray()));
+//        /* 4.4.2 */
+//        System.out.println("******************** 4.4.2 ********************");
+//        System.out.println("The right view of the Tree 1 is: ");
+//        System.out.println(Arrays.toString(rightSideViewDFS(r1).toArray()));
+//        System.out.println("The right view of the Tree 2 is: ");
+//        System.out.println(Arrays.toString(rightSideViewDFS(r100).toArray()));
+//        System.out.println("The right view of the Tree 3 is: ");
+//        System.out.println(Arrays.toString(rightSideViewDFS(r12).toArray()));
+//        System.out.println("The right view of the Tree 4 is: ");
+//        System.out.println(Arrays.toString(rightSideViewDFS(r16).toArray()));
 //        /* 5.1 */
 //        System.out.println("********************** 5.1 **********************");
 //        System.out.println("Converting Tree 1 to DDL: ");
@@ -948,6 +952,10 @@ public class TreeDemo {
 //        System.out.println();
 //        System.out.println("The string which is constructed by Tree 2: ");
 //        System.out.println(tree2str(r100));
+//        /* 17.1.1 */
+//        System.out.println("******************** 17.1.1 ********************");
+//        System.out.println("The Tree we can form from the String '4(2(3)(1))(6(5))' is: ");
+//        System.out.println(levelOrderBFS(str2tree("4(2(3)(1))(6(5))")));
 //        /* 18.1 Tree2 We can't test Tree1 since it's not a BST */
 //        System.out.println("********************* 18.1 *********************");
 //        System.out.print("The min abs distance between any nodes in Tree2: ");
@@ -1929,7 +1937,7 @@ public class TreeDemo {
         List<Integer> result = new ArrayList<>();
         if (root == null) {
             return result;
-        }    
+        }
 
         /* BFS */
         ArrayDeque<TreeNode> q = new ArrayDeque<>();
@@ -1969,21 +1977,21 @@ public class TreeDemo {
         return result;
     }
 
-    private static void rightSideViewHepler(TreeNode root, 
-                                     List<Integer> result, 
-                                     int level) {
+    private static void rightSideViewHepler(TreeNode root,
+                                            List<Integer> result,
+                                            int level) {
         if (root == null) {
             return;
         }
 
         if (level == result.size()) {
             result.add(root.val);
-        }        
+        }
 
         rightSideViewHepler(root.right, result, level + 1);
         rightSideViewHepler(root.left,  result, level + 1);
     }
-    
+
 /////////////////////////////////////////
 // 5. Convert BST to Doubly LinkedList //
 /////////////////////////////////////////
@@ -3436,6 +3444,95 @@ public class TreeDemo {
         return s.substring(1, s.length() - 1);
     }
 
+/////////////////////////////////////
+// 17.1 Construct a BT from String //
+/////////////////////////////////////
+
+    ////////////////////
+    // 1) str2treeRec //
+    ////////////////////
+
+    public static TreeNode str2treeRec(String s) {
+        if (s == null || s.length() == 0) {
+            return null;
+        }
+
+        int firstParent = s.indexOf( "(" );
+
+        int val = 0;
+        /* No "(" means there is only root */
+        if  (firstParent == - 1) {
+            val = Integer.parseInt(s);
+        /* Got the cur root's val */
+        } else {
+            val = Integer.parseInt(s.substring(0, firstParent));
+        }
+
+        TreeNode cur = new TreeNode(val);
+
+        if (firstParent == -1) {
+            return cur;
+        }
+
+        int start = firstParent;
+        int leftParentCount = 0;
+
+        for (int i = start; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                leftParentCount++;
+            } else if (s.charAt(i) == ')') {
+                leftParentCount--;
+            }
+
+            if (leftParentCount == 0 && start == firstParent) {
+                cur.left = str2treeRec(s.substring(start + 1, i));
+                start = i + 1;
+            } else if (leftParentCount == 0) {
+                cur.right = str2treeRec(s.substring(start + 1, i));
+            }
+
+        }
+        return cur;
+    }
+
+    /////////////////
+    // 2) str2tree //
+    /////////////////
+
+    /* Important one */
+    public static TreeNode str2tree(String s) {
+        /* Base */
+        if (s.length() == 0) return null;
+
+        /* Create root */
+        int i = 0, j = 0;
+
+        /* j is not out of bond; char at j is a digit or '-' */
+        while (j < s.length() && (Character.isDigit(s.charAt(j)) || s.charAt(j) == '-')) j++;
+        TreeNode root = new TreeNode(Integer.parseInt(s.substring(i, j)));
+
+        // "4(2(3)(1))(6(5))"
+
+        /* Left Child */
+        if (j < s.length()) {
+            i = j;
+            int count = 1;
+            while (j + 1 < s.length() && count != 0) {
+                j++;
+                if (s.charAt(j) == ')') count--;
+                if (s.charAt(j) == '(') count++;
+            }
+            root.left = str2tree(s.substring(i + 1, j));
+        }
+
+        j++;
+        /* Right child */
+        if (j < s.length()) {
+            root.right = str2tree(s.substring(j + 1, s.length() - 1));
+        }
+
+        return root;
+    }
 
 ///////////////////////////////////////////////////////
 // 18. Minimum absolute difference between any nodes //
