@@ -1,3 +1,5 @@
+import jdk.nashorn.internal.runtime.RewriteException;
+
 import java.util.*;
 
 
@@ -53,7 +55,7 @@ import java.util.*;
  * 4.5 Populating Next Right Pointers in Each Node
  *     1) connectBFS
  *     2) connectDFS
- * 
+ *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
  *
@@ -219,6 +221,19 @@ public class TreeDemo {
             this.val = val;
             left = null;
             right = null;
+        }
+    }
+
+    private static class TreeLinkNode {
+        int val;
+        TreeLinkNode left;
+        TreeLinkNode right;
+        TreeLinkNode next;
+        public TreeLinkNode(int val) {
+            this.val = val;
+            left = null;
+            right = null;
+            next = null;
         }
     }
 
@@ -2096,7 +2111,7 @@ public class TreeDemo {
                     node.next = null;
                 } else {
                     leftLast.next = node;
-                    leftLast = node;                    
+                    leftLast = node;
                 }
 
                 /* Add children */
@@ -2107,7 +2122,7 @@ public class TreeDemo {
                     q.offer(node.right);
                 }
             }
-        }  
+        }
     }
 
     ///////////////////
@@ -2119,15 +2134,15 @@ public class TreeDemo {
         if(root == null) {
             return;
         }
-            
+
         if(root.left != null){
             root.left.next = root.right;
             if(root.next != null)
                 root.right.next = root.next.left;
         }
-        
-        connect(root.left);
-        connect(root.right);
+
+        connectDFS(root.left);
+        connectDFS(root.right);
     }
 
 /////////////////////////////////////////
