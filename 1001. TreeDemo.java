@@ -204,6 +204,9 @@ import java.util.*;
  *     2) verifyPreorder
  *         -- LeetCode 255
  *
+ * 26.2 Delete a node in BST
+ *     1) deleteNode
+ *
  * 27. Tree Simulation
  *     1) killProcess
  *
@@ -417,9 +420,6 @@ public class TreeDemo {
 
              where r100 is the root
          */
-
-
-
 
         /* Make lists for 27.1 */
 
@@ -1241,6 +1241,16 @@ public class TreeDemo {
 //        System.out.println(verifyPreorder(inorderArray));
 //        System.out.print("Preorder traversal sequence randomArray :");
 //        System.out.println(verifyPreorder(randomArray));
+//        /* 26.2.1 */
+//        System.out.println("******************** 26.2.1 ********************");
+//        System.out.println("Delete node val of 100 from Tree 2: ");
+//        System.out.println(levelOrderBFS(deleteNode(r100, 100)));
+//        System.out.println("Delete node val of 30 from Tree 2: ");
+//        System.out.println(levelOrderBFS(deleteNode(r100, 30)));
+//        System.out.println("Delete node val of 180 from Tree 2: ");
+//        System.out.println(levelOrderBFS(deleteNode(r100, 180)));
+//        System.out.println("Delete node val of 40 from Tree 2: ");
+//        System.out.println(levelOrderBFS(deleteNode(r100, 40)));
 //        /* 27.1 */
 //        System.out.println("******************** 27.1 ********************");
 //        System.out.println("The processes we need to kill for pid 5 are: ");
@@ -4915,6 +4925,61 @@ public class TreeDemo {
             preorder[++i] = p;
         }
         return true;
+    }
+
+///////////////////////////////
+// 26.2 Delete a node in BST //
+///////////////////////////////
+
+    ///////////////////
+    // 1) deleteNode //
+    ///////////////////
+
+    /*
+        Recursively find the node that has the same value as the key(Binary
+        Search), while setting the left/right nodes equal to the returned
+        subtree
+        Once the node is found, have to handle the below 4 cases:
+
+        1. node doesn't have left or right - return null
+        2. node only has left subtree- return the left subtree
+        3. node only has right subtree- return the right subtree
+        4. node has both left and right - find the minimum value in the right
+        subtree, set that value to the currently found node, then recursively delete the minimum value in the right subtree
+     */
+    public static TreeNode deleteNode(TreeNode root, int key) {
+        /* Base */
+        if (root == null) {
+            return null;
+        }
+
+        /* Go left */
+        if (key < root.val) {
+            root.left = deleteNode(root.left, key);
+        /* Go right */
+        } else if (key > root.val) {
+            root.right = deleteNode(root.right, key);
+        } else { /* Find the node */
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+
+            TreeNode minNode = findMin(root.right);
+            root.val = minNode.val;
+            root.right = deleteNode(root.right, root.val);
+        }
+
+        return root;
+    }
+
+    private static TreeNode findMin(TreeNode node) {
+        /* Go leftmost */
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
     }
 
 /////////////////////////
