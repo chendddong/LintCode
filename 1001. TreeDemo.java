@@ -50,6 +50,10 @@ import java.util.*;
  *     1) rightSideViewBFS
  *     2) rightSideViewDFS
  *
+ * 4.5 Populating Next Right Pointers in Each Node
+ *     1) connectBFS
+ *     2) connectDFS
+ * 
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
  *
@@ -622,6 +626,8 @@ public class TreeDemo {
 //        System.out.println(Arrays.toString(rightSideViewDFS(r12).toArray()));
 //        System.out.println("The right view of the Tree 4 is: ");
 //        System.out.println(Arrays.toString(rightSideViewDFS(r16).toArray()));
+//        /* 4.5.1 - 4.5.2 */
+//        No test cases for these two just understand the concept
 //        /* 5.1 */
 //        System.out.println("********************** 5.1 **********************");
 //        System.out.println("Converting Tree 1 to DDL: ");
@@ -2051,6 +2057,77 @@ public class TreeDemo {
 
         rightSideViewHepler(root.right, result, level + 1);
         rightSideViewHepler(root.left,  result, level + 1);
+    }
+
+/////////////////////////////////////////////////////
+// 4.5 Populating Next Right Pointers in Each Node //
+/////////////////////////////////////////////////////
+
+    ///////////////////
+    // 1) connectBFS //
+    ///////////////////
+
+    /* BFS will do the work; It is too slow though */
+    public static void connectBFS(TreeLinkNode root) {
+        connectBFSHelper(root);
+    }
+    private static void connectBFSHelper(TreeLinkNode root) {
+        if (root == null) {
+            return;
+        }
+
+        /* BFS */
+        ArrayDeque<TreeLinkNode> q = new ArrayDeque<>();
+        /* Root */
+        q.offer(root);
+        root.next = null;
+        TreeLinkNode leftLast = null;
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                TreeLinkNode node = q.poll();
+
+                /* Solve problem by connecting */
+                if (i == 0) {
+                    leftLast = node;
+                } else if (i == size - 1) {
+                    leftLast.next = node;
+                    node.next = null;
+                } else {
+                    leftLast.next = node;
+                    leftLast = node;                    
+                }
+
+                /* Add children */
+                if (node.left != null) {
+                    q.offer(node.left);
+                }
+                if (node.right != null) {
+                    q.offer(node.right);
+                }
+            }
+        }  
+    }
+
+    ///////////////////
+    // 2) connectDFS //
+    ///////////////////
+
+    /* This solution is so brilliant since it's not using extra space !! */
+    public static void connectDFS(TreeLinkNode root) {
+        if(root == null) {
+            return;
+        }
+            
+        if(root.left != null){
+            root.left.next = root.right;
+            if(root.next != null)
+                root.right.next = root.next.left;
+        }
+        
+        connect(root.left);
+        connect(root.right);
     }
 
 /////////////////////////////////////////
