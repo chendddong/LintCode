@@ -124,6 +124,10 @@ import java.util.*;
  * 15.3 Length of the longest consecutive sequence path (any to any)
  *     1) longestConsecutiveII
  *
+ * 15.4 Sum Root to Leaf Numbers
+ *     1) sumNumbersNaive
+ *     2) sumNumbersCarry
+ *
  * 16. Merge two BT
  *     1) mergeTreesRec (LeetCode 617)
  *
@@ -337,8 +341,6 @@ public class TreeDemo {
         r13_1.right = r14_1;
 
 ////////////////////////////////////////////////////////////////////////////////
-
-
         /*
             Tree 4: Loosely BST
 
@@ -369,7 +371,30 @@ public class TreeDemo {
         r17.left = r17_2;
         r17.right = r17_3;
 
+
 ////////////////////////////////////////////////////////////////////////////////
+        /*
+            Tree 5: Simple BT
+
+                       1
+                     /   \
+                   2      3
+
+             where r101 is the root
+         */
+////////////////////////////////////////////////////////////////////////////////
+
+        /* Making Tree 5: */
+
+        TreeNode r101 = new TreeNode(1);
+        TreeNode r102 = new TreeNode(2);
+        TreeNode r103 = new TreeNode(3);
+
+        r101.left = r102;
+        r101.right = r103;
+
+////////////////////////////////////////////////////////////////////////////////
+
         /* Make lists for 13. rebuildBinaryTreeRec */
         List<Integer> preOrder = new ArrayList<>();
         preOrder.add(1);
@@ -5095,7 +5120,6 @@ public class TreeDemo {
 
         return graph;
     }
-
 
 
 
