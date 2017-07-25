@@ -16,24 +16,29 @@
  * }
  */ 
 
+//////////////////
+// Two Pointers //
+//////////////////
+
 public class Solution {
-    /* If "slow" and "fast" collide, we must have a cycle */
-    public boolean hasCycle(Node head) {
+    /* If "slow" and "fast" collide, we then have a cycle */    
+    public boolean hasCycle(ListNode head) {
         if (head == null) {
             return false;
-        }
-        
-        Node slow = head; // moves 1 Node  at a time
-        Node fast = head; // moves 2 Nodes at a time
-        
-        /* Work both for odd and even number of Nodes */
+        }    
+
+        ListNode slow = head; /* Moves 1 node at a time */
+        ListNode fast = head; /* Moves 2 nodes at a time */
+
+        /* Work both for odd and even number of Nodes; Remember it's && */
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
-            if (slow == fast) {
-                return true; // since "slow" and "fast" collided
+            if (fast == slow) {
+                return true;
             }
         }
+
         return false;
     }
 }
