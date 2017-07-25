@@ -42,3 +42,25 @@ public class Solution {
         return false;
     }
 }
+
+////////////////////
+// More Intuitive //
+////////////////////
+
+public boolean hasCycle(ListNode head) {
+    /* Check both */ 
+    if (head == null || head.next == null) {
+        return false;
+    }
+    /* One step ahead */
+    ListNode slow = head;
+    ListNode fast = head.next;
+    while (slow != fast) {
+        if (fast == null || fast.next == null) {
+            return false;
+        }
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    return true;
+}
