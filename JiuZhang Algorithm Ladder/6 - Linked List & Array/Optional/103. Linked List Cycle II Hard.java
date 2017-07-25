@@ -32,7 +32,7 @@ public class Solution {
             slow = slow.next;
             fast = fast.next;
         }
-        /* Now n2 points to the start of the loop */
+        /* Now fast or slow all points to the start of the loop */
         return fast;
     }
 }
