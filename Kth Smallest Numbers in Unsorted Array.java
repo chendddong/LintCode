@@ -6,7 +6,8 @@
 // inputs: int[] nums, int number
 // outputs: int;
 
-// use quick sort to partition the thgint and then just recurisively solve the problem.
+// use quick sort to partition the the int and then just recursively solve the
+// problem.
 // Solution #0 Mine
 
 class Solution {
@@ -16,46 +17,46 @@ class Solution {
      * @return kth smallest element
      */
     public int kthSmallest(int k, int[] nums) {
-    	if (nums == null || nums.length < k) {
-    		return Integer.MAX_VALUE;
-    	}
+        if (nums == null || nums.length < k) {
+            return Integer.MAX_VALUE;
+        }
         quickSort(nums, 0, nums.length - 1);
         return nums[k - 1];
 
     }
 
     private void quickSort(int[] nums,
-    					int start,
-    					int end) {
-    	int left = start;
-    	int right = end;
+                        int start,
+                        int end) {
+        int left = start;
+        int right = end;
 
-    	int pivot = nums[(left + right) / 2];
-    	while (left <= right) {
-    		while (left <= right && nums[left] < pivot) {
-    			left++;
-    		}
+        int pivot = nums[(left + right) / 2];
+        while (left <= right) {
+            while (left <= right && nums[left] < pivot) {
+                left++;
+            }
 
-    		while (left <= right && nums[right] > pivot) {
-    			right--;
-    		}
+            while (left <= right && nums[right] > pivot) {
+                right--;
+            }
 
-    		if (left <= right) {
-    			int tmp = nums[left];
-    			nums[left] = nums[right];
-    			nums[right] = tmp;
-    			left++;
-    			right--;
-    		}
-    	}
+            if (left <= right) {
+                int tmp = nums[left];
+                nums[left] = nums[right];
+                nums[right] = tmp;
+                left++;
+                right--;
+            }
+        }
 
-    	if (start < right) {
-    		quickSort(nums, start, right);
-    	}
+        if (start < right) {
+            quickSort(nums, start, right);
+        }
 
-    	if (left < end) {
-    		quickSort(nums, left, end);
-    	}
+        if (left < end) {
+            quickSort(nums, left, end);
+        }
     }
 }
 
