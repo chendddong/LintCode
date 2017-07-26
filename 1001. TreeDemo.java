@@ -1,5 +1,3 @@
-import jdk.nashorn.internal.runtime.RewriteException;
-
 import java.util.*;
 
 
@@ -55,6 +53,10 @@ import java.util.*;
  * 4.5 Populating Next Right Pointers in Each Node
  *     1) connectBFS
  *     2) connectDFS
+ *
+ * 4.6 Vertical Level Traversal
+ *     1) verticalOrderTreeMap
+ *     2) verticalOrderHashMap
  *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
@@ -668,6 +670,26 @@ public class TreeDemo {
 //        System.out.println(Arrays.toString(rightSideViewDFS(r16).toArray()));
 //        /* 4.5.1 - 4.5.2 */
 //        No test cases for these two just understand the concept
+//        /* 4.6.1 */
+//        System.out.println("******************** 4.6.1 ********************");
+//        System.out.println("The vertical order traversal of Tree 1 is :");
+//        System.out.println(Arrays.deepToString(verticalOrderTreeMap(r1).toArray()));
+//        System.out.println("The vertical order traversal of Tree 2 is :");
+//        System.out.println(Arrays.deepToString(verticalOrderTreeMap(r100).toArray()));
+//        System.out.println("The vertical order traversal of Tree 3 is :");
+//        System.out.println(Arrays.deepToString(verticalOrderTreeMap(r12).toArray()));
+//        System.out.println("The vertical order traversal of Tree 4 is :");
+//        System.out.println(Arrays.deepToString(verticalOrderTreeMap(r16).toArray()));
+//        /* 4.6.2 */
+//        System.out.println("******************** 4.6.2 ********************");
+//        System.out.println("The vertical order traversal of Tree 1 is :");
+//        System.out.println(Arrays.deepToString(verticalOrderHashMap(r1).toArray()));
+//        System.out.println("The vertical order traversal of Tree 2 is :");
+//        System.out.println(Arrays.deepToString(verticalOrderHashMap(r100).toArray()));
+//        System.out.println("The vertical order traversal of Tree 3 is :");
+//        System.out.println(Arrays.deepToString(verticalOrderHashMap(r12).toArray()));
+//        System.out.println("The vertical order traversal of Tree 4 is :");
+//        System.out.println(Arrays.deepToString(verticalOrderHashMap(r16).toArray()));
 //        /* 5.1 */
 //        System.out.println("********************** 5.1 **********************");
 //        System.out.println("Converting Tree 1 to DDL: ");
@@ -2178,6 +2200,125 @@ public class TreeDemo {
 
         connectDFS(root.left);
         connectDFS(root.right);
+    }
+
+//////////////////////////////////
+// 4.6 Vertical Level Traversal //
+//////////////////////////////////
+
+    /////////////////////////////
+    // 1) verticalOrderTreeMap //
+    /////////////////////////////
+
+    public static List<List<Integer>> verticalOrderTreeMap(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        Map<Integer, List<Integer>> map = new TreeMap<Integer, List<Integer>>();
+        ArrayDeque<Integer> qCol = new ArrayDeque<>();
+        ArrayDeque<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        qCol.offer(0);
+
+        /* Go through */
+        // Given binary tree [3,9,20,null,null,15,7],
+        //    3
+        //   /\
+        //  /  \
+        //  9  20
+        //     /\
+        //    /  \
+        //   15   7
+        // return its vertical order traversal as:
+        // [
+        //   [9],
+        //   [3,15],
+        //   [20],
+        //   [7]
+        // ]
+
+        /* BFS ! And we can't use DFS since it's required to top to bottom */
+        while (!queue.isEmpty()) {
+            TreeNode curr = queue.poll();
+            int col = qCol.poll();
+
+            /* Judge if there are any keys before adding the keys */
+            if (!map.containsKey(col)) {
+                /* Bit tricky tho for the treeMap */
+                map.put(col, new ArrayList<Integer>(Arrays.asList(curr.val)));
+            } else {
+                map.get(col).add(curr.val);
+            }
+
+            if (curr.left != null) {
+                queue.offer(curr.left);
+                qCol.offer(col - 1);
+            }
+            if (curr.right != null) {
+                queue.offer(curr.right);
+                qCol.offer(col + 1);
+            }
+        }
+
+        for (int n : map.keySet()) {
+            result.add(map.get(n));
+        }
+
+        return result;
+    }
+
+    /////////////////////////////
+    // 2) verticalOrderHashMap //
+    /////////////////////////////
+
+    public static List<List<Integer>> verticalOrderHashMap(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null) {
+            return ans;
+        }
+
+        int colMin = 0;
+        int colMax = 0;
+        Map<Integer, List<Integer>> col = new HashMap<>();
+
+        ArrayDeque<Integer> q1 = new ArrayDeque<>(); /* For col */
+        ArrayDeque<TreeNode> q2 = new ArrayDeque<>(); /* For node */
+
+        q1.add(0);
+        q2.add(root);
+
+        while (!q1.isEmpty()) {
+            int c = q1.poll();
+            TreeNode node = q2.poll();
+
+            /* Map's empty key */
+            if (!col.containsKey(c)) {
+                col.put(c, new ArrayList<Integer>());
+            }
+            col.get(c).add(node.val);
+
+            /* The essence: stretch the index and iterate from the smallest */
+            colMin = Math.min(colMin, c);
+            colMax = Math.max(colMax, c);
+
+            if (node.left != null) {
+                q1.add(c - 1);
+                q2.add(node.left);
+            }
+            if (node.right != null) {
+                q1.add(c + 1);
+                q2.add(node.right);
+            }
+        }
+
+        /* Iterate the map key and add its values */
+        for (int i = colMin; i <= colMax; i++) {
+            ans.add(col.get(i));
+        }
+
+        return ans;
     }
 
 /////////////////////////////////////////
