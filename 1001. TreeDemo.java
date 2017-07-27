@@ -62,6 +62,12 @@ import java.util.*;
  *     1) verticalOrderTreeMap
  *     2) verticalOrderHashMap
  *
+ * 4.7 Level order ZigZag Traversal
+ *     1) zigzagLevelOrder
+ *             -- LeetCode 103
+ *             -- LintCode 71
+ *             -- TreeDemo 4.7.1
+ *
  * 5. Convert BST to Doubly LinkedList
  *     1) convertBST2DLLRec (refer to LintCode 378)
  *
@@ -597,14 +603,14 @@ public class TreeDemo {
 //        System.out.println();
 //        postorderTraversal(r100);
 //        System.out.println();
-        /* 3.1.1 */
-        System.out.println("******************** 3.1.1 ********************");
-        System.out.print("The inorder successor of r100 in Tree 2 is: ");
-        System.out.println(inorderSuccessor(r100, r100).val);
-        /* 3.1.2 */
-        System.out.println("******************** 3.1.2 ********************");
-        System.out.print("The inorder predecessor of r100 in Tree 2 is: ");
-        System.out.println(inorderPredecessor(r100, r100).val);
+//        /* 3.1.1 */
+//        System.out.println("******************** 3.1.1 ********************");
+//        System.out.print("The inorder successor of r100 in Tree 2 is: ");
+//        System.out.println(inorderSuccessor(r100, r100).val);
+//        /* 3.1.2 */
+//        System.out.println("******************** 3.1.2 ********************");
+//        System.out.print("The inorder predecessor of r100 in Tree 2 is: ");
+//        System.out.println(inorderPredecessor(r100, r100).val);
 //        /* 4.1 */
 //        System.out.println("********************** 4.1 **********************");
 //        System.out.print("The Level Traversal of Tree 1 is: ");
@@ -702,6 +708,20 @@ public class TreeDemo {
 //        System.out.println(Arrays.deepToString(verticalOrderHashMap(r12).toArray()));
 //        System.out.println("The vertical order traversal of Tree 4 is :");
 //        System.out.println(Arrays.deepToString(verticalOrderHashMap(r16).toArray()));
+//        /* 4.7.1 */
+//        System.out.println("******************** 4.7.1 ********************");
+//        System.out.println("The ZigZag traversal for Tree 1 is: ");
+//        System.out.println(Arrays.deepToString(zigzagLevelOrder(r1).toArray
+//                ()));
+//        System.out.println("The ZigZag traversal for Tree 2 is: ");
+//        System.out.println(Arrays.deepToString(zigzagLevelOrder(r100).toArray
+//                ()));
+//        System.out.println("The ZigZag traversal for Tree 3 is: ");
+//        System.out.println(Arrays.deepToString(zigzagLevelOrder(r12).toArray
+//                ()));
+//        System.out.println("The ZigZag traversal for Tree 4 is: ");
+//        System.out.println(Arrays.deepToString(zigzagLevelOrder(r16).toArray
+//                ()));
 //        /* 5.1 */
 //        System.out.println("********************** 5.1 **********************");
 //        System.out.println("Converting Tree 1 to DDL: ");
@@ -2367,6 +2387,51 @@ public class TreeDemo {
         }
 
         return ans;
+    }
+
+//////////////////////////////////////
+// 4.7 Level order ZigZag Traversal //
+//////////////////////////////////////
+
+    /////////////////////////
+    // 1) zigzagLevelOrder //
+    /////////////////////////
+
+    /* A little trick about the ArrayList by adding element both ways */
+    public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+        boolean normalOrder = true;
+
+        while (!q.isEmpty()) {
+            List<Integer> level = new ArrayList<>();
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = q.poll();
+                /* Add from the tail */
+                if (normalOrder) {
+                    level.add(node.val);
+                /* Add from the head */
+                } else {
+                    level.add(0, node.val);
+                }
+
+                if (node.left != null) {
+                    q.offer(node.left);
+                }
+                if (node.right != null) {
+                    q.offer(node.right);
+                }
+            }
+            result.add(level);
+            normalOrder = !normalOrder;
+        }
+        return result;
     }
 
 /////////////////////////////////////////

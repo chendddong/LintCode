@@ -2,6 +2,10 @@
     Given a binary tree, return the zigzag level order traversal of its nodes'
     values. (ie, from left to right, then right to left for the next level and alternate between).
 
+    -- LeetCode 103
+    -- LintCode 71
+    -- TreeDemo 4.7.1
+
     Have you met this question in a real interview? Yes
     Example
     Given binary tree {3,9,20,#,#,15,7},
