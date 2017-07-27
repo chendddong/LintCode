@@ -27,6 +27,10 @@ import java.util.*;
  *     5) postorderTraversalRec
  *     6) postorderTraversal
  *
+ * 3.1 BST Inorder Successor / Predecessor
+ *     1) inorderSuccessor
+ *     2) inorderPredecessor
+ *
  * 4. Level order traversal
  *     1) levelTraversal
  *     2) levelTraversalRec
@@ -593,6 +597,14 @@ public class TreeDemo {
 //        System.out.println();
 //        postorderTraversal(r100);
 //        System.out.println();
+        /* 3.1.1 */
+        System.out.println("******************** 3.1.1 ********************");
+        System.out.print("The inorder successor of r100 in Tree 2 is: ");
+        System.out.println(inorderSuccessor(r100, r100).val);
+        /* 3.1.2 */
+        System.out.println("******************** 3.1.2 ********************");
+        System.out.print("The inorder predecessor of r100 in Tree 2 is: ");
+        System.out.println(inorderPredecessor(r100, r100).val);
 //        /* 4.1 */
 //        System.out.println("********************** 4.1 **********************");
 //        System.out.print("The Level Traversal of Tree 1 is: ");
@@ -1737,6 +1749,42 @@ public class TreeDemo {
 
         while(!out.isEmpty()) {
             System.out.print(out.pop().val + " ");
+        }
+    }
+
+/////////////////////////////////////////////
+// 3.1 BST Inorder Successor / Predecessor //
+/////////////////////////////////////////////
+
+    /////////////////////////
+    // 1) inorderSuccessor //
+    /////////////////////////
+
+    public static TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if (root == null)
+            return null;
+
+        if (root.val <= p.val) {
+            return inorderSuccessor(root.right, p);
+        } else {
+            TreeNode left = inorderSuccessor(root.left, p);
+            return (left != null) ? left : root;
+        }
+    }
+
+    ///////////////////////////
+    // 2) inorderPredecessor //
+    ///////////////////////////
+
+    public static TreeNode inorderPredecessor(TreeNode root, TreeNode p) {
+        if (root == null)
+            return null;
+
+        if (root.val >= p.val) {
+            return inorderPredecessor(root.left, p);
+        } else {
+            TreeNode right = inorderPredecessor(root.right, p);
+            return (right != null) ? right : root;
         }
     }
 

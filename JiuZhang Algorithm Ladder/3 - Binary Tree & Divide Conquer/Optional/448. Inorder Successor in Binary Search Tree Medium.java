@@ -35,9 +35,9 @@
  * }
  */
 
-////////////////////////////////////////////
-// Solution #0 Straight forward traversal //
-////////////////////////////////////////////
+////////////////////////////////
+// Straight forward traversal //
+////////////////////////////////
 
 class ResultType {
     public boolean found;
@@ -47,7 +47,6 @@ class ResultType {
         this.target = target;
     }
 }
-
 public class Solution {
     /* for the final answer */
     TreeNode targetNode = null;
@@ -72,7 +71,6 @@ public class Solution {
         return null;
         
     }
-
     private ArrayList<Integer> getList(TreeNode root) { 
         ArrayList<Integer> list = new ArrayList<>();
 
@@ -89,7 +87,6 @@ public class Solution {
 
         return list;
     }
-
     private ResultType findTarget(int p, ArrayList<Integer> list) {
         int size = list.size();
 
@@ -106,8 +103,6 @@ public class Solution {
 
         return new ResultType(true, list.get(list.size() - size + 1));        
     }
-
-
     private void findNode(TreeNode root, int targetValue) {
         if (root == null) {
             return;
@@ -123,14 +118,67 @@ public class Solution {
     }
 }
 
+///////////////////////
+// Inorder Traversal //
+///////////////////////
 
+public class Solution {
+
+    /*
+        Inorder traversal.
+        If the pre is the p then just return the cur.
+     */   
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if (root == null || p == null) {
+            return null;
+        }
+
+        ArrayDeque<TreeNode> s = new ArrayDeque<>();
+        TreeNode cur = root;
+        TreeNode pre = null;
+
+        while (!s.isEmpty() || cur != null) {
+            while (cur != null) {
+                s.push(cur);
+                cur = cur.left;
+            }
+
+            cur = s.peek();
+            s.pop();
+
+            /* Solve the problem */
+            if (pre == p) {
+                return cur;
+            }
+
+            pre = cur;
+            cur = cur.right;
+        }
+
+        return null;
+
+    }
+}
+
+///////////////////
+// Binary search //
+///////////////////
 
 public class Solution {
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
-        /* Record the successor along the way */
+        /* !!!Important. Record the successor along the way */
         TreeNode successor = null;
+
+
+        //       100
+        //     /    \
+        //    40     180
+        //  /  \     /
+        // 30   60  110
+
         /* Find p */
         while (root != null && root != p) {
+            /* Only update successor when going left */
             if (root.val > p.val) {
                 successor = root;
                 root = root.left;
@@ -158,4 +206,44 @@ public class Solution {
         return root;
     }
 }
+
+
+///////////////////////////////
+// Successor Simple Solution //
+///////////////////////////////
+
+public class Solution {
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+      if (root == null)
+        return null;
+
+      if (root.val <= p.val) {
+        return inorderSuccessor(root.right, p);
+      } else {
+        TreeNode left = inorderSuccessor(root.left, p);
+        return (left != null) ? left : root;
+      }
+    }    
+}
+
+
+/////////////////
+// Predecessor //
+/////////////////
+
+public class Solution {
+    public TreeNode inorderPredecessor(TreeNode root, TreeNode p) {
+      if (root == null)
+        return null;
+
+      if (root.val >= p.val) {
+        return inorderPredecessor(root.left, p);
+      } else {
+        TreeNode right = inorderPredecessor(root.right, p);
+        return (right != null) ? right : root;
+      }
+    }    
+}
+
+
 
