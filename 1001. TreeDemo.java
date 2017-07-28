@@ -57,6 +57,9 @@ import java.util.*;
  * 4.5 Populating Next Right Pointers in Each Node
  *     1) connectBFS
  *     2) connectDFS
+ *     3) connectIIBFS
+ *     4) connectIIDummy
+ *         --LeetCode 116-117
  *
  * 4.6 Vertical Level Traversal
  *     1) verticalOrderTreeMap
@@ -719,7 +722,7 @@ public class TreeDemo {
 //        System.out.println(Arrays.toString(rightSideViewDFS(r12).toArray()));
 //        System.out.println("The right view of the Tree 4 is: ");
 //        System.out.println(Arrays.toString(rightSideViewDFS(r16).toArray()));
-//        /* 4.5.1 - 4.5.2 */
+//        /* 4.5.1 - 4.5.4 */
 //        No test cases for these two just understand the concept
 //        /* 4.6.1 */
 //        System.out.println("******************** 4.6.1 ********************");
@@ -2305,6 +2308,91 @@ public class TreeDemo {
 
         connectDFS(root.left);
         connectDFS(root.right);
+    }
+
+    /////////////////////
+    // 3) connectIIBFS //
+    /////////////////////
+
+    /* BFS will do the work; It is too slow though */
+    public static void connectIIBFS(TreeLinkNode root) {
+        connectBFS(root);
+    }
+    private static void connectBFS(TreeLinkNode root) {
+        if (root == null) {
+            return;
+        }
+
+        /* BFS */
+        ArrayDeque<TreeLinkNode> q = new ArrayDeque<>();
+        /* Root */
+        q.offer(root);
+        root.next = null;
+        TreeLinkNode leftLast = null;
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                TreeLinkNode node = q.poll();
+
+                /* Solve problem by connecting */
+                if (i == 0) {
+                    leftLast = node;
+                } else if (i == size - 1) {
+                    leftLast.next = node;
+                    node.next = null;
+                } else {
+                    leftLast.next = node;
+                    leftLast = node;                    
+                }
+
+                /* Add children */
+                if (node.left != null) {
+                    q.offer(node.left);
+                }
+                if (node.right != null) {
+                    q.offer(node.right);
+                }
+            }
+        }  
+    }
+
+    ///////////////////////
+    // 4) connectIIDummy //
+    ///////////////////////
+
+    /* 
+        This algorithm will take O(n) time and O(1) space;
+        Always, Always, Always try to use dummy node in LinkedList !!!
+        Use a dummy node and a travel pointer
+    */
+    public static void connectIIDummy(TreeLinkNode root) {
+
+        while (root != null) {
+            /* For fresh and return */
+            TreeLinkNode tempChild = new TreeLinkNode(0);
+            /* For traversal -- pointer */
+            TreeLinkNode currentChild = tempChild;
+            //      1
+            //    /  \
+            //   2    3
+            //  / \    \
+            // 4   5    7
+            while (root != null) {
+                if (root.left != null) {
+                    currentChild.next = root.left;
+                    currentChild = currentChild.next;
+                }
+                if (root.right != null) {
+                    currentChild.next = root.right;
+                    currentChild = currentChild.next;
+                }
+                root = root.next;
+            }
+            /* Dummy Node */
+            root = tempChild.next;
+        }
+
     }
 
 //////////////////////////////////
