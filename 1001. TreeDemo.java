@@ -183,6 +183,11 @@ import java.util.*;
  * 22.1 Serialize and deserialize BST
  *     1) serialize/deserialize
  *
+ * 22.2 Convert Sorted LinkedList to height balanced BST
+ *     1) sortedListToBST
+ *          -- LintCode 106
+ *          -- LeetCode 109
+ *
  * 23. Tree 1 is subtree of Tree2 (LeetCode 572, LintCode 245)
  *     1) isSubtree
  *
@@ -253,6 +258,14 @@ public class TreeDemo {
             left = null;
             right = null;
             next = null;
+        }
+    }
+
+    private static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int x) {
+            val = x;
         }
     }
 
@@ -486,6 +499,26 @@ public class TreeDemo {
         int treeNumber = 5;
         int[][] edges = {{0, 1}, {0, 2}, {0, 3}, {1, 4}};
         int[][] edges1 = {{0, 1}, {1, 2}, {2, 3}, {1, 3}, {1,4}};
+
+        /* Make LinkedNode for 22.2.1 */
+        ListNode ln1 = new ListNode(1);
+        ListNode ln2 = new ListNode(2);
+        ListNode ln3 = new ListNode(3);
+        ListNode ln4 = new ListNode(4);
+        ListNode ln5 = new ListNode(5);
+        ListNode ln6 = new ListNode(6);
+        ListNode ln7 = new ListNode(7);
+
+        ln1.next = ln2;
+        ln2.next = ln3;
+        ln3.next = ln4;
+        ln4.next = ln5;
+        ln5.next = ln6;
+        ln6.next = ln7;
+        ln7.next = null;
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1206,6 +1239,10 @@ public class TreeDemo {
 //        System.out.println(serialize(r100));
 //        System.out.println("Tree 2 after deserialization: ");
 //        System.out.println(levelOrderBFS(deserialize(serialize(r100))));
+       /* 22.2.1 */
+        System.out.println("******************** 22.2.1 ********************");
+        System.out.println("Convert the sorted list 1 - 7 to a balanced BST: ");
+        System.out.println(levelOrderBFS(sortedListToBST(ln1)));
 //        /* 23.1 */
 //        System.out.println("********************* 23.1 *********************");
 //        System.out.print("r1 is the subtree of r1 : ");
@@ -4480,9 +4517,9 @@ public class TreeDemo {
         return false;
     }
 
-    //////////////////////////////////////////////
-    // 21.2 Find the value of the LeftMost node //
-    //////////////////////////////////////////////
+//////////////////////////////////////////////
+// 21.2 Find the value of the LeftMost node //
+//////////////////////////////////////////////
 
 
     ///////////////////////////////
@@ -4677,6 +4714,48 @@ public class TreeDemo {
 
         return root;
 
+    }
+
+///////////////////////////////////////////////////////////
+// 22.2 Convert Sorted LinkedList to height balanced BST //
+///////////////////////////////////////////////////////////
+
+    ////////////////////////
+    // 1) sortedListToBST //
+    ////////////////////////
+
+    public static TreeNode sortedListToBST(ListNode head) {
+        /* Edge */
+        if (head == null) {
+            return null;
+        }
+        return toBST(head, null);
+    }
+    private static TreeNode toBST(ListNode head, ListNode tail) {
+        ListNode slow = head;
+        ListNode fast = head;
+
+        /* Clever Base */
+        if (head == tail) {
+            return null;
+        }
+
+        // 1->2->3->4->5->6->7->null
+        //          s
+        //                   f
+
+        /* Get the middle node slow by using TAIL */
+        while (fast != tail && fast.next != tail) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        /* Preorder */
+        TreeNode newHead = new TreeNode(slow.val);
+        newHead.left = toBST(head, slow);
+        newHead.right = toBST(slow.next, tail);
+
+        return newHead;
     }
 
 ////////////////////////////////////
