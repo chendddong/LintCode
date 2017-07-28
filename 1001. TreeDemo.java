@@ -59,7 +59,6 @@ import java.util.*;
  *     2) connectDFS
  *     3) connectIIBFS
  *     4) connectIIDummy
- *         --LeetCode 116-117
  *
  * 4.6 Vertical Level Traversal
  *     1) verticalOrderTreeMap
@@ -2316,9 +2315,9 @@ public class TreeDemo {
 
     /* BFS will do the work; It is too slow though */
     public static void connectIIBFS(TreeLinkNode root) {
-        connectBFS(root);
+        connectII(root);
     }
-    private static void connectBFS(TreeLinkNode root) {
+    private static void connectII(TreeLinkNode root) {
         if (root == null) {
             return;
         }
@@ -2343,7 +2342,7 @@ public class TreeDemo {
                     node.next = null;
                 } else {
                     leftLast.next = node;
-                    leftLast = node;                    
+                    leftLast = node;
                 }
 
                 /* Add children */
@@ -2354,14 +2353,14 @@ public class TreeDemo {
                     q.offer(node.right);
                 }
             }
-        }  
+        }
     }
 
     ///////////////////////
     // 4) connectIIDummy //
     ///////////////////////
 
-    /* 
+    /*
         This algorithm will take O(n) time and O(1) space;
         Always, Always, Always try to use dummy node in LinkedList !!!
         Use a dummy node and a travel pointer
@@ -5035,8 +5034,8 @@ public class TreeDemo {
     /////////////////////////////////////////////
 
     /*
-     Since we need the total sum from root to leaf, it's could not be more
-     obvious that it's DFS
+        Since we need the total sum from root to leaf, it's could not be more
+        obvious that it's DFS
     */
     public static List<List<Integer>> binaryTreePathSumList(TreeNode root, int sum) {
         List<List<Integer>> result = new ArrayList<>();
