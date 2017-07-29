@@ -230,6 +230,14 @@ import java.util.*;
  * 26.2 Delete a node in BST
  *     1) deleteNode
  *
+ * 26.3 Unique BST by n
+ *     1) numTrees
+ *         -- LeetCode 96
+ *         -- LintCode 163
+ *     2) generateTrees
+ *         -- LeetCode 95
+ *         -- LintCode 164
+ *
  * 27. Tree Simulation
  *     1) killProcess
  *
@@ -1241,10 +1249,10 @@ public class TreeDemo {
 //        System.out.println(serialize(r100));
 //        System.out.println("Tree 2 after deserialization: ");
 //        System.out.println(levelOrderBFS(deserialize(serialize(r100))));
-       /* 22.2.1 */
-        System.out.println("******************** 22.2.1 ********************");
-        System.out.println("Convert the sorted list 1 - 7 to a balanced BST: ");
-        System.out.println(levelOrderBFS(sortedListToBST(ln1)));
+//       /* 22.2.1 */
+//        System.out.println("******************** 22.2.1 ********************");
+//        System.out.println("Convert the sorted list 1 - 7 to a balanced BST: ");
+//        System.out.println(levelOrderBFS(sortedListToBST(ln1)));
 //        /* 23.1 */
 //        System.out.println("********************* 23.1 *********************");
 //        System.out.print("r1 is the subtree of r1 : ");
@@ -1369,6 +1377,26 @@ public class TreeDemo {
 //        System.out.println(levelOrderBFS(deleteNode(r100, 180)));
 //        System.out.println("Delete node val of 40 from Tree 2: ");
 //        System.out.println(levelOrderBFS(deleteNode(r100, 40)));
+//       /* 26.3.1 */
+//        System.out.println("******************** 26.3.1 ********************");
+//        System.out.print("The total number of BST for n = 3 is : ");
+//        System.out.println(numTrees(3));
+//        System.out.print("The total number of BST for n = 5 is : ");
+//        System.out.println(numTrees(5));
+//        System.out.print("The total number of BST for n = 7 is : ");
+//        System.out.println(numTrees(7));
+//       /* 26.3.2 Rewrite the test method later */
+//        System.out.println("******************** 26.3.2 ********************");
+//        System.out.println("All the unique BSTs generated from n = 3 is : ");
+//        for (TreeNode root : generateTrees(3)) {
+//            printBST(root);
+//            System.out.println();
+//        }
+//        System.out.println("All the unique BSTs generated from n = 5 is : ");
+//        for (TreeNode root : generateTrees(5)) {
+//            printBST(root);
+//            System.out.println();
+//        }
 //        /* 27.1 */
 //        System.out.println("******************** 27.1 ********************");
 //        System.out.println("The processes we need to kill for pid 5 are: ");
@@ -1386,11 +1414,6 @@ public class TreeDemo {
 //        System.out.print("Is the given n and edges a valid tree ? ");
 //        System.out.println(validTree(treeNumber, edges1));
 
-
-
-
-
-
     }
 
 
@@ -1399,8 +1422,40 @@ public class TreeDemo {
 
 // ---------------------------- test helper -------------------------------- //
 
+    /*
+        Tree 2: Binary Search Tree
+                  100
+                /    \
+               40     180
+             /  \     /
+            30   60  110
 
+         where r100 is the root
 
+         For 26.3.2
+     */
+
+    public static void printBST(TreeNode root) {
+        if (root == null) {
+            System.out.print("{}");
+            return;
+        }
+        ArrayDeque<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+
+        while (!q.isEmpty()) {
+            TreeNode cur = q.poll();
+
+            /* Print it out */
+            System.out.print(cur.val + "->");
+            if (cur.left != null) {
+                q.offer(cur.left);
+            }
+            if (cur.right != null) {
+                q.offer(cur.right);
+            }
+        }
+    }
 
 // ------------------------------------------------------------------------- //
 
@@ -5169,9 +5224,9 @@ public class TreeDemo {
         return result;
     }
 
-    ////////////////////////////////////////
-    // 25.1 Kth Smallest Element in a BST //
-    ////////////////////////////////////////
+////////////////////////////////////////
+// 25.1 Kth Smallest Element in a BST //
+////////////////////////////////////////
 
     //////////////////////////////////////
     // 1) kthSmallestBS (Binary Search) //
@@ -5425,6 +5480,89 @@ public class TreeDemo {
             node = node.left;
         }
         return node;
+    }
+
+//////////////////////////
+// 26.3 Unique BST by n //
+//////////////////////////
+
+    /////////////////
+    // 1) numTrees //
+    /////////////////
+
+    /*
+        The case for 3 elements example
+        Count[3] = Count[0]*Count[2]  (1 as root)
+                      + Count[1]*Count[1]  (2 as root)
+                      + Count[2]*Count[0]  (3 as root)
+
+        Therefore, we can get the equation:
+        Count[i] = ∑ Count[0...k] * [ k+1....i]     0<=k<i-1
+    */
+
+    public static int numTrees(int n) {
+        if (n <= 0) {
+            return 1;
+        }
+
+        int[] G = new int[n + 1];
+        G[0] = G[1] = 1;
+
+        for(int i = 2; i <= n; ++i) {
+            for(int j = 1; j <= i; ++j) {
+                G[i] += G[j - 1] * G[i - j];
+            }
+        }
+
+        return G[n];
+    }
+
+    //////////////////////
+    // 2) generateTrees //
+    //////////////////////
+
+    /*
+        We can do this recursively.
+        Frankly, it's easier than I thought it could be
+
+        I start by noting that 1..n is the in-order traversal for any BST with nodes 1 to n. So if I pick i-th node as my root, the left subtree will contain elements 1 to (i-1), and the right subtree will contain elements (i+1) to n.
+
+        I use recursive calls to get back all possible trees for left and right subtrees and combine them in all possible ways with the root.
+     */
+    public static List<TreeNode> generateTrees(int n) {
+        if (n == 0) {
+            return new ArrayList<>();
+        }
+        return generate(1, n);
+    }
+    private static List<TreeNode> generate(int start, int end) {
+        List<TreeNode> result = new ArrayList<>();
+
+        if (start > end) {
+            result.add(null);
+            return result;
+        }
+
+        if(start == end){
+            result.add(new TreeNode(start));
+            return result;
+        }
+        /* Algorithm Walk through */
+
+        for (int i = start; i <= end; i++) {
+            List<TreeNode> left = generate(start, i - 1);
+            List<TreeNode> right = generate(i + 1, end);
+
+            for (TreeNode l : left) {
+                for (TreeNode r : right) {
+                    TreeNode root = new TreeNode(i);
+                    root.left  = l;
+                    root.right = r;
+                    result.add(root);
+                }
+            }
+        }
+        return result;
     }
 
 /////////////////////////
