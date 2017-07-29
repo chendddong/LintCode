@@ -46,6 +46,7 @@
  */
 public class Solution {
 
+    /* Similar to the query except there are two updates in the leaf nodes */
     public SegmentTreeNode build(int[] A) {
         return buildTree(0, A.length - 1, A);
     }
