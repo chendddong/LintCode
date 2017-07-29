@@ -57,6 +57,8 @@ public class Solution {
             2. Bottom to top updating when backtracking
 
         This problem only deals with the intervals though.
+
+        The running time for building the segment tree is O(N);
      */
     public SegmentTreeNode build(int start, int end) {
         /* Base */
