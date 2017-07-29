@@ -179,6 +179,9 @@ import java.util.*;
  *     1) findBottomLeftValueBFS
  *     2) findBottomLeftValueRec
  *
+ * 21.3 Boundary of the BT
+ *     1) boundaryOfBinaryTree
+ *
  * 22. Convert Sorted Array to BST (LeetCode 108, LintCode 177)
  *     1) sortedArrayToBST
  *
@@ -1237,6 +1240,10 @@ public class TreeDemo {
 //        /* Tree 4 */
 //        System.out.print("The leftmost node's value for Tree 4 is: ");
 //        System.out.println(findBottomLeftValueRec(r16));
+//        /* 21.3.1 */
+//        System.out.println("******************* 21.3.1 *******************");
+//        System.out.println("The boundary of the Tree 1 is : ");
+//        System.out.println(Arrays.toString(boundaryOfBinaryTree(r1).toArray()));
 //        /* 22.1 */
 //        System.out.println("********************* 22.1 *********************");
 //        System.out.println("The converted BST by 'sortedArray' is : ");
@@ -4712,6 +4719,107 @@ public class TreeDemo {
         /* When going down, we have to increment the level */
         findBottomLeftValueRechelper(root.left, level + 1);
         findBottomLeftValueRechelper(root.right, level + 1);
+    }
+
+/////////////////////////////
+// 21.3 Boundary of the BT //
+/////////////////////////////
+
+    /////////////////////////////
+    // 1) boundaryOfBinaryTree //
+    /////////////////////////////
+
+    /*
+        Break this into three parts: all of the three uses recursion
+        Left boundary part:
+        Collecting leaf parts:
+        Right boundary part:
+
+        NOTE: 1. HashSet is actually ordered after insertion.
+              2. There might be duplicate node's value, so we must use TreeNode
+              as in the HashSet.
+              3. Mind the if else clause in the boundary part.
+     */
+    public static List<Integer> boundaryOfBinaryTree(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        /* Creating the HashSet: */
+        HashSet<TreeNode> set = new HashSet<>();
+
+        /* Left */
+        if (root.left == null) {
+            set.add(root);
+            result.add(root.val);
+        } else {
+            travelLeftBoundary(root, set, result);
+        }
+
+        getAllLeaves(root, set, result);
+
+        if (root.right == null) {
+            if (!set.contains(root)) {
+                set.add(root);
+                result.add(root.val);
+            }
+        } else {
+            travelRightBoundary(root, set, result);
+        }
+
+        return result;
+    }
+    private static void travelLeftBoundary(TreeNode root, HashSet<TreeNode> set, List<Integer> result) {
+        if (root == null) {
+            return;
+        }
+
+        if (!set.contains(root)) {
+            set.add(root);
+            result.add(root.val);
+        }
+
+        if (root.left != null) {
+            travelLeftBoundary(root.left, set, result);
+        } else {
+            travelLeftBoundary(root.right, set, result);
+
+        }
+
+    }
+    private static void getAllLeaves(TreeNode root, HashSet<TreeNode> set, List<Integer> result) {
+        if (root == null) {
+            return;
+        }
+
+        if (root.left == null && root.right == null) {
+            if (!set.contains(root)) {
+                set.add(root);
+                result.add(root.val);
+            }
+
+        }
+
+        getAllLeaves(root.left,  set, result);
+        getAllLeaves(root.right, set, result);
+    }
+    private static void travelRightBoundary(TreeNode root, HashSet<TreeNode> set, List<Integer> result) {
+        if (root == null) {
+            return;
+        }
+
+        if (root.right != null) {
+            travelRightBoundary(root.right, set, result);
+        } else {
+            travelRightBoundary(root.left, set, result);
+        }
+
+        if (!set.contains(root)) {
+            set.add(root);
+            result.add(root.val);
+        }
+
     }
 
 /////////////////////////////////////
