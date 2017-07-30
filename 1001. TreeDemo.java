@@ -5718,6 +5718,7 @@ public class TreeDemo {
         getAllChildren(map.get(kill), result);
         return result;
     }
+    
     private static void getAllChildren(Node node, List<Integer> result) {
         for (Node n : node.children) {
             result.add(n.val);
