@@ -22,9 +22,9 @@
  * }
  */
 
-///////////////
-// UnionFind //
-///////////////
+////////////////////////////
+// UnionFind with HashMap //
+////////////////////////////
 
 public class Solution {
     /*  
@@ -89,7 +89,7 @@ public class Solution {
         VERY VERY VERY IMPORTANT
 
         Dive deeply after and draw those things
-        
+
     ---------------------------------------------------------------------------                
      */
     
@@ -178,6 +178,79 @@ public class Solution {
 
                     }
                 }
+            }
+            result.add(count);
+        }
+        return result;
+    }
+}
+
+//////////////////////////
+// UnionFind with Array //
+//////////////////////////
+
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    int[] father = null;
+    class UnionFind {
+        UnionFind(int n) {
+            father = new int[n + 1];
+            Arrays.fill(father, -1);
+        }
+        int find(int x) {
+            if (father[x] == x) {
+                return x;
+            }
+            father[x] = find(father[x]);
+            return father[x];
+        }
+        void union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            if (rootX != rootY) {
+                father[rootX] = rootY;
+            }
+        }
+    }
+
+    public List<Integer> numIslands2(int n, int m, Point[] operators) {
+        int[][] dirs = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+        List<Integer> result = new ArrayList<>();
+        if (m <= 0 || n <= 0 || operators == null || operators.length == 0) {
+            return result;
+        }
+
+        UnionFind uf = new UnionFind(m * n);
+        int count = 0;
+
+        for (Point p : operators) {
+            int id = m * p.x + p.y;
+            father[id] = id;
+            count++;    
+
+            for (int[] dir : dirs) {
+                int x = p.x + dir[0];
+                int y = p.y + dir[1];
+                int adjID = m * x + y;
+
+                if (x < 0 || x >= n || y < 0 || y >= m || father[adjID] == -1) {
+                    continue;
+                }
+
+                int fID = uf.find(id);
+                int fAdj = uf.find(adjID);
+                if (fID != fAdj) {
+                    count--;
+                    uf.union(fID, adjID);
+                } 
             }
             result.add(count);
         }
