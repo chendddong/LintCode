@@ -21,9 +21,7 @@
     >>> true
  */
 
-///////////////////////
-// Array of TrieNode //
-///////////////////////
+
 
     /*  
         What can Trie do:
@@ -43,6 +41,10 @@
             15 minutes in the interview.
         -----------------------------------------------------------------------                    
      */  
+
+///////////////////////
+// Array of TrieNode //
+///////////////////////
 
 /**
  * Your Trie object will be instantiated and called as such:
@@ -95,21 +97,105 @@ public class Trie {
         root = new TrieNode();
     }
 
-    // Inserts a word into the trie.
+     Inserts a word into the trie. */
     public void insert(String word) {
         root.insert(word, 0);
     }
 
-    // Returns if the word is in the trie.
+    /* Returns if the word is in the trie. */
     public boolean search(String word) {
         TrieNode node = root.find(word, 0);
         return node != null && node.hasWord;
     }
 
-    // Returns if there is any word in the trie
-    // that starts with the given prefix.
+    /* Returns if there is any word in the trie */
+    /* that starts with the given prefix. */
     public boolean startsWith(String prefix) {
         TrieNode node = root.find(prefix, 0);
         return node != null;
     }
 }
+
+/////////////////////
+// Using a HashMap //
+/////////////////////
+
+/* StraightForward TrieNode */
+class TrieNode {
+    public char c;
+    HashMap<Character, TrieNode> children = new HashMap<Character, TrieNode>();
+    boolean hasWord;
+    public TrieNode() {}
+    public TrieNode(char ch) {
+        c = ch;
+    }
+}
+
+public class Trie {
+    private TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    /* Insert */
+    public void insert(String word) {
+        /* Get cur */
+        TrieNode cur = root;
+        HashMap<Character, TrieNode> curChildren = root.children;
+        char[] wordArray = word.toCharArray();
+        /* Traverse each character in the word */
+        for (int i = 0; i < wordArray.length; i++) {
+            char wc = wordArray[i];
+            if (curChildren.containsKey(wc)) { /* Find key, go deeper */
+                cur = curChildren.get(wc);
+            } else { /* Create the children and go deeper */
+                TrieNode newNode = new TrieNode(wc); /* Deep copy */
+                curChildren.put(wc, newNode);
+                cur = newNode;
+            }
+            curChildren = cur.children; /* Set children */
+            /* The entire word */
+            if (i == wordArray.length - 1) {
+                cur.hasWord = true;
+            }
+        }
+    }
+    /* Search */
+    public boolean search(String word) {
+        if (searchWordNodePos(word) == null) {
+            return false;
+        }
+        if (searchWordNodePos(word).hasWord) {
+            return true;
+        } 
+        return false;
+    }
+    /* StartWith */
+    public boolean startsWith(String prefix) {
+        if (searchWordNodePos(prefix) == null) {
+            return false;
+        } 
+        return true;
+    }
+    
+    /* Search Position -- This is a helper */
+    public TrieNode searchWordNodePos(String word) {
+        HashMap<Character, TrieNode> children = root.children;
+        TrieNode cur = null;
+        char[] wordArray = word.toCharArray();
+        for (int i = 0; i < wordArray.length; i++) {
+            char c = wordArray[i];
+            if (children.containsKey(c)) {
+                cur = children.get(c);
+                children = cur.children;
+            } else {
+                return null;
+            }
+        }
+        return cur;
+    }
+}
+
+
+
