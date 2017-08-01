@@ -178,3 +178,94 @@ public class Solution {
         String word;
     }     
 }
+
+
+///////////////////////////////////
+// Trie Template Bit slow though //
+///////////////////////////////////
+
+public class Solution {
+
+    class TrieNode {
+        String s;
+        boolean isString;
+        HashMap<Character, TrieNode> children;
+        public TrieNode() {
+            isString = false;
+            children = new HashMap<>();
+            s = "";
+        }
+    }
+    class Trie {
+        private TrieNode root;
+        public Trie(TrieNode node) {
+            this.root = node;
+        }
+        /* We are gonna put every Word in the Trie not the matrix */
+        public void insert(String s) {
+            TrieNode cur = root;
+            char[] sArray = s.toCharArray();
+            for (int i = 0; i < sArray.length; i++) {
+                if (!cur.children.containsKey(sArray[i])) { /* No previous */
+                    cur.children.put(sArray[i], new TrieNode());
+                }
+                cur = cur.children.get(sArray[i]);
+            }
+            cur.s = s;
+            cur.isString = true;
+        }
+        public boolean find(String s) {
+            TrieNode cur = root;
+            char[] sArray = s.toCharArray();            
+            for (int i = 0; i < sArray.length; i++) {
+                if (!cur.children.containsKey(sArray[i])) {
+                    return false;
+                }
+                cur = cur.children.get(sArray[i]);
+            }
+            return cur.isString;
+        }
+    }
+    public int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public void search(char[][] board, int x, int y, TrieNode root,
+        ArrayList<String> ans) {
+        if (root.isString && !ans.contains(root.s)) {
+            /* De-duplicate */
+            ans.add(root.s);
+        }
+        if (x < 0 || x >= board.length || y < 0 || y >= board[0].length
+            || board[x][y] == 0 || root == null) {
+            return;
+        }
+        if (root.children.containsKey(board[x][y])) {
+            for (int[] dir : dirs) {
+                char cur = board[x][y];
+                board[x][y] = 0; /* visited */
+                search(board, x + dir[0], y + dir[1], root.children.get(cur),
+                    ans);
+                board[x][y] = cur;
+            }
+        }
+    }
+
+    public ArrayList<String> wordSearchII(char[][] board, ArrayList<String> words) {
+        ArrayList<String> ans = new ArrayList<String>();
+
+        /* Insert to the Trie root */
+        Trie tree = new Trie(new TrieNode());
+        for (String word : words){
+            tree.insert(word);
+        }
+
+        /* Search the whole tree */
+        for (int i = 0; i < board.length; i++){
+            for (int j = 0; j < board[i].length; j++){
+                search(board, i, j, tree.root, ans);
+            }
+        }
+        return ans;
+    }    
+
+
+}
+
