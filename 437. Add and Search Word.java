@@ -107,3 +107,79 @@ public class WordDictionary {
     }
 }
 
+
+///////////////////
+// HashMap + DFS //
+///////////////////
+
+/* TrieNode is much easier to construct */
+class TrieNode {
+    public HashMap<Character, TrieNode> children;
+    public boolean hasWord;
+
+    public TrieNode() {
+        children = new HashMap<Character, TrieNode>();
+        hasWord = false;
+    }
+}
+
+public class WordDictionary {
+    private TrieNode root;
+
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+
+    public void addWord(String word) {
+        TrieNode cur = root;
+        char[] wordArray = word.toCharArray();
+        for (int i = 0; i < wordArray.length; i++) {
+            char c = wordArray[i];
+            if (!cur.children.containsKey(c)) { /* No previous occurrence */
+                TrieNode newNode = new TrieNode();
+                cur.children.put(c, newNode);
+            }
+            /* Found the child; Just use get(c) to go deep */
+            cur = cur.children.get(c);
+        }
+        cur.hasWord = true;
+    }
+
+    public boolean find(String word, int index, TrieNode cur) {
+        if (index == word.length()) {
+            if (cur.children.size() == 0) {
+                return true;
+            } 
+            return false;
+            
+        }
+
+        Character c = word.charAt(index);
+        if (cur.children.containsKey(c)) {
+            if (index == word.length() - 1 && cur.children.get(c).hasWord) {
+                return true;
+            }
+            return find(word, index + 1, cur.children.get(c));
+        } else if (c == '.') {
+            boolean result = false;
+            for (Map.Entry<Character, TrieNode> child : cur.children.entrySet())
+            {
+                if (index == word.length() - 1 && child.getValue().hasWord) {
+                    return true;
+                }
+                /* If any path is true, set result to be true */
+                if (find(word, index + 1, child.getValue())) {
+                    result = true;
+                }
+            }
+            return result;
+        } else {
+            return false;
+        } 
+    }
+
+    public boolean search(String word) {
+        return find(word, 0, root);
+    }
+}
+
