@@ -14,6 +14,7 @@
     return 5
 
     -- Similar to LintCode 465
+    -- LeetCode 378
 
  */
 
@@ -44,6 +45,7 @@ class Pair {
     }
 }
 
+/* This is how to write a comparator outside the method function */
 class PairComparator implements Comparator<Pair> {
     public int compare(Pair a, Pair b) {
         return a.val - b.val; /* Ascending */
@@ -58,7 +60,7 @@ public class Solution {
         int[] dy = new int[]{1, 0};
         int n = matrix.length;
         int m = matrix[0].length;
-        boolean[][] hash = new boolean[n][m];
+        boolean[][] hash = new boolean[n][m]; /* Recorded the visited */
 
         /* 
             This comparator:
@@ -81,13 +83,14 @@ public class Solution {
         // ]
         // return 5        
 
-        /* Add k num to the min heap and peek the right position */
+        /* Add k num to the min heap and peek the right and down position */
         for (int i = 0; i < k - 1; i++) {
             Pair cur = minHeap.poll();
             for (int j = 0; j < 2; j++) {
                 int next_x = cur.x + dx[j];
                 int next_y = cur.y + dy[j];
                 Pair nextPair = new Pair(next_x, next_y, 0);
+                /* next_x, next_y should only be larger than 0*/
                 if (next_x < n && next_y < m && !hash[next_x][next_y]) {
                     hash[next_x][next_y] = true;
                     nextPair.val = matrix[next_x][next_y];
