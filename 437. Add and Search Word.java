@@ -183,3 +183,73 @@ public class WordDictionary {
     }
 }
 
+///////////////////
+// HashMap + BFS //
+///////////////////
+
+class TrieNode {
+    public HashMap<Character, TrieNode> children;
+    public boolean hasWord;
+    public TrieNode() {
+        children = new HashMap<>();
+        hasWord = false;
+    }
+}
+
+public class WordDictionary {
+    TrieNode root;
+    public WordDictionary() {
+        root = new TrieNode();
+    }
+
+    public void addWord(String word) {
+        TrieNode cur = root;
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+
+            if (!cur.children.containsKey(c)) { /* No previous occurrence */
+                TrieNode newNode = new TrieNode();
+                cur.children.put(c, newNode);
+            }
+            /* Found the child; Just use get(c) to go deep */
+            cur = cur.children.get(c);
+        }
+        cur.hasWord = true;            
+    }
+
+    /* We can directly search without using a find Helper function */
+    public boolean search(String word) {
+        ArrayDeque<TrieNode> q = new ArrayDeque<>();
+        q.offer(root);
+        int index = 0; /* For traversing the ‘word’ */
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            char c = word.charAt(index);
+            boolean flag = false;
+            for (int i = 0; i < size; i++) {
+                TrieNode cur = q.poll();
+                if (c == '.') {
+                    for (TrieNode tempNode : cur.children.values()) {
+                        q.offer(tempNode);
+                        // a |= b is the same as a = (a | b);
+                        flag |= tempNode.hasWord;  
+                    }
+                } else if (cur.children.containsKey(c)) {
+                    TrieNode newNode = cur.children.get(c);
+                    flag |= newNode.hasWord;
+                    q.offer(newNode);
+                }
+            }
+            index++;
+            if (index >= word.length()) {
+                return flag;
+            }
+        }
+        return false;
+    }
+
+}
+
+
+
