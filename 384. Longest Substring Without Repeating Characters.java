@@ -75,13 +75,14 @@ public class Solution {
         for (i = 0; i < s.length(); i++) {
             while (j < s.length()) {
                 if (!set.contains(s.charAt(j))) {
-                    set.add(s.charAt(j++));
-                    maxConut = Math.max(j - i, maxConut);
+                    set.add(s.charAt(j++));/* Important to increment j first */
+                    /* !!! Update max constantly !!! */
+                    maxConut = Math.max(j - i, maxConut); 
                 } else {
                     break;
                 }
             }
-            /* Don't for get to remove the i as to update it */
+            /* !!! Don't for get to remove the i as to update it !!! */
             set.remove(s.charAt(i));            
         }
 
