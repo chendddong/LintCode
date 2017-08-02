@@ -6,6 +6,11 @@
     Example
     Given [3, 4, 1, 2, 5], k = 3, the 3rd smallest numbers are [1, 2, 3].
  */
+
+///////////////////////////////
+// StraightForward QuickSort //
+///////////////////////////////
+    
 class Solution {
 
     public int kthSmallest(int k, int[] nums) {
@@ -38,7 +43,7 @@ class Solution {
             }
         }
 
-        /* These babies should be outside the while loop */
+        /* !These babies should be outside the while loop! */
         if (start < j) {
             quickSort(nums, start, j);    
         }
