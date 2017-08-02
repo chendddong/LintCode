@@ -15,9 +15,13 @@
     [4(1),4(2),4(4)]
     [4(1),4(3),4(4)]
     [4(2),4(3),4(4)]
-
-
  */
+
+/*
+    Time complexity : O(n^2)
+    Space complexity : O(log n) because of the sorting
+ */
+
 
 public class Solution {
 
@@ -61,3 +65,24 @@ public class Solution {
 
     If the time complexity is not less than nlogn we can just sort it using the generic sort method
 */
+
+
+/////////////////////////
+// More Intuitive Scan //
+/////////////////////////
+
+public class Solution {
+    public int triangleCount(int[] nums) {
+        int count = 0;
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 2; i++) {
+            int k = i + 2;
+            for (int j = i + 1; j < nums.length - 1 && nums[i] != 0; j++) {
+                while (k < nums.length && nums[i] + nums[j] > nums[k])
+                    k++;
+                count += k - j - 1; /* Walk through and see the happening */
+            }
+        }
+        return count;
+    }
+}
