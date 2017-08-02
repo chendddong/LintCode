@@ -116,7 +116,99 @@ public class Solution {
     }
 }
 
-v
+////////////////
+// Union Find //
+////////////////
+
+/* Wrap it up in class and use it accordingly; Connecting Graph III */
+class UnionFind {
+    private int[] father = null;
+    private int count;
+
+    /* Initialization */
+    public UnionFind(int n) {
+        father = new int[n + 1];
+        for (int i = 1; i < n + 1; ++i) {
+            father[i] = i;
+        }
+    }
+    /* Actions */
+    private int find(int x) {
+        if (father[x] == x) {
+            return x;
+        }
+        return father[x] = find(father[x]);
+    }
+    public void union(int a, int b) {
+        int rootA = find(a);
+        int rootB = find(b);
+        if (rootA != rootB) {
+            father[rootA] = rootB;
+            count--; /* Decrement count for each connection */
+        }
+    }
+    public int query() { /* Since the count is private */
+        return count;
+    }
+    public void set_count(int total) { /* Since the count is private */
+        count = total;
+    }
+    
+}
+
+public class Solution {
+    public int numIslands(boolean[][] grid) {
+        /* Edge */
+        int n = grid.length;
+        if (n == 0) {
+            return 0;
+        }
+        int m = grid[0].length;
+        if (m == 0) {
+            return 0;
+        }
+
+        /* Get a UnionFind instance*/
+        UnionFind uf = new UnionFind(n * m);
+
+        /* Traversal the matrix and find 1 then set total count for UF */
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j]) {
+                    count++;
+                }
+            }
+        }
+        uf.set_count(count);
+
+        /* 
+            Traverse the matrix again and connecting those 1's with adjacent
+            node. It's union find so we don't need to care about the duplicates.
+            Just convert the 2D to 1D for the use of UnionFind.
+         */
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j]) {
+                    if (i > 0 && grid[i - 1][j]) {
+                        uf.union(i * m + j, (i - 1) * m + j);
+                    }
+                    if (i < n - 1 && grid[i + 1][j]) {
+                        uf.union(i * m + j, (i + 1) * m + j);
+                    }
+                    if (j > 0 && grid[i][j - 1]) {
+                        uf.union(i * m + j, i * m + (j - 1));
+                    }
+                    if (j < m - 1 && grid[i][j + 1]) {
+                        uf.union(i * m + j, i * m + (j + 1));
+                    }
+                }
+            }
+        }
+
+        return uf.query();
+    }
+}
 
 /////////
 // DFS //
