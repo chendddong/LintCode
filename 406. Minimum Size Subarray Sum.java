@@ -29,7 +29,7 @@ public class Solution {
                 j++;
             }
 
-            /* Update the min */
+            /* Update the min. !!!It's >= not just = !!!*/
             if (sum >= s) {
                 min = Math.min(min, j - i);
             }
@@ -38,6 +38,7 @@ public class Solution {
             sum -= nums[i];
         }
 
+        /* !!!If nothing happens in those loops!!! */
         if (min == Integer.MAX_VALUE) {
             min = -1;
         }
