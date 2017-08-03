@@ -189,71 +189,71 @@ public class Solution {
 // UnionFind with Array //
 //////////////////////////
 
-/**
- * Definition for a point.
- * class Point {
- *     int x;
- *     int y;
- *     Point() { x = 0; y = 0; }
- *     Point(int a, int b) { x = a; y = b; }
- * }
- */
-public class Solution {
+public class Solution {    
     int[] father = null;
     class UnionFind {
-        UnionFind(int n) {
-            father = new int[n + 1];
+        UnionFind(int N) {
+            father = new int[N + 1];
             Arrays.fill(father, -1);
         }
-        int find(int x) {
+        int compressedFind(int x) {
             if (father[x] == x) {
                 return x;
             }
-            father[x] = find(father[x]);
-            return father[x];
+            return father[x] = compressedFind(father[x]);
         }
         void union(int x, int y) {
-            int rootX = find(x);
-            int rootY = find(y);
-            if (rootX != rootY) {
-                father[rootX] = rootY;
+            int fatherX = compressedFind(x); 
+            int fatherY = compressedFind(y);
+            if (fatherX != fatherY) {
+                father[fatherX] = fatherY;
             }
         }
     }
 
-    public List<Integer> numIslands2(int n, int m, Point[] operators) {
-        int[][] dirs = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+    public List<Integer> numIslands2(int m, int n, Point[] operators) {
+        int[][] dirs = {{0,1},{1,0},{-1,0},{0,-1}};
         List<Integer> result = new ArrayList<>();
         if (m <= 0 || n <= 0 || operators == null || operators.length == 0) {
             return result;
         }
-
+        /* This will prevent the duplicate operators!!!*/
+        int[][] islands = new int[m][n];         
         UnionFind uf = new UnionFind(m * n);
         int count = 0;
 
+
         for (Point p : operators) {
-            int id = m * p.x + p.y;
-            father[id] = id;
-            count++;    
+            if (islands[p.x][p.y] != 1) {
+                int id = n * p.x + p.y;
+                father[id] = id;
+                
+                islands[p.x][p.y] = 1;
+                count++;    
 
-            for (int[] dir : dirs) {
-                int x = p.x + dir[0];
-                int y = p.y + dir[1];
-                int adjID = m * x + y;
+                for (int[] dir : dirs) {
+                    int x = p.x + dir[0];
+                    int y = p.y + dir[1];
+                    int adjID = n * x + y;
 
-                if (x < 0 || x >= n || y < 0 || y >= m || father[adjID] == -1) {
-                    continue;
+                    if (x < 0 || x >= m || y < 0 || y >= n || islands[x][y] == 0)
+                    {
+                        continue;
+                    }
+                    /* 
+                        Since we are going to decrement the count, we have to do
+                        this outside the generic find function 
+                     */ 
+                    if (uf.compressedFind(id) != uf.compressedFind(adjID)) {
+                        count--;
+                        uf.union(id, adjID);
+                    } 
                 }
-
-                int fID = uf.find(id);
-                int fAdj = uf.find(adjID);
-                if (fID != fAdj) {
-                    count--;
-                    uf.union(fID, adjID);
-                } 
             }
+
             result.add(count);
         }
         return result;
     }
 }
+
