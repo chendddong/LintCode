@@ -57,14 +57,14 @@
 /* 1. TrieNode */
 class TrieNode {
     public boolean hasWord;
-    private TrieNode[] children;
+    private TrieNode[] children; /* Need an array full of TrieNode */ 
     
     /* Constructor */
     public TrieNode() {
         children = new TrieNode[26];
         hasWord = false;
     }
-    /* Insert */    
+    /* Insert: 1. length, position, recursion */    
     public void insert(String word, int index) {
         if (index == word.length()) {
             this.hasWord = true;
@@ -76,7 +76,7 @@ class TrieNode {
         }
         children[pos].insert(word, index + 1);
     }
-    /* Find */    
+    /* Find: 1. length, position, recursion */
     public TrieNode find(String word, int index) {
         if (index == word.length()) {
             return this;
@@ -97,7 +97,7 @@ public class Trie {
         root = new TrieNode();
     }
 
-     Inserts a word into the trie. */
+    /* Inserts a word into the trie. */
     public void insert(String word) {
         root.insert(word, 0);
     }
@@ -143,7 +143,9 @@ public class Trie {
         /* Get cur */
         TrieNode cur = root;
         HashMap<Character, TrieNode> curChildren = root.children;
-        char[] wordArray = word.toCharArray();
+        /* Better performance than String.charAt() */
+
+        char[] wordArray = word.toCharArray(); 
         /* Traverse each character in the word */
         for (int i = 0; i < wordArray.length; i++) {
             char wc = wordArray[i];
@@ -157,7 +159,7 @@ public class Trie {
             curChildren = cur.children; /* Set children */
             /* The entire word */
             if (i == wordArray.length - 1) {
-                cur.hasWord = true;
+                cur.hasWord = true; /* set hasWord inside the for loop */
             }
         }
     }
