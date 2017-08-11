@@ -26,40 +26,6 @@
     the work and the complexity of the remove method in TreeSet is O(logn) 
 */
 
-//////////////////////////////
-// Simply s   ort O(n * klogk) //
-//////////////////////////////
-
-public class Solution {
-    public List<Integer> medianSlidingWindow(int[] nums, int k) {
-
-        List<Integer> res = new ArrayList<>();
-        if (nums == null || nums.length == 0) return res;
-
-        /* Parallel pointers */
-        int i = 0, j = k - 1;
-        while (i <= nums.length - k && j <= nums.length - 1) {
-            int[] window = copyArray(i, k, nums); /* Copy target window */
-            Arrays.sort(window);
-            if (k % 2 == 1)
-                res.add(window[k / 2]);
-            else 
-                res.add(window[k / 2 - 1]);
-            i++;
-            j++;
-        }        
-        return res;
-    }
-    private int[] copyArray(int l, int k, int[] nums) {
-        int[] arr = new int[k];
-        int index = 0;
-        for (int i = 0; i < k; i++) {
-            arr[index++] = nums[l++];
-        }
-        return arr;
-    }
-}
-
 /////////////
 // TreeSet //
 /////////////
@@ -149,3 +115,90 @@ public class Solution {
     }
 }
 
+//////////////////
+// Normal Heaps //               TLE !!!
+//////////////////
+
+public class Solution {
+    public ArrayList<Integer> medianSlidingWindow(int[] nums, int k) {
+        List<Integer> result = new ArrayList<>();
+        /* The Edge will always be associated with the k if there is a k */
+        if (nums == null || nums.length < k) return result;
+
+        /* Two Heaps */
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(1,
+            Collections.reverseOrder());
+
+        /* First median */
+        int median = nums[0];
+        if (k == 1) result.add(median);
+
+        int j = 0;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] > median) minHeap.offer(nums[i]);
+            else maxHeap.offer(nums[i]);
+
+            if (i > k - 1) {
+                if (nums[j] > median) minHeap.remove(nums[j]);
+                else if (nums[j] < median) maxHeap.remove(nums[j]);
+                else median = Integer.MIN_VALUE;
+                j++;
+            }
+
+            if (medain == Integer.MIN_VALUE) {
+                median = minHeap.size() > maxHeap.size() 
+                       ? minHeap.poll() : maxHeap.poll();
+            } else {
+                while (minHeap.size() >= maxHeap.size() + 2) {
+                    maxHeap.offer(medain);
+                    medain = minHeap.poll();
+                }
+
+                while (maxHeap.size() >= minHeap.size() + 1) {
+                    minHeap.offer(median);
+                    median = maxHeap.poll();
+                }
+            }
+
+            if (i >= k - 1) {
+                result.add(median);
+            }
+        }
+        return result;
+    }
+}
+
+////////////////////////////////
+// Simply sort O(n * k log k) //            TLE
+////////////////////////////////
+
+public class Solution {
+    public List<Integer> medianSlidingWindow(int[] nums, int k) {
+
+        List<Integer> res = new ArrayList<>();
+        if (nums == null || nums.length == 0) return res;
+
+        /* Parallel pointers */
+        int i = 0, j = k - 1;
+        while (i <= nums.length - k && j <= nums.length - 1) {
+            int[] window = copyArray(i, k, nums); /* Copy target window */
+            Arrays.sort(window);
+            if (k % 2 == 1)
+                res.add(window[k / 2]);
+            else 
+                res.add(window[k / 2 - 1]);
+            i++;
+            j++;
+        }        
+        return res;
+    }
+    private int[] copyArray(int l, int k, int[] nums) {
+        int[] arr = new int[k];
+        int index = 0;
+        for (int i = 0; i < k; i++) {
+            arr[index++] = nums[l++];
+        }
+        return arr;
+    }
+}
