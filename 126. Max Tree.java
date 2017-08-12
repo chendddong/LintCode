@@ -1,0 +1,38 @@
+/**
+ * Given an integer array with no duplicates. A max tree building on this array
+ * is defined as follow:
+ */
+
+/*
+    The root is the maximum number in the array. The left subtree and right
+    subtree are the max trees of the subArraydivided by the root number.
+    Construct the max tree by the given array.
+
+    Example
+    Given [2, 5, 6, 0, 3, 1], the max tree constructed by this array is:
+
+        6
+       / \
+      5   3
+     /   / \
+    2   0   1
+ */
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    
+ 
+    public TreeNode maxTree(int[] A) {
+
+    }
+}
