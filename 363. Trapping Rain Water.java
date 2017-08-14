@@ -17,6 +17,7 @@ public class Solution {
     /*
         The Pillar from the left and right is the most important.
         It's the cornerstone.
+
         That's why we use two pointer. Left Pointer, right pointer 
      */
     public int trapRainWater(int[] heights) {
@@ -24,6 +25,7 @@ public class Solution {
         /* Two pointers */
         int left = 0;
         int right = heights.length - 1;
+        
         int res = 0;
         if (left >= right) return res; /* Edge */
 
