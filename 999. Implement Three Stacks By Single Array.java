@@ -1,3 +1,9 @@
+/**
+ * Describe how you could use a single array to implement three stacks.
+ *
+ * Maybe this is from CC150
+ */
+
 public class ThreeStacks {
     public int stackSize;
     public int indexUsed;
@@ -15,7 +21,6 @@ public class ThreeStacks {
     }
 
     public void push(int stackNum, int value) {
-        // Write your code here
         // Push value into stackNum stack
         int lastIndex = stackPointer[stackNum];
         stackPointer[stackNum] = indexUsed;

@@ -26,6 +26,7 @@
     nums == null --> return []
     nums.length == 0 --> return [[]]
  */
+    s
 class Solution {
     /**
      * @param nums: A list of integers.
@@ -80,9 +81,9 @@ class Solution {
         }
  */
 
-  ////////////////////////////////////
-  // Solution 2 Non-Recursion Stack //
-  ////////////////////////////////////
+////////////////////////////////////
+// Solution 2 Non-Recursion Stack //
+////////////////////////////////////
 
 
 class Solution {

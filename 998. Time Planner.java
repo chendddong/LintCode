@@ -47,6 +47,11 @@
 // [input] integer
 
 // [output] array.integer
+
+
+
+
+
 class Solution {
     public static int[] meetingPlanner(int[][] slotsA, int[][] slotsB, int dur) {
         int ia = 0;
@@ -87,6 +92,12 @@ class Solution {
 
     }
 }
+
+
+////////////////////////////////
+//  Try the Scan Line version //
+////////////////////////////////
+
 
 
 

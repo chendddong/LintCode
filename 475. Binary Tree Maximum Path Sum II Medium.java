@@ -25,10 +25,6 @@
  * }
  */
 public class Solution {
-    /**
-     * @param root the root of binary tree.
-     * @return an integer
-     */
      
     public int maxPathSum2(TreeNode root) {
         if (root == null) {
@@ -37,7 +33,6 @@ public class Solution {
         
         int left = maxPathSum2(root.left);
         int right = maxPathSum2(root.right);
-        
         /* 
            Must have the root value, if the children are smaller than 0, 
            just drop it

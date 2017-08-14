@@ -111,3 +111,22 @@ public class Solution {
     int[] myIntArray = new int[]{1,2,3};    
  */
 
+/*
+    1.  Really have to understand the meaning of this problem
+    2.  When it comes to the neighbor in matrix, always use the magical number
+    to convert the axis! Coz we only got two direction to go and we have to find
+    out either go right or down.
+        int[] dx = new int[]{0, 1};
+        int[] dy = new int[]{1, 0};    
+    3.  Write the comparator!!!
+    4.  Use hashMap as a way to mark if the element is been visited.
+    5.  The situation where we can add the next element in the minHeap. 
+
+    Boundary and visited
+
+        if (next_x < n && next_y < m && !hash[next_x][next_y]) {
+            hash[next_x][next_y] = true;
+            next_Pair.val = matrix[next_x][next_y];
+            minHeap.add(next_Pair);
+        }
+*/
