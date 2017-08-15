@@ -37,7 +37,7 @@
 */
 
 //////////////////////////////
-// Add + Collections.Sort() //
+// Add + Collections.Sort() //              TLE
 //////////////////////////////
 
 public class Solution {
@@ -149,7 +149,7 @@ public class Solution {
  */
 
 /////////////////////////
-// A tale of Two Heaps //
+// A tale of Two Heaps //    Yeah, only a tale though
 /////////////////////////
 
 
