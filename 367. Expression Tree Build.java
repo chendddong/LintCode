@@ -36,6 +36,100 @@
  * }
  */
 
+////////////////////////////////////////
+// Building Expression Tree Template  //
+////////////////////////////////////////
+
+/**
+ * Definition of ExpressionTreeNode:
+ * public class ExpressionTreeNode {
+ *     public String symbol;
+ *     public ExpressionTreeNode left, right;
+ *     public ExpressionTreeNode(rooting symbol) {
+ *         this.symbol = symbol;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+class TreeNode {
+    public int val;
+    public String s;
+    public ExpressionTreeNode root; 
+
+    public TreeNode(int val, String ss) {
+        this.val = val;
+        this.root = new ExpressionTreeNode(ss);
+    }
+}
+
+public class Solution {
+
+    public ExpressionTreeNode build(String[] expression) {
+
+        ArrayDeque<TreeNode> stack = new ArrayDeque<TreeNode>();
+        TreeNode root = null;
+        int val = 0;
+        Integer base = 0;
+
+        for (int i = 0; i <= expression.length; i++) {
+            if(i != expression.length)
+            {
+                
+                if (expression[i].equals("(")) {
+                    base += 10;
+                    continue;
+                }
+                if (expression[i].equals(")")) {
+                    base -= 10;
+                    continue;
+                }
+                val = getValue(expression[i], base);
+
+            }
+            TreeNode right = i == expression.length ? new TreeNode(
+                    Integer.MIN_VALUE, "") : new TreeNode(val,
+                    expression[i]);
+            while (!stack.isEmpty()) {
+                if (right.val <= stack.peek().val) {
+                    TreeNode nodeNow = stack.pop();
+
+                    if (stack.isEmpty()) {
+                        right.root.left = nodeNow.root;
+
+                    } else {
+                        TreeNode left = stack.peek();
+                        if (left.val < right.val) {
+                            right.root.left = nodeNow.root;
+                        } else {
+                            left.root.right = nodeNow.root;
+                        }
+                    }
+                } else {
+                    break;
+                }
+            }
+            stack.push(right);
+        }
+        return stack.peek().root.left;
+    }
+
+    int getValue(String a, Integer base) {
+        if (a.equals("+") || a.equals("-"))
+            return 1 + base;
+        if (a.equals("*") || a.equals("/"))
+            return 2 + base;
+
+        return Integer.MAX_VALUE;
+    }    
+}
+
+/* Algorithm Walkthrough */
+// Write the work through later 
+
+/////////////////////
+// Another Version //
+/////////////////////
+
 public class Solution {
     /* Create a TreeNode for handling the level */
     class TreeNode {
@@ -122,8 +216,6 @@ public class Solution {
 //                                  EN(23)  EN(7) EN(1) EN(2)
 //                                               
 //                             
-//                             EN(+)
-//                             /
 //                                  
 //                                                  
 // 
@@ -196,4 +288,3 @@ public class Solution {
 //            }
 //                 
 // base = 0
-
