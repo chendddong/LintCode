@@ -96,6 +96,7 @@ public class Solution {
         ArrayDeque<Integer> stack = new ArrayDeque<>();
         int max = 0;
 
+        // Given height = [2,1,5,6,2,3],
         for (int i = 0; i <= height.length; i++) {
             int cur = (i == height.length) ? -1 : height[i];
             while (!stack.isEmpty() && cur <= height[stack.peek()]) {
