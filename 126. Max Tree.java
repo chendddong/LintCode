@@ -30,6 +30,44 @@
  * }
  */
 
+
+///////////////////
+// Using a Stack //   Supposed to be a decreasing stack(max number) template
+///////////////////
+
+public class Solution {
+    /* Prevent stack overflow as well as store the temp value */ 
+
+    public TreeNode maxTree(int[] A) {
+        ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode root = null;
+        for (int i = 0; i <= A.length; i++) {
+            TreeNode right = i == A.length ? new TreeNode(Integer.MAX_VALUE) :
+                                             new TreeNode(A[i]);
+            while (!stack.isEmpty()) {
+                if (right.val > stack.peek().val) { /* New node increase */
+                    TreeNode nodeNow = stack.pop();
+                    if (stack.isEmpty()) {
+                        right.left = nodeNow; /* Connecting if stack isEmpty */
+                    } else { /* Compare the left with the right */
+                        TreeNode left = stack.peek();
+                        if (left.val > right.val) { /* Connecting the other */
+                            right.left = nodeNow;
+                        } else {
+                            left.right = nodeNow;
+                        }
+                    }
+                } else {
+                    break;
+                }
+            }
+            stack.push(right);
+        }
+        return stack.peek().left; /* Don't forget the return value */
+    }
+}
+
+
 /////////////////////////////////////
 // Using TreeNode Array as a Stack //
 /////////////////////////////////////
@@ -41,66 +79,7 @@ public class Solution {
         for (int i = 0; i < len; i++) {
             stack[i] = new TreeNode(0);
         }
-        /* Walkthrough */
 
-        // A = [2, 5, 6, 0, 3, 1]
-        // 
-        // stack [0', 0', 0', 0', 0', 0'       count = 0,
-        // temp = 2'
-        // 
-        // stack [2', 0', 0', 0', 0', 0'       count = 1,
-        // temp = 5'
-        // 
-        // TREE:
-        //        5'
-        //       /
-        //      2'                        count = 0
-        //      
-        // stack [5', 0', 0', 0', 0', 0'  count = 1                          
-        // temp = 6'
-        // 
-        // TREE:
-        //          6'
-        //         /
-        //        5'
-        //       /
-        //      2'                        count = 0
-        //      
-        // stack [6', 0', 0', 0', 0', 0'  count = 1                          
-        // temp = 0
-        // 
-        // TREE:
-        //          6'
-        //         / \ 
-        //        5'  0' 
-        //       /  
-        //      2'                        count = 1     
-        //         
-        // stack [6', 0', 0', 0', 0', 0'  count = 2
-        // temp = 3'
-        // 
-        //  PART TREE:
-        //          3'
-        //         /
-        //        0'                       count = 1
-        //    
-        // TREE:
-        //          6'
-        //         / \ 
-        //        5'  3' 
-        //       /   /
-        //      2'  0'
-        //     
-        // stack [6', 3', 0', 0', 0', 0'   count = 2
-        // temp = 1'
-        // 
-        // TREE:
-        //          6'
-        //         / \ 
-        //        5'  3' 
-        //       /   / \ 
-        //      2'  0'  1'
-        // 
         int count = 0;
         for (int i = 0; i < len; i++) {
             TreeNode temp = new TreeNode(A[i]);
@@ -118,6 +97,67 @@ public class Solution {
         return stack[0]; /* Largest Node */
     }
 }
+
+/* Walkthrough */
+
+// A = [2, 5, 6, 0, 3, 1]
+// 
+// stack [0', 0', 0', 0', 0', 0'       count = 0,
+// temp = 2'
+// 
+// stack [2', 0', 0', 0', 0', 0'       count = 1,
+// temp = 5'
+// 
+// TREE:
+//        5'
+//       /
+//      2'                        count = 0
+//      
+// stack [5', 0', 0', 0', 0', 0'  count = 1                          
+// temp = 6'
+// 
+// TREE:
+//          6'
+//         /
+//        5'
+//       /
+//      2'                        count = 0
+//      
+// stack [6', 0', 0', 0', 0', 0'  count = 1                          
+// temp = 0
+// 
+// TREE:
+//          6'
+//         / \ 
+//        5'  0' 
+//       /  
+//      2'                        count = 1     
+//         
+// stack [6', 0', 0', 0', 0', 0'  count = 2
+// temp = 3'
+// 
+//  PART TREE:
+//          3'
+//         /
+//        0'                       count = 1
+//    
+// TREE:
+//          6'
+//         / \ 
+//        5'  3' 
+//       /   /
+//      2'  0'
+//     
+// stack [6', 3', 0', 0', 0', 0'   count = 2
+// temp = 1'
+// 
+// TREE:
+//          6'
+//         / \ 
+//        5'  3' 
+//       /   / \ 
+//      2'  0'  1'
+// 
 
 //////////////////////////////
 // Recursive by finding max //              StackOverFlow
@@ -157,38 +197,4 @@ public class Solution {
     }
 }
 
-///////////////////
-// Using a Stack //
-///////////////////
-
-public class Solution {
-    /* Prevent stack overflow as well as store the temp value */ 
-    public TreeNode maxTree(int[] A) {
-        ArrayDeque<TreeNode> stack = new ArrayDeque<>();
-        TreeNode root = null;
-        for (int i = 0; i <= A.length; i++) {
-            TreeNode right = i == A.length ? new TreeNode(Integer.MAX_VALUE) :
-                                             new TreeNode(A[i]);
-            while (!stack.isEmpty()) {
-                if (right.val > stack.peek().val) {
-                    TreeNode nodeNow = stack.pop();
-                    if (stack.isEmpty()) {
-                        right.left = nodeNow;
-                    } else {
-                        TreeNode left = stack.peek();
-                        if (left.val > right.val) {
-                            right.left = nodeNow;
-                        } else {
-                            left.right = nodeNow;
-                        }
-                    }
-                } else {
-                    break;
-                }
-            }
-            stack.push(right);
-        }
-        return stack.peek().left;
-    }
-}
 
