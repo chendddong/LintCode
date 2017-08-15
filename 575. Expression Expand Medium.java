@@ -22,6 +22,7 @@
 // Stack //
 ///////////
 
+/* Mind those Objects conversion */
 public class Solution {
 
     public String expressionExpand(String s) {
@@ -38,7 +39,7 @@ public class Solution {
                 number = 0; /* Set the number back */
             } else if (c == ']') {
                 /* Pop all strings before a number */                
-                String newStr = popStack(stack); 
+                String newStr = popString(stack); 
                 Integer count = (Integer) stack.pop(); /* Cast */
                 /* Push back the timed 'long' str */
                 for (int i = 0; i < count; i++) { 
@@ -49,10 +50,10 @@ public class Solution {
             }
         }
 
-        return popStack(stack); /* Pop all of the String at once */
+        return popString(stack); /* Pop all of the String at once */
     }
 
-    private String popStack(ArrayDeque<Object> stack) {
+    private String popString(ArrayDeque<Object> stack) {
         /* For flip the sequence */
         ArrayDeque<String> buffer = new ArrayDeque<>();
 
