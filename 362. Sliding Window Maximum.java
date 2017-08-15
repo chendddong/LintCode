@@ -21,7 +21,6 @@
     [1, 2, |7, 7, 8|], return the maximum 8;
  */
 
-
 ////////////////////////
 // ArrayDeque Version //        AC
 ////////////////////////
@@ -34,42 +33,28 @@
     the window. The element in the array just go in and out of the deque once no matter what. So the worst case time complexity is O(2N)
  */
 public class Solution {
-
+    ArrayDeque<Integer> deque;
     public ArrayList<Integer> maxSlidingWindow(int[] nums, int k) {
-        ArrayList<Integer> ans = new ArrayList<>();
-        Deque<Integer> deque = new ArrayDeque<>();
-
-        if (nums.length == 0) return ans; /* Edge */
+        ArrayList<Integer> res = new ArrayList<>();
+        deque = new ArrayDeque<>();
+        
+        if (nums.length == 0) return res; /* Edge */
 
         /* Put first k - 1 number in the deque */
         for (int i = 0; i < k - 1; i++) {
-            putNumberInDeque(deque, nums[i]);
+            addToDeque(nums[i]);
         }
-
+        
         for (int i = k - 1; i < nums.length; i++) {
-            putNumberInDeque(deque, nums[i]);
-            ans.add(deque.peekFirst());
-            getNumberOutDeque(deque, nums[i - k + 1]);
+            addToDeque(nums[i]);
+            res.add(deque.peekFirst());
+            removeFromDeque(nums[i - k + 1]);
         }
-
-        return ans;
+        
+        return res;    
     }
-
-    /* Walkthrough */
-
-    // [1, 2, 7, 7, 8], moving window size k = 3. return [7, 7, 8]
-    // 
-    // ans = [7, 7, 8] 
-    // 
-    //                   deque:
-    //                   
-    //          |     1  2  7  7  8  | 
-    //                x  x  x  x  
-    //                
-    //      first(front)         last(end)     
-                                                        
-    /* Always put the largest number at the front of the deque */
-    private void putNumberInDeque(Deque<Integer> deque, int num) {
+    /* Always put the largest number at the front of the deque */    
+    private void addToDeque(int num) {
         while (!deque.isEmpty() && deque.peekLast() < num) {
             deque.pollLast();
         }
@@ -78,14 +63,26 @@ public class Solution {
     /* 
         Poll the first number of the window if the peekFirst() is equal to the
         last number of the window. 
-     */
-    private void getNumberOutDeque(Deque<Integer> deque, int num) {
+     */    
+    private void removeFromDeque(int num) {
         if (deque.peekFirst() == num) {
             deque.pollFirst();
         }
-    }    
+    }
 }
+/* Walkthrough */
 
+// [1, 2, 7, 7, 8], moving window size k = 3. return [7, 7, 8]
+// 
+// ans = [7, 7, 8] 
+// 
+//                   deque:
+//                   
+//          |     1  2  7  7  8  | 
+//                x  x  x  x  
+//                
+//      first(front)         last(end)     
+    
 ////////////////////////////////////////
 // Sliding and Sort window O(n*klogk) //      91% TLE
 ////////////////////////////////////////
