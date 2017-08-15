@@ -23,7 +23,12 @@
 /*
     There is a remove method for Priority Queue in java, the time
     complexity for that remove is O(n). Whereas, We could use TreeSet to do
-    the work and the complexity of the remove method in TreeSet is O(logn) 
+    the work and the complexity of the remove method in TreeSet is O(log n) 
+    
+///////////////////////////////////////////////////////////////////////////////
+/// This problem is the fusion of Comparator, TreeSet(Heap), Sliding Window ///
+///////////////////////////////////////////////////////////////////////////////
+
 */
 
 /////////////
@@ -39,7 +44,7 @@ class Node implements Comparable<Node> {
         val = VAL;
     }
     public int compareTo(Node other) {
-        Node a = (Node) other;
+        Node a = (Node) other; /* Cast */
         if (this.val == a.val) {
             return this.id - a.id;
         }
@@ -106,7 +111,10 @@ public class Solution {
     }
     private void remove(TreeSet<Node> minHeap, TreeSet<Node> maxHeap, Node node)
     {
-        /* Delete either either of the Heap */
+        /* 
+            Delete either either of the Heap and the complexity of remove nodes
+            in the treeSet is log(n) 
+         */
         if (minHeap.contains(node)) {
             minHeap.remove(node);
         } else {
