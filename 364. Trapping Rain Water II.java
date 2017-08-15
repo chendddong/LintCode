@@ -55,6 +55,7 @@ public class Solution {
         int n = heights[0].length;
         int[][] visit = new int[m][n];
 
+        /* Just draw a matrix and traverse */
         for (int i = 0; i < m; i++) {
             heap.offer(new Cell(i, 0, heights[i][0])); /* left most col */
             heap.offer(new Cell(i, n - 1, heights[i][n - 1])); /* rightmost col */
@@ -82,7 +83,7 @@ public class Solution {
                 if (nx >= 0 && nx < m && ny >= 0 && ny < n && visit[nx][ny] == 0) {
                     visit[nx][ny] = 1;
                     heap.offer(new Cell(nx, ny, Math.max(now.h, heights[nx]
-                        [ny])));
+                        [ny]))); /* Note that we should update the height */
                     ans += Math.max(0, now.h - heights[nx][ny]);
                 }
             }
