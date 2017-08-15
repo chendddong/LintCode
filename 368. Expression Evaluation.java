@@ -34,11 +34,12 @@ class TreeNode {
 
 public class Solution {
 
-    public static void main(String args[]) {
-        Solution obj = new Solution();
-        String[] expression = {  "2", "*", "6", "-", "(", "23", "+", "7", ")", "/", "(", "1", "+", "2", ")" };
-        System.out.println(obj.evaluateExpression(expression));
-    }
+    // public static void main(String args[]) {
+    //     Solution obj = new Solution();
+    //     String[] expression = {  "2", "*", "6", "-", "(", "23", "+", "7", ")", "/", "(", "1", "+", "2", ")" };
+    //     System.out.println(obj.evaluateExpression(expression));
+    // }
+    
     int get(String a, Integer base) {
         if (a.equals("+") || a.equals("-"))
             return 1 + base;
