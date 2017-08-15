@@ -18,6 +18,7 @@
 
 /* Building the Tree is the same as always */
 
+
 class TreeNode {
     public int val;
     public String s;
@@ -28,54 +29,46 @@ class TreeNode {
         this.s = ss;
         this.left = this.right = null;
     }
+
 }
 
 public class Solution {
 
-    public int evaluateExpression(String[] expression) {
-        List<String> rpn = convertToRPN(expression);
-        String[] str = new String[rpn.size()];
-        rpn.toArray(str);
-        return evalreversepolish(str);
-    }   
+    public static void main(String args[]) {
+        Solution obj = new Solution();
+        String[] expression = {  "2", "*", "6", "-", "(", "23", "+", "7", ")", "/", "(", "1", "+", "2", ")" };
+        System.out.println(obj.evaluateExpression(expression));
+    }
+    int get(String a, Integer base) {
+        if (a.equals("+") || a.equals("-"))
+            return 1 + base;
+        if (a.equals("*") || a.equals("/"))
+            return 2 + base;
 
-    private int evalreversepolish(String[] tokens) {
-        int returnValue = 0;
-        String operators = "+-*/";
-        ArrayDeque<String> stack = new Stack<>();
-
-        for (String s : tokens) {
-            if (!operators.contains(s)) { /* Push numbers */
-                stack.push(s);
-            } else {
-                int one = Integer.valueOf(stack.pop());
-                int two = Integer.valueOf(stack.pop());
-                if (s.equals("+")) {
-                    stack.push(String.valueOf(a + b));
-                } else if (s.equals("-")) {
-                    stack.push(String.valueOf(a - b));                    
-                } else if (s.equals("*")) {
-                    stack.push(String.valueOf(a * b));                    
-                } else if (s.equals("/")) {
-                    stack.push(String.valueOf(a / b));                    
-                }
-            }
-
-        }
-
-        /* Should be just one result over there */
-        return returnValue = stack.isEmpty() ? 0 : Integer.valueOf(stack.pop());
-
+        return Integer.MAX_VALUE;
     }
 
-    private List<String> convertToRPN(String[] expression) {
-        ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+    void dfs(TreeNode root, ArrayList<String> as) {
+        if(root==null)
+            return;
+        if (root.left != null)
+            dfs(root.left, as);
+
+        if (root.right != null)
+            dfs(root.right, as);
+        as.add(root.s);
+    }
+
+    public int evaluateExpression(String[] expression) {
+
+        ArrayDeque<TreeNode> stack = new ArrayDeque<TreeNode>();
         TreeNode root = null;
         int val = 0;
         Integer base = 0;
-
         for (int i = 0; i <= expression.length; i++) {
-            if (i != expression.length) {
+            if(i != expression.length)
+            {
+
                 if (expression[i].equals("(")) {
                     base += 10;
                     continue;
@@ -84,20 +77,19 @@ public class Solution {
                     base -= 10;
                     continue;
                 }
+                val = get(expression[i], base);
 
-                val = getValue(expression[i], base);
             }
-
-            TreeNode right = i == expression.length ?
-                new TreeNode(Integer.MIN_VALUE, "") :
-                new TreeNode(val, expression[i]);
-
+            TreeNode right = i == expression.length ? new TreeNode(
+                    Integer.MIN_VALUE, "") : new TreeNode(val,
+                    expression[i]);
             while (!stack.isEmpty()) {
                 if (right.val <= stack.peek().val) {
                     TreeNode nodeNow = stack.pop();
 
                     if (stack.isEmpty()) {
                         right.left = nodeNow;
+
                     } else {
                         TreeNode left = stack.peek();
                         if (left.val < right.val) {
@@ -110,32 +102,48 @@ public class Solution {
                     break;
                 }
             }
-
             stack.push(right);
         }
 
-        ArrayList<String> reversePolish = new ArrayList<>();
-        dfs(stack.peek().left, reversePolish);
+        ArrayList<String> reversepolish = new ArrayList<String>();
+        dfs(stack.peek().left, reversepolish);
+        String[] str = new String[reversepolish.size()];
+        reversepolish.toArray(str);
+        //System.out.println(as);
 
-        return reversePolish;
+        return evalreversepolish(str);
     }
 
-    private int getValue(String a, Integer base) {
-        if (a.equals("+") || a.equals("-"))
-            return base + 1;
-        if (a.equals("*") || a.equals("/"))
-            return base + 2;
+    int evalreversepolish(String[] tokens) {
+        int returnValue = 0;
+        String operators = "+-*/";
 
-        return Integer.MAX_VALUE;
+        ArrayDeque<String> stack = new ArrayDeque<String>();
+
+        for (String ss : tokens) {
+            if (!operators.contains(ss)) {
+                stack.push(ss);
+            } else {
+                int a = Integer.valueOf(stack.pop());
+                int b = Integer.valueOf(stack.pop());
+                if (ss.equals("+")) {
+                    stack.push(String.valueOf(a + b));
+                } else if (ss.equals("-")) {
+                    stack.push(String.valueOf(b - a));
+                } else if (ss.equals("*")) {
+                    stack.push(String.valueOf(a * b));
+                } else if (ss.equals("/")) {
+                    stack.push(String.valueOf(b / a));
+                }
+            }
+        }
+        if(stack.isEmpty())
+            returnValue = 0;
+        else
+            returnValue = Integer.valueOf(stack.pop());
+
+        return returnValue;
     }
-
-    /* Postorder traverse the tree and add the node along the way */
-    private void dfs(TreeNode root, ArrayList<String> as) {
-        if (root == null)   return;
-        if (root.left  != null) dfs(root.left,  as);
-        if (root.right != null) dfs(root.right, as);
-        as.add(root.s);
-    }    
 }
 
 /*
