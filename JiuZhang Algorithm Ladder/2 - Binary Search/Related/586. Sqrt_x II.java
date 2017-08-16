@@ -11,35 +11,39 @@
     Given n = 2 return 1.41421356
  */
 
-///////////////////////////////
-// Solution 1 Just Return it //
-///////////////////////////////
+////////////////////
+// Just Return it //
+////////////////////
 
 public class Solution {
-    /**
-     * @param x a double
-     * @return the square root of x
-     */
     public double sqrt(double x) {
         return Math.sqrt(x);
     }
 }
 
-////////////////////////////////////
-// Solution 2 Using Binary Search //
-////////////////////////////////////
+///////////////////
+// Binary Search //
+///////////////////
+
+/*
+    Thoughts:
+
+    1. double type is different from the int type;
+    2. when comes to the double, we have to set a epsilon to control the result
+    3. if the right - left > epsilon, the loop goes on.
+    4. we can return either the left or the right.
+    5. When the x is less than 1. Just set the end to 1, it is experiential.
+ */
 
 public class Solution {
-    /**
-     * @param x a double
-     * @return the square root of x
-     */
+
     public double sqrt(double x) {
-        // Write your code here
+
         double left = 0.0;
         double right = x;
-        double eps = 1e-12;
+        double eps = 1e-12; 
 
+        /* The numbers between 0 and 1 are getting larger when sqrt them */
         if(right < 1.0) {
             right = 1.0;
         }
@@ -54,66 +58,17 @@ public class Solution {
             }
         }
 
-        return left;
+        return left; 
+        // return right;
     }
 }
 
-/*
-    Thoughts:
-
-    1. double type is different from the int type;
-    2. when comes to the double, we have to set a epsilon to control the result
-    3. if the right - left > epsilon, the loop goes on.
-    4. we can return either the left or the right.
-    5. When the x is less than 1. Just set the end to 1, it is experiential.
- */
-
-//////////////////////////
-// Solution 3 My way... //
-//////////////////////////
+///////////////////
+// Newton Method //
+///////////////////
 
 public class Solution {
-    /**
-     * @param x a double
-     * @return the square root of x
-     */
-    public double sqrt(double x) {
-        double epsilon = 1e-12;
-        double start = 0;
-        double end = x;
-        double mid = x / 2;
-        
-        if (x < 1) {
-            end = 1;
-        }
 
-            while (Math.abs(mid * mid - x) > epsilon) {
-                mid = (start + end) / 2;
-                if (mid * mid >= x) {
-                    end = mid;
-                } else {
-                    start = mid;
-                }
-            }
-            
-            if (end * end <= x) {
-                return end;
-            }
-            
-            return start;
-       
-    }
-}
-
-//////////////////////////////
-// Solution 4 Newton Method //
-//////////////////////////////
-
-public class Solution {
-    /**
-     * @param x a double
-     * @return the square root of x
-     */
     public double sqrt(double x) {
         double res = 1.0;
         double eps = 1e-12;
@@ -125,4 +80,3 @@ public class Solution {
         return res;
     }
 }
-
