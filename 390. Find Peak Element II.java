@@ -40,6 +40,16 @@
 // Double for loop and then check the four direction //  Got AC on LintCode
 ///////////////////////////////////////////////////////
 
+/*  
+    The runtime for this is O(m * n) since we are visiting only one time for
+    each node.
+
+    A slightly better way to search the matrix is to only go up till we hit a
+    point where we can't go up anymore. 
+    
+    The worst case big O could be O(m * n) climbing shape is a snake.
+ */
+
 class Solution {
     int[][] board;
     int[] dx = {0, 0, 1, -1};
@@ -78,19 +88,6 @@ class Solution {
     }
 }
 
-
-///////////////////
-// Only climb up //    
-///////////////////
-
-/* The worst case big O could be O(m * n) climbing shape is a snake */
-class Solution {
-
-    public List<Integer> findPeakII(int[][] A) {
-    }
-}
-
-
 //////////////////////
 // Better optimized //              The big O is O(n log n)
 //////////////////////
@@ -106,8 +103,41 @@ class Solution {
 
     public List<Integer> findPeakII(int[][] A) {
 
+        List<Integer> ans = new ArrayList<>();
+        /* 
+            The binary search is bit different from the template since we are
+            getting the only one peak not narrow it to a pair that we can
+            handle latter.
+         */
+        int start = 1, end = A.length - 2;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            int col = find(mid, A); /* Find max of the col */
+            if (A[mid][col] < A[mid - 1][col]) {
+                end = mid - 1;
+            } else if (A[mid][col] < A[mid + 1][col]) {
+                start = mid + 1;
+            } else if (A[mid][col] > A[mid - 1][col] 
+                    && A[mid][col] > A[mid + 1][col]) {
+                ans.add(mid);
+                ans.add(col);
+                break;
+            }
+        }
+
+        return ans;
+    }
+    private int find(int start, int[][] A) { /* Linear time */
+        int col = 0;
+        for (int i = 0; i < A[start].length; i++) {
+            if (A[start][i] > A[start][col]) {
+                col = i;
+            }
+        }
+        return col;
     }
 }
+
 
 /////////////////
 // Linear Time //
@@ -115,14 +145,50 @@ class Solution {
 
 /* 
     Algorithm :
+    Do the row and col binary search in turn recursively.
     
-
+    VERY VERY VERY IMPORTANT. The fusion of recursion and binary search 
  */
 
 class Solution {
 
     public List<Integer> findPeakII(int[][] A) {
+        int n = A.length;
+        int m = A[0].length;
+        return binarySearch(1, n - 2, 1, m - 2, A, true);
+    }
 
+    private List<Integer> binarySearch(int xl, int xr,
+                                       int yl, int yr,
+                                       int[][] A,
+                                       boolean flag) {
+        if (flag) { /* Find peak in a row */
+            int mid = (xl + xr) / 2;
+            int index = yl;
+            for (int i = yl; i <= yr; i++) 
+                if (A[mid][i] > A[mid][index]) 
+                    index = i;
+
+            if (A[mid - 1][index] > A[mid][index]) 
+                return binarySearch(xl, mid - 1, yl, yr, A, !flag);
+            else if (A[mid + 1][index] > A[mid][index])
+                return binarySearch(mid + 1, xr, yl, yr, A, !flag);
+            else 
+                return new ArrayList<Integer>(Arrays.asList(mid, index));
+        } else { /* Find peak in a col */
+            int mid = (yl + yr) / 2;
+            int index = xl;
+            for (int i = xl; i <= xr; i++) 
+                if (A[i][mid] > A[index][mid]) 
+                    index = i;
+
+            if (A[index][mid - 1] > A[index][mid]) 
+                return binarySearch(xl, xr, yl, mid - 1, A, !flag);
+            else if (A[index][mid + 1] > A[index][mid])
+                return binarySearch(xl, xr, mid + 1, yr, A, !flag);
+            else 
+                return new ArrayList<Integer>(Arrays.asList(index, mid));
+        }
     }
 }
 
