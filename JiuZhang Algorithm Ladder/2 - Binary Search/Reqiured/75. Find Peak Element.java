@@ -20,16 +20,16 @@
     Return index 1 (which is number 2) or 6 (which is number 7)
  */
 
-/////////////////////////////////////////////////////
-// Solution 1 Love & Understanding & Possibilities //
-/////////////////////////////////////////////////////
+//////////////////////////////////////////
+// Love & Understanding & Possibilities //
+//////////////////////////////////////////
 
-
+/*
+    Note that PEAK could be more than 1 in an array, whereas there is only 1
+    MAX.
+ */
 class Solution {
-    /**
-     * @param A: An integers array.
-     * @return: return any of peek positions.
-     */
+
     public int findPeak(int[] A) {
         if (A == null || A.length == 0) {
             return -1;
@@ -41,16 +41,17 @@ class Solution {
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
             if (A[mid - 1] == A[mid + 1] && A[mid - 1] < A[mid] && A[mid + 1] <
-                A[mid]) {
+                A[mid]) { /* Peak is the mid */
                 return mid;
+            /* Increasing, go right */
             } else if (A[mid - 1] < A[mid] && A[mid] < A[mid + 1]) {
                 start = mid;
-            } else {
+            } else { /* Decreasing, go left */
                 end = mid;
             }
         }
         
-        return A[start] > A[end] ? start : end;
+        return A[start] > A[end] ? start : end; /* The larger index*/
     }
 }
 
@@ -58,31 +59,25 @@ class Solution {
 // Solution 2 Control the Border a bit //
 /////////////////////////////////////////
 
-
-
 class Solution {
-    /**
-     * @param A: An integers array.
-     * @return: return any of peek positions.
-     */
+
     public int findPeak(int[] A) {
-        /* Restrict start and end so there are at least three elements to
-        compare with */
-        int start = 1, end = A.length-2; 
-        while(start + 1 <  end) {
+        /* 
+            Restrict start and end so there are at least three elements to
+            compare with.
+         */
+        int start = 1, end = A.length - 2; 
+        while (start + 1 <  end) {
             int mid = (start + end) / 2;
-            if(A[mid] < A[mid - 1]) {
+            if (A[mid] < A[mid - 1]) {  /* Decreasing, go left */
                 end = mid;
-            } else if(A[mid] < A[mid + 1]) {
+            } else if(A[mid] < A[mid + 1]) {  /* Increasing, go right */
                 start = mid;
             } else {
-                end = mid;
+                start = mid; // end = mid
             }
         }
-        if(A[start] < A[end]) {
-            return end;
-        } else { 
-            return start;
-        }
+
+        return A[start] > A[end] ? start : end; /* The larger index */
     }
 }
