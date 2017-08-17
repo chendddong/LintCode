@@ -6,10 +6,6 @@
     first bad one. The details interface can be found in the code's annotation part.
 */
 
-///////////////////////////////////////////////////////////////////////////////////////////
-// ##################################################################################### //
-///////////////////////////////////////////////////////////////////////////////////////////
- 
  /*
      Notice
 
@@ -44,7 +40,7 @@ class Solution {
         
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
-            if (SVNRepo.isBadVersion(mid)) {
+            if (SVNRepo.isBadVersion(mid)) { /* Generic check */
                 end = mid;
             } else {
                 start = mid;
