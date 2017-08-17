@@ -1,6 +1,6 @@
 /*
     Given an array with positive and negative numbers, find the maximum average
-    subarray which length should be greater or equal to given length k.
+    sub-array which length should be greater or equal to given length k.
 
  */
 
@@ -15,11 +15,7 @@
  */
 
 public class Solution {
-    /**
-     * @param nums an array with positive and negative numbers
-     * @param k an integer
-     * @return the maximum average
-     */
+
     public double maxAverage(int[] nums, int k) {
         double l = Integer.MAX_VALUE; // smallest
         double r = Integer.MIN_VALUE; // largest
@@ -36,19 +32,19 @@ public class Solution {
 
         while (r - l >= 1e-6) {
             double mid = (l + r) / 2.0;
-            if (check_valid(nums, mid, k)) {
+            if (check_valid(nums, mid, k)) {/* The mid is too small go right */
                 l = mid;
-            } else {
+            } else { /* The mid is too large go left */
                 r = mid;
             }
         }
         return l;
     }
 
-    private boolean check_valid(int nums[], double mid, int k) {
+    private boolean check_valid(int[] nums, double mid, int k) {
         int n = nums.length;
         double min_pre = 0;
-        double[] sum = new double[n + 1];
+        double[] sum = new double[n + 1]; 
         sum[0] = 0;
         for (int i = 1; i <= n; ++i) {
             sum[i] = sum[i - 1] + nums[i - 1] - mid;
@@ -66,6 +62,14 @@ public class Solution {
 }
 
 /*
+    Thoughts: 
+
+    1. The maximum average of a sub-array must lie between the min and max of
+    this array. We have to therefore narrow down the min and max of the array
+    by one traversal.
+    2. Then we need to narrow down the search interval until it reaches a
+    epsilon (e.g. 1e-6). We can check and update the mid value along the way.
+
     个人理解：
     1、一个数组的子数组的最大平均数一定在数组的最大值和最小值之间，所以二分法的第一步限定average位于[min,max]之中。
     2、接下去要做的就是不断的缩小范围，直至max-min足够小（如1e-6），那我们就得到了想要的结果。
@@ -79,7 +83,5 @@ public class Solution {
     [i]存储的总和个数超过k时（即i>k），也就是说我们保证了这个子数组的长度达到k后，可以砍掉之前一些拖后腿的数。这些拖后腿 
     的数在上述链接的代码中是用min_pre来实现的。当之前拖后腿的数值小于min_pre时，更新min_pre=sum[i - k + 1]。sum[i]
     存储的是num[0]~num[i-1]减去mid的总和，而min_pre存储的是num[0]~num[k]减掉mid的总和，这样sum
-    [i]-min_pre得到的是  sum[k+1]~sum[i-1]，它所记录的总和个数也就是到num[i]为止能够找到的最大平均数 子数组的长度。
-
-    Comeback later **
+    [i]-min_pre得到的是  sum[k+1]~sum[i-1]，它所记录的总和个数也就是到num[i]为止能够找到的最大平均数 子数组的长度。    
  */
