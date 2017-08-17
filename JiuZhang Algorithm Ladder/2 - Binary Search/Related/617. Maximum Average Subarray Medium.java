@@ -85,3 +85,22 @@ public class Solution {
     存储的是num[0]~num[i-1]减去mid的总和，而min_pre存储的是num[0]~num[k]减掉mid的总和，这样sum
     [i]-min_pre得到的是  sum[k+1]~sum[i-1]，它所记录的总和个数也就是到num[i]为止能够找到的最大平均数 子数组的长度。    
  */
+
+/////////////////
+// Double loop //           TLE
+/////////////////
+
+public class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        double res = Integer.MIN_VALUE;
+        for (int s = 0; s < nums.length - k + 1; s++) {
+            long sum = 0;
+            for (int i = s; i < nums.length; i++) {
+                sum += nums[i];
+                if (i - s + 1 >= k)
+                    res = Math.max(res, sum * 1.0 / (i - s + 1));
+            }
+        }
+        return res;
+    }
+}
