@@ -29,11 +29,13 @@
  * you can use SVNRepo.isBadVersion(k) to judge whether 
  * the kth code version is bad or not.
 */
+
+///////////////////
+// Binary Search //
+///////////////////
+
 class Solution {
-    /**
-     * @param n: An integers.
-     * @return: An integer which is the first bad version.
-     */
+
     public int findFirstBadVersion(int n) {
         int start = 1;
         int end = n;
@@ -58,4 +60,10 @@ class Solution {
         return 0;
     }
 }
+
+//////////////////////////////////////////
+// Also there is a linear time solution //
+//////////////////////////////////////////
+
+
 
