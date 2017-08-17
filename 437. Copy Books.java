@@ -2,8 +2,8 @@
     Given n books and the ith book has A[i] pages. You are given k people to copy
     the n books.
 
-    n books list in a row and each person can claim a continous range of the n
-    books.   For example one copier can copy the books from ith to jth continously, 
+    n books list in a row and each person can claim a continuous range of the n
+    books.   For example one copier can copy the books from ith to jth continuously, 
     but he can not copy the 1st book, 2nd book and 4th book (without 3rd book).
 
     They start copying books at the same time and they all cost 1 minute to copy 1  
@@ -24,20 +24,20 @@
 // Solution 1: Binary Search //
 ///////////////////////////////
 
-/* this version cost O(n log m) where n is the number of books and m is the sum
-of the pages.*/
+/* 
+    this version cost O(n log m) where n is the number of books and m is the
+    sum of the pages. So if the m is extremely large, the time complexity would
+    go up quickly.
+*/
 
 public class Solution {
-    /**
-     * @param pages: an array of integers
-     * @param k: an integer
-     * @return: an integer
-     */
+
     public int copyBooks(int[] pages, int k) {
         if (pages.length == 0) {
             return 0;  
         }
         
+        /* Find the search interval */
         int total = 0;
         int max = pages[0];
         for (int i = 0; i < pages.length; i++) {
@@ -47,18 +47,20 @@ public class Solution {
             }
         }
         
-        int start = max;
-        int end = total;
+        int start = max; /* At least we have to take this much time */
+        int end = total; 
         
         while (start + 1 < end) {
             int mid = (end - start) / 2 + start;
-            if (countCopiers(pages, mid) > k) {
+            if (countCopiers(pages, mid) > k) { /* Check */
                 start = mid;
             } else {
                 end = mid;
             }
         }
         
+        // start = 4 end = 5
+
         if (countCopiers(pages, start) <= k) {
             return start;
         }
@@ -72,7 +74,11 @@ public class Solution {
         }
         
         int copiers = 1;
-        int sum = pages[0]; // limit is always >= pages[0]
+        /* 
+            limit is always >= pages[0] since the smallest limit is the max
+            number in the pages 
+         */
+        int sum = pages[0]; 
         for (int i = 1; i < pages.length; i++) {
             if (sum + pages[i] > limit) {
                 copiers++;
@@ -85,9 +91,9 @@ public class Solution {
     }
 }
 
-/////////////////////////////////////
-// Solution 2: Dynamic Programming //
-/////////////////////////////////////
+/////////////////////////
+// Dynamic Programming //           Comeback for this solution later
+/////////////////////////
 
 
 public class Solution {
