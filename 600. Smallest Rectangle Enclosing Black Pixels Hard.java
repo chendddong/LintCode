@@ -1,9 +1,10 @@
 /*
-    An image is represented by a binary matrix with 0 as a white pixel and 1 as a
-    black pixel. The black pixels are connected, i.e., there is only one black region. 
-    Pixels are connected horizontally and vertically. Given the location (x, y) of one 
-    of the black pixels, return the area of the smallest (axis-aligned) rectangle that
-     encloses all black pixels.
+    An image is represented by a binary matrix with 0 as a white pixel and 1 as
+    a black pixel. The black pixels are connected, i.e., there is only one
+    black region. 
+    
+    Pixels are connected horizontally and vertically. Given the location (x,y)
+    of one of the black pixels, return the area of the smallest (axis-aligned) rectangle that encloses all black pixels.
  */
 
 
@@ -20,21 +21,17 @@
     Return 6.
  */
 
-//////////////////////////////////////////////
-// Solution 1 Not Using x, y Too SLow No AC //
-//////////////////////////////////////////////
+//////////////////////////////////////////////////
+// Use bit Or to see if certain row / col has 1 //            TLE
+//////////////////////////////////////////////////
 
 
 public class Solution {
-    /**
-     * @param image a binary matrix with '0' and '1'
-     * @param x, y the location of one of the black pixels
-     * @return an integer
-     */
+
     public int minArea(char[][] image, int x, int y) {
         /* Use cast to cast the number in two sides and count those number of
         ones and return the area */
-
+  
         /* Corner Cases */
         if (image == null || image.length == 0 || image[0].length == 0) {
             return 0;
@@ -75,125 +72,159 @@ public class Solution {
     }
 }
 
-/////////////////////////////////////////////
-// Solution 2 Think Symmetrically O(log n) //
-/////////////////////////////////////////////
-
-
+///////////////////////
+// Condensed Version //         O(log n)
+///////////////////////
 
 public class Solution {
-    /**
-     * @param image a binary matrix with '0' and '1'
-     * @param x, y the location of one of the black pixels
-     * @return an integer
-     */
+    char[][] board = null;
     public int minArea(char[][] image, int x, int y) {
-        if (image == null || image.length == 0 || image[0].length == 0) {
+        if (image == null || image.length == 0 || image[0].length == 0) 
             return 0;
-        }
         
+        board = image;
         int n = image.length;
         int m = image[0].length;
         
-        int left = findLeft(image, 0, y);
-        int right = findRight(image, y, m - 1);
-        int top = findTop(image, 0, x);
-        int bottom = findBottom(image, x, n - 1);
+        /* Left, right, top, bottom */
+        int l = find(0, y, 'l');
+        int r = find(y, m - 1, 'r');
+        int t = find(0, x, 't');
+        int b = find(x, n - 1, 'b');
+        
+        return (r - l + 1) * (b - t + 1);
+    }
+    private int find(int start, int end, char x) {
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (x == 'l' || x == 't') {
+                if (isEmpty(mid, x)) 
+                    start = mid;
+                else 
+                    end = mid;                
+            } else { /* x == 'r || x == 'b' */
+                if (isEmpty(mid, x)) 
+                    end = mid;
+                else
+                    start = mid;
+            }
+        }
+        
+        if (x == 'l' || x == 't') {
+            if (isEmpty(start, x))
+                return end;
+            return start;             
+        } else { /* x == 'r' || x == 'b' */
+            if (isEmpty(end, x))
+                return start;
+            return end;              
+        }
+       
+    }    
+    private boolean isEmpty(int index, char x) {
+        if (x == 'l' || x == 'r') {
+            for (int i = 0; i < board.length; i++) {
+                if (board[i][index] == '1')
+                    return false;
+            }
+            return true;
+        } else { /* x == 't' || x == 'b' */
+            for (int i = 0; i < board[0].length; i++) {
+                if (board[index][i] == '1')
+                    return false;
+            }
+            return true;            
+        }
+    }
+ 
+}
 
-        /* test for the final resutl */
+//////////////////////////////////
+// Think Symmetrically O(log n) //
+//////////////////////////////////
+
+public class Solution {
+    char[][] board = null;
+    public int minArea(char[][] image, int x, int y) {
+        if (image == null || image.length == 0 || image[0].length == 0) 
+            return 0;
+        
+        board = image;
+        int n = image.length;
+        int m = image[0].length;
+        
+        int left = findLeft(0, y);
+        int right = findRight(y, m - 1);
+        int top = findTop(0, x);
+        int bottom = findBottom(x, n - 1);
+        
         return (right - left + 1) * (bottom - top + 1);
     }
-    
-    /* Find left Index */
-    private int findLeft(char[][] image, int start, int end) {
+    private int findLeft(int start, int end) {
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
-            if (isEmptyColumn(image, mid)) {
+            if (isEmptyColumn(mid)) 
                 start = mid;
-            } else {
+            else 
                 end = mid;
-            }
         }
         
-        if (isEmptyColumn(image, start)) {
+        if (isEmptyColumn(start))
             return end;
+            
+        return start;
+    }
+    private int findRight(int start, int end) {
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (isEmptyColumn(mid)) 
+                end = mid;
+            else 
+                start = mid;
         }
+        if (isEmptyColumn(end))
+            return start;
+            
+        return end;
+    }    
+    private int findTop(int start, int end) {
+        while (start + 1 < end) {
+            int mid = start + (end - start) / 2;
+            if (isEmptyRow(mid))
+                start = mid;
+            else 
+                end = mid;
+        }
+        if (isEmptyRow(start))
+            return end;
         
         return start;
     }
-
-    /* Find right Index */
-    private int findRight(char[][] image, int start, int end) {
+    private int findBottom(int start, int end) {
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
-            if (isEmptyColumn(image, mid)) {
+            if (isEmptyRow(mid)) 
                 end = mid;
-            } else {
+            else 
                 start = mid;
-            }
         }
-        
-        if (isEmptyColumn(image, end)) {
+        if (isEmptyRow(end))
             return start;
-        }
         
         return end;
-    }
-
-    /* Find Top Index */
-    
-    private int findTop(char[][] image, int start, int end) {
-        while (start + 1 < end) {
-            int mid = start + (end - start) / 2;
-            if (isEmptyRow(image, mid)) {
-                start = mid;
-            } else {
-                end = mid;
-            }
-        }
-        
-        if (isEmptyRow(image, start)) {
-            return end;
-        }
-        
-        return start;
-    }
-
-    /* Find Bottom Index */
-    
-    private int findBottom(char[][] image, int start, int end) {
-        while (start + 1 < end) {
-            int mid = start + (end - start) / 2;
-            if (isEmptyRow(image, mid)) {
-                end = mid;
-            } else {
-                start = mid;
-            }
-        }
-        
-        if (isEmptyRow(image, end)) {
-            return start;
-        }
-        
-        return end;
-    }
-    
-    
-    private boolean isEmptyColumn(char[][] image, int col) {
-        for (int i = 0; i < image.length; i++) {
-            if (image[i][col] == '1') {
+    }    
+    private boolean isEmptyColumn(int col) {
+        for (int i = 0; i < board.length; i++) {
+            if (board[i][col] == '1')
                 return false;
-            }
         }
         return true;
     }
-    
-    private boolean isEmptyRow(char[][] image, int row) {
-        for (int j = 0; j < image[0].length; j++) {
-            if (image[row][j] == '1') {
+    private boolean isEmptyRow(int row) {
+        for (int i = 0; i < board[0].length; i++) {
+            if (board[row][i] == '1')
                 return false;
-            }
         }
         return true;
-    }
+    }    
 }

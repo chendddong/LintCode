@@ -23,7 +23,7 @@ public class Solution {
         /* Template */
         while (start + 1 < end) {
             int mid = start + (end - start) / 2;
-            if (count(L, mid) >= k) { /* Check */
+            if (count(L, mid) >= k) { /* The wood block is too small */
                 start = mid;
             } else {
                 end = mid;

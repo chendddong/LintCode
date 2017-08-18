@@ -24,8 +24,8 @@ public class Solution {
         while (start + 1 < end) {
             int mid = start + (end - start) / 2; /* Treat this like median */
             if (checkSmallerNum(mid, nums) <= mid) {
-                /* If the number of numbers that is smaller than or equal to the
-                the median, that means there must be a larger duplicate */
+                /* If the number of numbers that is smaller than or equal to
+                the the median, that means there must be a larger duplicate */
                 start = mid;
             } else {
                 end = mid;

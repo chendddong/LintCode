@@ -52,6 +52,10 @@ public class Solution {
         
         while (start + 1 < end) {
             int mid = (end - start) / 2 + start;
+            /* 
+                It took more than k people to finish so the time is
+                actually should be larger 
+            */
             if (countCopiers(pages, mid) > k) { /* Check */
                 start = mid;
             } else {
@@ -79,6 +83,7 @@ public class Solution {
             number in the pages 
          */
         int sum = pages[0]; 
+        /* sliding the book */
         for (int i = 1; i < pages.length; i++) {
             if (sum + pages[i] > limit) {
                 copiers++;
