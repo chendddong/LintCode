@@ -11,16 +11,6 @@
     Given n = 2 return 1.41421356
  */
 
-////////////////////
-// Just Return it //
-////////////////////
-
-public class Solution {
-    public double sqrt(double x) {
-        return Math.sqrt(x);
-    }
-}
-
 ///////////////////
 // Binary Search //
 ///////////////////
@@ -38,28 +28,32 @@ public class Solution {
 public class Solution {
 
     public double sqrt(double x) {
-
-        double left = 0.0;
-        double right = x;
-        double eps = 1e-12; 
-
+        
+        double l = 0.0, r = x, e = 1e-10;
+        
         /* The numbers between 0 and 1 are getting larger when sqrt them */
-        if(right < 1.0) {
-            right = 1.0;
+        if (r < 1.0) 
+            r = 1.0;
+        
+        while (r - l > e) {
+            double mid = (l + r) / 2;
+            if (mid * mid < x) 
+                l = mid;
+            else
+                r = mid;
         }
+        
+        return l; // return r;
+    }
+}
 
-        while(right - left > eps) {
-            double mid = (right + left) / 2;
-            if(mid * mid < x) {
-                left = mid;
-            }
-            else {
-                right = mid;
-            }
-        }
+////////////////////
+// Just Return it //
+////////////////////
 
-        return left; 
-        // return right;
+public class Solution {
+    public double sqrt(double x) {
+        return Math.sqrt(x);
     }
 }
 
