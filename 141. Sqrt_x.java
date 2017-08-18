@@ -15,6 +15,32 @@
     sqrt(10) = 3
  */
 
+//////////////////////////////////
+// Using Binary Search Directly //          Optimal
+//////////////////////////////////
+
+/* Treat this as the template of value binary search */
+
+class Solution {
+
+    public int sqrt(int x) {
+        long start = 1, end = x; /* Should use long instead of int */
+        while (start + 1 < end) {
+            long mid = start + (end - start) / 2;
+            if (mid * mid <= x) {
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        
+        if (end * end <= x) {
+            return (int) end; /* Cast to return type */
+        }
+        return (int) start;
+    }
+}
+
 ////////////////////////////////////////
 // StraightForward Using Math.sqrt(); //
 ////////////////////////////////////////
@@ -76,29 +102,5 @@ class Solution {
     }
 }
 
-//////////////////////////////////
-// Using Binary Search Directly // 
-//////////////////////////////////
 
-/* Treat this as the template of value binary search */
-
-class Solution {
-
-    public int sqrt(int x) {
-        long start = 1, end = x; /* Should use long instead of int */
-        while (start + 1 < end) {
-            long mid = start + (end - start) / 2;
-            if (mid * mid <= x) {
-                start = mid;
-            } else {
-                end = mid;
-            }
-        }
-        
-        if (end * end <= x) {
-            return (int) end; /* Cast to return type */
-        }
-        return (int) start;
-    }
-}
 
