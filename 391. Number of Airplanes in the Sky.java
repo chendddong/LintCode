@@ -31,7 +31,11 @@
  *     }
  */
 
-class Point {
+/////////////////
+// flag is int //
+/////////////////
+
+class Point { /* Reconstruct the data to use it wisely */
     int time;
     int flag;
     Point(int t, int f) {
@@ -46,7 +50,6 @@ class Point {
         }
     };
 }
-
 
 class Solution {
 
@@ -66,10 +69,52 @@ class Solution {
             else count--;
             max = Math.max(max, count);
         }
+        
         return max;
     }
 }
 
+/////////////////////
+// flag is boolean //
+/////////////////////
+
+class Point {
+    int time;
+    boolean isStart;
+    Point(int t, boolean is) {
+        this.time = t;
+        this.isStart = is;
+    }
+}
+
+class pointComparator implements Comparator<Point> {
+    @Override
+    public int compare(Point p1, Point p2) {
+        if (p1.time == p2.time) return p1.isStart ? 1 : -1;
+        return p1.time - p2.time;
+    }
+}
+
+class Solution {
+    public int countOfAirplanes(List<Interval> airplanes) { 
+        List<Point> list = new ArrayList<>(airplanes.size() * 2);
+        for (Interval i : airplanes) {
+            list.add(new Point(i.start, true));
+            list.add(new Point(i.end, false));
+        }
+        
+        Collections.sort(list, new pointComparator());
+        
+        int count = 0, max = 0;
+        for (Point p : list) {
+            if (p.isStart) count++;
+            else count--;
+            max = Math.max(max, count);
+        }
+
+        return max;
+    }
+}
 /* 
     There are some other same problems like the seminars arrangement. It is
     basically the same !!! 
