@@ -59,7 +59,12 @@
 // Heap //      Use PriorityQueue as a heap O(n log n)
 //////////
 
-/* Go through the algorithm later */
+
+/* 
+    Classic :
+    Comparator // Heap // Sweep Line // Traversal // Construct Answer
+ */
+
 public class Solution {
 
     class Edge {
@@ -73,23 +78,32 @@ public class Solution {
             this.isStart = isStart;
         }
     }
-    /* How to sort the Edge ?!*/
+    /* How to sort the Edge */
     class EdgeComparator implements Comparator<Edge> {
         @Override
         public int compare(Edge arg1, Edge arg2) {
             Edge l1 = (Edge) arg1;
             Edge l2 = (Edge) arg2;
-            if (l1.pos != l2.pos)
+
+            /* Not in the same spot, sort by pos asc */
+            if (l1.pos != l2.pos) 
                 return compareInteger(l1.pos, l2.pos);
+
+            /* Same spot, all starts, sort by height desc */
             if (l1.isStart && l2.isStart) {
                 return compareInteger(l2.height, l1.height);
             }
+
+            /* Same spot, all ends, sort by height asc */
             if (!l1.isStart && !l2.isStart) {
                 return compareInteger(l1.height, l2.height);
             }
+
+            /* One of them is start, sort asc */
             return l1.isStart ? -1 : 1;
         }
 
+        /* Compare asc */
         int compareInteger(int a, int b) {
             return a <= b ? -1 : 1;
         }
@@ -97,11 +111,12 @@ public class Solution {
 
     public ArrayList<ArrayList<Integer>> buildingOutline(int[][] buildings) {
         ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
-
+        /* Edge */
         if (buildings == null || buildings.length == 0
             || buildings[0].length == 0) {
             return res;
         }
+
         ArrayList<Edge> edges = new ArrayList<Edge>();
         for (int[] building : buildings) {
             Edge startEdge = new Edge(building[0], building[2], true);
@@ -115,19 +130,20 @@ public class Solution {
         ArrayList<Integer> now = null;
         
         for (Edge edge : edges) {
-            if (edge.isStart) {s
+            if (edge.isStart) {
+                /* Only add when it is increasing */
                 if (heap.isEmpty() || edge.height > heap.peek()) {
                     now = new ArrayList<Integer>(Arrays.asList(edge.pos,
                         edge.height));
                     res.add(now);
                 }
-                heap.add(edge.height);
+                heap.add(edge.height); /* Add to heap last */
             } else {
-                heap.remove(edge.height);
+                heap.remove(edge.height); /* Remove from heap first */
                 if (heap.isEmpty() || edge.height > heap.peek()) {
-                    if (heap.isEmpty()) {
+                    if (heap.isEmpty()) { /* 0 as a place holder */
                         now = new ArrayList<Integer>(Arrays.asList(edge.pos, 0));
-                    } else {
+                    } else { /* Need the higher height */
                         now = new ArrayList<Integer>(Arrays.asList(edge.pos,
                             heap.peek()));
                     }
@@ -143,6 +159,7 @@ public class Solution {
         if (res.size() > 0) {
             int pre = res.get(0).get(0);
             int height = res.get(0).get(1);
+
             for (int i = 1; i < res.size(); i++) {
                 ArrayList<Integer> now = new ArrayList<Integer>();
                 int id = res.get(i).get(0);
@@ -150,8 +167,10 @@ public class Solution {
                     now.add(pre);
                     now.add(id);
                     now.add(height);
+
                     ans.add(now);
                 }
+                /* Update the pre and height to now */
                 pre = id;
                 height = res.get(i).get(1);
             }
