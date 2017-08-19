@@ -203,6 +203,10 @@ import java.util.*;
  *     1) countUnivalSubtreesGlobal
  *     2) countUnivalSubtreesRec
  *
+ * 23.3 Number of nodes in BST Subtree
+ *     1) largestBSTSubtreeRec
+ *     2) largestBSTSubtreeResultType
+ *
  * 24. Path Sum
  *     1) hasPathSum (root to leaf LeetCode 112)
  *     2) binaryTreePathSumList (root to leaf)
@@ -1288,7 +1292,14 @@ public class TreeDemo {
 //        System.out.println("******************** 23.2.2 ********************");
 //        System.out.print("The number of Univalue subtree for T4 is: ");
 //        System.out.println(countUnivalSubtreesRec(r16));
-
+//        /* 23.3.1 */
+//        System.out.println("******************** 23.3.1 ********************");
+//        System.out.print("The largest number of nodes in Tree 2's subtree is: ");
+//        System.out.println(largestBSTSubtreeRec(r100));
+//        /* 23.3.2 */
+//        System.out.println("******************** 23.3.2 ********************");
+//        System.out.print("The largest number of nodes in Tree 2's subtree is: ");
+//        System.out.println(largestBSTSubtreeResultType(r100));
 //        /* 24.1 */
 //        System.out.println("********************* 24.1 *********************");
 //        System.out.print("Tree 1 has a path sum of 17 : ");
@@ -5160,6 +5171,81 @@ public class TreeDemo {
 
     }
 
+/////////////////////////////////////////
+// 23.3 Number of nodes in BST Subtree //
+/////////////////////////////////////////
+
+    /////////////////////////////
+    // 1) largestBSTSubtreeRec //
+    /////////////////////////////
+
+    public static int largestBSTSubtreeRec(TreeNode root) {
+        if (root == null) return 0;
+        if (root.left == null && root.right == null) return 1;
+        if (isValid(root, null, null)) return countNode(root);
+        return Math.max(largestBSTSubtreeRec(root.left), largestBSTSubtreeRec(root.right));
+    }
+
+    public static boolean isValid(TreeNode root, Integer min, Integer max) {
+        if (root == null) return true;
+        if (min != null && min >= root.val) return false;
+        if (max != null && max <= root.val) return false;
+        return isValid(root.left, min, root.val) && isValid(root.right, root.val, max);
+    }
+
+    public static int countNode(TreeNode root) {
+        if (root == null) return 0;
+        if (root.left == null && root.right == null) return 1;
+        return 1 + countNode(root.left) + countNode(root.right);
+    }
+
+    ////////////////////////////////////
+    // 2) largestBSTSubtreeResultType //
+    ////////////////////////////////////
+
+    /* size of current tree, range of current tree [rangeLower, rangeUpper] */
+    private static class ResultType23_3_2 {
+        int size;
+        int lower;
+        int upper;
+
+        ResultType23_3_2(int size, int lower, int upper) {
+            this.size = size;
+            this.lower = lower;
+            this.upper = upper;
+        }
+    }
+    private static int max23_3_2 = 0;
+
+    public static int largestBSTSubtreeResultType(TreeNode root) {
+
+
+        if (root == null) { return 0; }
+        traverse(root);
+        return max23_3_2;
+    }
+
+    private static ResultType23_3_2 traverse(TreeNode root) {
+        /* For easy comparison, we need to set lower & upper to max and min */
+        if (root == null) return new ResultType23_3_2(0, Integer.MAX_VALUE, Integer.MIN_VALUE);
+
+        ResultType23_3_2 left = traverse(root.left);
+        ResultType23_3_2 right = traverse(root.right);
+        /* Not BST */
+        if (left.size == -1 || right.size == -1 || root.val <= left.upper ||
+                root.val >= right.lower) {
+            return new ResultType23_3_2(-1, 0, 0);
+        }
+        int size = left.size + 1 + right.size;
+        max23_3_2 = Math.max(size, max23_3_2); /* Update the max */
+        /*
+            Make sure the lower and upper bound are min and the max between the
+            root and the left & right child.
+         */
+        return new ResultType23_3_2(size, Math.min(left.lower, root.val),
+                Math.max(right.upper, root.val));
+    }
+
 ///////////////////
 //  24. Path Sum //
 ///////////////////
@@ -5718,7 +5804,7 @@ public class TreeDemo {
         getAllChildren(map.get(kill), result);
         return result;
     }
-    
+
     private static void getAllChildren(Node node, List<Integer> result) {
         for (Node n : node.children) {
             result.add(n.val);
