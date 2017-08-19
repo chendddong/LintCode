@@ -206,6 +206,10 @@ import java.util.*;
  * 23.3 Number of nodes in BST Subtree
  *     1) largestBSTSubtreeRec
  *     2) largestBSTSubtreeResultType
+ *         -- LeetCode 333
+ *
+ * 23.4 Find duplicate subtrees
+ *     1) findDuplicateSubtrees
  *
  * 24. Path Sum
  *     1) hasPathSum (root to leaf LeetCode 112)
@@ -1300,6 +1304,29 @@ public class TreeDemo {
 //        System.out.println("******************** 23.3.2 ********************");
 //        System.out.print("The largest number of nodes in Tree 2's subtree is: ");
 //        System.out.println(largestBSTSubtreeResultType(r100));
+//        /* 23.4.1 */
+//        System.out.println("******************** 23.4.1 ********************");
+//        System.out.print("The duplicate subtree of nodes in Tree 1: ");
+//        for (TreeNode node : findDuplicateSubtrees(r1)) {
+//            System.out.print(node.val + " ");
+//        }
+//        System.out.println();
+//
+//        System.out.print("The duplicate subtree of nodes in Tree 2: ");
+//        for (TreeNode node : findDuplicateSubtrees(r100)) {
+//            System.out.print(node.val + " ");
+//        }
+//        System.out.println();
+//        System.out.print("The duplicate subtree of nodes in Tree 3: ");
+//        for (TreeNode node : findDuplicateSubtrees(r12)) {
+//            System.out.print(node.val + " ");
+//        }
+//        System.out.println();
+//        System.out.print("The duplicate subtree of nodes in Tree 4: ");
+//        for (TreeNode node : findDuplicateSubtrees(r16)) {
+//            System.out.print(node.val + " ");
+//        }
+//        System.out.println();
 //        /* 24.1 */
 //        System.out.println("********************* 24.1 *********************");
 //        System.out.print("Tree 1 has a path sum of 17 : ");
@@ -5244,6 +5271,35 @@ public class TreeDemo {
          */
         return new ResultType23_3_2(size, Math.min(left.lower, root.val),
                 Math.max(right.upper, root.val));
+    }
+
+//////////////////////////////////
+// 23.4 Find duplicate subtrees //
+//////////////////////////////////
+
+    //////////////////////////////
+    // 1) findDuplicateSubtrees //
+    //////////////////////////////
+
+    public static List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        List<TreeNode> res = new LinkedList<>();
+        traverse(root, new HashMap<>(), res);
+        return res;
+    }
+
+    public static String traverse(TreeNode cur,
+                                  Map<String, Integer> map,
+                                  List<TreeNode> res) {
+        if (cur == null) return "#";
+        String serial = cur.val + "," + traverse(cur.left, map, res) + "," +
+                traverse(cur.right, map, res); /* Preorder AC */
+
+        // String serial = traverse(cur.left, map, res) + "," + traverse(cur.right,map, res) + cur.val;  /* Postorder AC */
+        // String serial = traverse(cur.left, map, res) + "," + cur.val + "," + traverse(cur.right, map, res) ; /* Inorder No AC */
+
+        if (map.getOrDefault(serial, 0) == 1) res.add(cur);
+        map.put(serial, map.getOrDefault(serial, 0) + 1);
+        return serial;
     }
 
 ///////////////////
