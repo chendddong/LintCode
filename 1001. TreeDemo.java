@@ -253,6 +253,11 @@ import java.util.*;
  *         -- LeetCode 95
  *         -- LintCode 164
  *
+ * 26.4 Validate BST
+ *     1) isValidBSTSqueeze
+ *     2) isValidBSTTraverse
+ *     3) isValidBSTResultType
+ *
  * 27. Tree Simulation
  *     1) killProcess
  *
@@ -1458,6 +1463,24 @@ public class TreeDemo {
 //            printBST(root);
 //            System.out.println();
 //        }
+//        /* 26.4.1 */
+//        System.out.println("******************** 26.4.1 ********************");
+//        System.out.print("Is tree 1 a BST ? ");
+//        System.out.println(isValidBSTSqueeze(r1));
+//        System.out.print("Is tree 2 a BST ? ");
+//        System.out.println(isValidBSTSqueeze(r100));
+//        /* 26.4.2 */
+//        System.out.println("******************** 26.4.2 ********************");
+//        System.out.print("Is tree 1 a BST ? ");
+//        System.out.println(isValidBSTTraverse(r1));
+//        System.out.print("Is tree 2 a BST ? ");
+//        System.out.println(isValidBSTTraverse(r100));
+//        /* 26.4.3 */
+//        System.out.println("******************** 26.4.3 ********************");
+//        System.out.print("Is tree 1 a BST ? ");
+//        System.out.println(isValidBSTResultType(r1));
+//        System.out.print("Is tree 2 a BST ? ");
+//        System.out.println(isValidBSTResultType(r100));
 //        /* 27.1 */
 //        System.out.println("******************** 27.1 ********************");
 //        System.out.println("The processes we need to kill for pid 5 are: ");
@@ -5885,6 +5908,99 @@ public class TreeDemo {
             }
         }
         return result;
+    }
+
+///////////////////////
+// 26.4 Validate BST //
+///////////////////////
+
+    //////////////////////////
+    // 1) isValidBSTSqueeze //
+    //////////////////////////
+
+    /*
+        I think the O-(n) where n is the range of the problem.
+        Could be faster than we thought
+     */
+    public static boolean isValidBSTSqueeze(TreeNode root) {
+        /* range of values in problem */
+        return checkBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+    private static boolean checkBST(TreeNode node, long min, long max) {
+        /* Base case */
+        if (node == null) {
+            return true;
+        } else if (node.val <= min || node.val >= max) { /* Note the Edge */
+            return false;
+        }
+        return checkBST(node.left, min, Math.min(max, node.val)) && checkBST(node.right, Math.max(min, node.val), max); /* Note the Edge */
+    }
+
+    ///////////////////////////
+    // 2) isValidBSTTraverse //
+    ///////////////////////////
+
+    /* Global Variable */
+    private static TreeNode lastNode26_4_2 = null;
+    public static boolean isValidBSTTraverse(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        /* Left */
+        if (!isValidBSTTraverse(root.left)) {
+            return false;
+        }
+
+        /* Root */
+        if (lastNode26_4_2 != null && lastNode26_4_2.val >= root.val) {
+            return false;
+        }
+        lastNode26_4_2 = root;
+
+        /* Right */
+        if (!isValidBSTTraverse(root.right)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /////////////////////////////
+    // 3) isValidBSTResultType //
+    /////////////////////////////
+
+    private static class ResultType26_4_3 {
+        boolean isBST;
+        int max, min;
+        ResultType26_4_3(boolean isBST, int max, int min) {
+            this.isBST = isBST;
+            this.max = max;
+            this.min = min;
+        }
+    }
+    public static boolean isValidBSTResultType(TreeNode root) {
+        ResultType26_4_3 r = validHelper(root);
+        return r.isBST;
+    }
+    /* Task: return the ResultType of the tree with the root of 'root' */
+    private static ResultType26_4_3 validHelper(TreeNode root) {
+        /* Base Case */
+        if (root == null) {
+            return new ResultType26_4_3(true, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        }
+        /* Divide */
+        ResultType26_4_3 left = validHelper(root.left);
+        ResultType26_4_3 right = validHelper(root.right);
+
+        /* Early stops where the tree is not the BST */
+        if (!left.isBST || !right.isBST ||
+                root.left != null && left.max >= root.val ||
+                root.right != null && right.min <= root.val) {
+            return new ResultType26_4_3(false, 0, 0);
+        }
+        /* Go deep */
+        return new ResultType26_4_3(true, Math.max(right.max, root.val),
+                Math.min(left.min, root.val));
     }
 
 /////////////////////////
