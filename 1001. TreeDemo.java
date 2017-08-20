@@ -123,6 +123,10 @@ import java.util.*;
  *     2) isCompleteBinaryTreeNoDummy*
  *     3) isCompleteBinaryTreeRec*
  *
+ * 14.1 Count nodes in a complete binary tree
+ *     1) countNodesCompleteBTRec
+ *     2) countNodesCompleteBT
+ *
  * 15. Longest Path (root to leaf)
  *     1) findLongest
  *
@@ -1070,6 +1074,18 @@ public class TreeDemo {
 //        System.out.println(isCompleteBinaryTreeRec(r100));
 //        System.out.print("Tree 1 a complete BT : ");
 //        System.out.println(isCompleteBinaryTreeRec(r1));
+//        /* 14.1.1 */
+//        System.out.println("******************** 14.1.1 ********************");
+//        System.out.print("The total number of nodes in tree 2 is: ");
+//        System.out.println(countNodesCompleteBTRec(r100));
+//        System.out.print("The total number of nodes in tree 3 is: ");
+//        System.out.println(countNodesCompleteBTRec(r12));
+//        /* 14.1.2 */
+//        System.out.println("******************** 14.1.2 ********************");
+//        System.out.print("The total number of nodes in tree 2 is: ");
+//        System.out.println(countNodesCompleteBT(r100));
+//        System.out.print("The total number of nodes in tree 3 is: ");
+//        System.out.println(countNodesCompleteBT(r12));
 //        /* 15.1 */
 //        System.out.println("********************* 15.1 *********************");
 //        System.out.print("The longest path from root to leaf for Tree1 is: ");
@@ -3833,6 +3849,62 @@ public class TreeDemo {
                 || (left.isPerfectBT && right.isCompleteBT && left.height == right.height);
 
         return result;
+    }
+
+////////////////////////////////////////////////
+// 14.1 Count nodes in a complete binary tree //
+////////////////////////////////////////////////
+
+    ////////////////////////////////
+    // 1) countNodesCompleteBTRec //
+    ////////////////////////////////
+
+    /*
+        The height of a tree can be found by just going left. Let a single node tree have height 0. Find the height h of the whole tree. If the whole tree is empty, i.e., has height -1, there are 0 nodes.
+
+        Otherwise check whether the height of the right subtree is just one less than that of the whole tree, meaning left and right subtree have the same height.
+
+        If yes, then the last node on the last tree row is in the right subtree and the left subtree is a full tree of height h-1. So we take the 2^h-1 nodes of the left subtree plus the 1 root node plus recursively the number of nodes in the right subtree.
+        If no, then the last node on the last tree row is in the left subtree and the right subtree is a full tree of height h-2. So we take the 2^(h-1)-1 nodes of the right subtree plus the 1 root node plus recursively the number of nodes in the left subtree.
+        Since I halve the tree in every recursive step, I have O(log(n)) steps. Finding a height costs O(log(n)). So overall O(log(n)^2).
+     */
+    private static int height(TreeNode root) {
+        return root == null ? -1 : 1 + height(root.left);
+    }
+    public static int countNodesCompleteBTRec(TreeNode root) {
+
+        int h = height(root);
+        if (h < 0)  /* Edge */
+            return 0;
+        int hr = height(root.right);
+
+        if (hr == h - 1) /* Left and Right subtree have the same height */
+            /* Whole leftSide + root + rightSide*/
+            return (1 << h) + countNodesCompleteBTRec(root.right);
+        else /* Left subtree height is 1 more than right side */
+            /* Whole rightSide + root + leftSide */
+            return (1 << h - 1) + countNodesCompleteBTRec(root.left);
+    }
+
+    /////////////////////////////
+    // 2) countNodesCompleteBT //
+    /////////////////////////////
+
+    /* The algorithm is the same; Just remember to decrement the h */
+    public static int countNodesCompleteBT(TreeNode root) {
+        int nodes = 0, h = height(root); /* Reuse the method in 14.1.1 */
+        while (root != null) {
+            if (height(root.right) == h - 1) {
+                nodes += 1 << h;
+                root = root.right;
+            } else {
+                nodes += 1 << h - 1;
+                root = root.left;
+            }
+            h--;
+        }
+
+        return nodes;
     }
 
 /////////////////////////////////////
