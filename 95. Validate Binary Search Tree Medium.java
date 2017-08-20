@@ -46,13 +46,11 @@
  * }
  */
 
-/* 
-    I think the O-(n) where n is the range of the problem.
-    Could be faster than we thought 
- */
-
 public class Solution {
-
+    /* 
+        I think the O-(n) where n is the range of the problem.
+        Could be faster than we thought 
+     */
     public boolean isValidBST(TreeNode root) {
         /* range of values in problem */        
         return checkBST(root, Long.MIN_VALUE, Long.MAX_VALUE); 
@@ -149,4 +147,26 @@ public class Solution {
     The [resultType] of things!
  */
 
+////////////////////////
+// Inorder traversal  //    The goto option
+////////////////////////
 
+class Solution {
+    public boolean isValidBST(TreeNode root) {
+        if (root == null) return true;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode pre = null;
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            /* Solve problem */
+            if(pre != null && root.val <= pre.val) return false;
+            pre = root;
+            root = root.right;
+        }
+        return true;
+    }
+}
