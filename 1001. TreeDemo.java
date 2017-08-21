@@ -264,6 +264,9 @@ import java.util.*;
  *     2) isValidBSTTraverse
  *     3) isValidBSTResultType
  *
+ * 26.5 Recover two wrong nodes in BST
+ *     1) recoverTree
+ *
  * 27. Tree Simulation
  *     1) killProcess
  *
@@ -1517,6 +1520,14 @@ public class TreeDemo {
 //        System.out.println(isValidBSTResultType(r1));
 //        System.out.print("Is tree 2 a BST ? ");
 //        System.out.println(isValidBSTResultType(r100));
+//        /* 26.5.1 */
+//        System.out.println("******************** 26.4.1 ********************");
+//        System.out.println("BSTree 5 inorder traversal before recover: ");
+//        inorderTraversalRec(r101);
+//        System.out.println();
+//        System.out.println("BSTree 5 inorder traversal after recover: ");
+//        recoverTree(r101);
+//        inorderTraversalRec(r101);
 //        /* 27.1 */
 //        System.out.println("******************** 27.1 ********************");
 //        System.out.println("The processes we need to kill for pid 5 are: ");
@@ -6247,6 +6258,51 @@ public class TreeDemo {
         /* Go deep */
         return new ResultType26_4_3(true, Math.max(right.max, root.val),
                 Math.min(left.min, root.val));
+    }
+
+/////////////////////////////////////////
+// 26.5 Recover two wrong nodes in BST //
+/////////////////////////////////////////
+
+    ////////////////////
+    // 1) recoverTree //
+    ////////////////////
+
+    /*
+        Same idea as the recursive version. Since that version requires the
+        global variable. We could just stick to the iterative version. And We
+        must know inorder traversal from the heart.
+     */
+    public static void recoverTree(TreeNode root) {
+        TreeNode first = null;
+        TreeNode second = null;
+        TreeNode prev = null;
+        TreeNode cur = root;
+
+        ArrayDeque<TreeNode> stack = new ArrayDeque<>();
+
+        while (!stack.isEmpty() || cur != null) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.peek();
+            stack.pop();
+
+            if (prev != null && cur.val <= prev.val) { /* <= */
+                if (first == null)
+                    first = prev;
+                second = cur;
+            }
+
+            prev = cur;
+            cur = cur.right;
+        }
+
+        /* Swap value */
+        int temp = first.val;
+        first.val = second.val;
+        second.val = temp;
     }
 
 /////////////////////////
