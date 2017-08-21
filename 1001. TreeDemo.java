@@ -190,7 +190,8 @@ import java.util.*;
  *     1) sortedArrayToBST
  *
  * 22.1 Serialize and deserialize BST
- *     1) serialize/deserialize
+ *     1) serializeWithNull / deserializeWithNull
+ *     2) serializeBFS / deserializeBFS
  *
  * 22.2 Convert Sorted LinkedList to height balanced BST
  *     1) sortedListToBST
@@ -1287,10 +1288,16 @@ public class TreeDemo {
 //        /* 22.1.1 */
 //        System.out.println("******************** 22.1.1 ********************");
 //        System.out.println("Tree 2 after serialization: ");
-//        System.out.println(serialize(r100));
+//        System.out.println(serializeWithNull(r100));
 //        System.out.println("Tree 2 after deserialization: ");
-//        System.out.println(levelOrderBFS(deserialize(serialize(r100))));
-//       /* 22.2.1 */
+//        System.out.println(levelOrderBFS(deserializeWithNull(serializeWithNull(r100))));
+//        /* 22.1.2 */
+//        System.out.println("******************** 22.1.2 ********************");
+//        System.out.println("Tree 2 after serialization: ");
+//        System.out.println(serializeBFS(r100));
+//        System.out.println("Tree 2 after deserialization: ");
+//        System.out.println(levelOrderBFS(deserializeBFS(serializeBFS(r100))));
+//        /* 22.2.1 */
 //        System.out.println("******************** 22.2.1 ********************");
 //        System.out.println("Convert the sorted list 1 - 7 to a balanced BST: ");
 //        System.out.println(levelOrderBFS(sortedListToBST(ln1)));
@@ -5025,16 +5032,66 @@ public class TreeDemo {
 // 22.1 Serialize and deserialize BST //
 ////////////////////////////////////////
 
-    ////////////////////////////////
-    // 1) serialize / deserialize //
-    ////////////////////////////////
+    ////////////////////////////////////////////////
+    // 1) serializeWithNull / deserializeWithNull //
+    ////////////////////////////////////////////////
 
-    /* Very Important problem; Using two queues BFS */
-    public static String serialize(TreeNode root) {
+    /*
+        The idea is simple: print the tree in pre-order traversal and use "X"
+        to denote null node and split node with ",". We can use a StringBuilder
+        for building the string on the fly. For deserializing, we use a Queue to store the pre-order traversal and since we have "X" as null node, we know exactly how to where to end building subtrees.
+     */
+    private static final String spliter = ",";
+    private static final String Null = "#";
+
+    public static String serializeWithNull(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        buildString(root, sb);
+        return sb.toString();
+    }
+    public static TreeNode deserializeWithNull(String data) {
+        Deque<String> nodes = new LinkedList<>();
+        /* Convert Array to List */
+        nodes.addAll(Arrays.asList(data.split(spliter)));
+        return buildTree(nodes);
+    }
+    /* Preorderly traverse the tree and add nodes to sb */
+    private static void buildString(TreeNode node, StringBuilder sb) {
+        if (node == null) {
+            sb.append(Null).append(spliter);
+        } else {
+            sb.append(node.val).append(spliter);
+            buildString(node.left,  sb);
+            buildString(node.right, sb);
+        }
+    }
+    /* Build the node preorderly */
+    private static TreeNode buildTree(Deque<String> nodes) {
+        String val = nodes.remove(); /* Remove from the front */
+
+        if (val.equals(Null)) return null;
+
+        TreeNode node = new TreeNode(Integer.valueOf(val)); /* Convert str */
+        node.left  = buildTree(nodes);
+        node.right = buildTree(nodes);
+        return node;
+    }
+
+
+    //////////////////////////////////////
+    // 2) serializeBFS / deserializeBFS //
+    //////////////////////////////////////
+
+    /* Need to go through the algorithm */
+    public static String serializeBFS(TreeNode root) {
         if (root == null) {
             return "{}";
         }
 
+        /*
+            Use ArrayList as a queue instead of the deque since we are gonna
+            manipulate the index.
+        */
         ArrayList<TreeNode> queue = new ArrayList<>();
         queue.add(root);
 
@@ -5074,58 +5131,43 @@ public class TreeDemo {
         return sb.toString();
     }
 
-    public static TreeNode deserialize(String data) {
-        if (data.equals("{}")) {
+    public static TreeNode deserializeBFS(String data) {
+        if (data.equals("{}"))
             return null;
-        }
 
-        /* Split data and get the String array; Don't forget to cut the '{' */
+        /* Split data, get the String array;Don't forget to cut the '{' '}' */
         String[] vals = data.substring(1, data.length() - 1).split(",");
 
         /* Creating queue and root node */
         ArrayList<TreeNode> queue = new ArrayList<>();
-        TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
+        TreeNode root = new TreeNode(Integer.parseInt(vals[0]));/* s to int */
         queue.add(root);
 
-        int index = 0;
+        int index = 0; /* For record the level */
         boolean isLeftChild = true;
 
-        /*
-            Tree 2: Binary Search Tree
-                      100
-                    /    \
-                   40     180
-                 /  \     /
-                30   60  110
-
-             where r100 is the root
-            String = "{100,40,180,30,60,110}"
-         */
-
-        /* BFS process; Using index to access the parent one by one */
+        /* BFS process: Using index to access the parent one by one */
         for (int i = 1; i < vals.length; i++) {
             /* We got numbers */
             if (!vals[i].equals("#")) {
                 TreeNode node = new TreeNode(Integer.parseInt(vals[i]));
                 /* Connecting the tree */
-                if (isLeftChild) {
+                if (isLeftChild)
                     queue.get(index).left = node;
-                } else {
+                else {
                     queue.get(index).right = node;
                 }
 
-                /* Offer it to the queue as well */
+                /* Offer the node to queue */
                 queue.add(node);
             }
-
-            if (!isLeftChild) {
+            if (!isLeftChild)
                 index++;
-            }
             isLeftChild = !isLeftChild;
+
         }
 
         return root;
-
     }
 
 ///////////////////////////////////////////////////////////
@@ -5690,9 +5732,9 @@ public class TreeDemo {
     }
 
     private static void inorder(TreeNode root,
-                         double target,
-                         boolean isSucc,
-                         ArrayDeque<Integer> stack) {
+                                double target,
+                                boolean isSucc,
+                                ArrayDeque<Integer> stack) {
         if (root == null) return;
 
         /* Go deeper; Successor ? go right first : go left first */
