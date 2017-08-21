@@ -225,6 +225,10 @@ import java.util.*;
  *                    leaf)
  *         -- LeetCode 437
  *
+ * 24.1 Binary Tree Maximum Path Sum
+ *     1) maxPathSumResultType
+ *     2) maxPathSumGlobalRec
+ *
  * 25. Closest BST value
  *     1) closestValueRec
  *     2) closestValue
@@ -1395,9 +1399,23 @@ public class TreeDemo {
 //        System.out.println("********************* 24.3 *********************");
 //        System.out.print("The total number of paths for sum 16 for T1 is: ");
 //        System.out.println(pathSumIII(r1, 16));
+//        /* 24.1.1 */
+//        System.out.println("******************** 24.1.1 ********************");
+//        System.out.print("The Maximum Path Sum of Tree 1 is : ");
+//        System.out.println(maxPathSumResultType(r1));
+//        System.out.print("The Maximum Path Sum of Tree 2 is : ");
+//        System.out.println(maxPathSumResultType(r100));
+//        /* 24.1.2 Tree 1 */
+//        System.out.println("******************** 24.1.2 ********************");
+//        System.out.print("The Maximum Path Sum of Tree 1 is : ");
+//        System.out.println(maxPathSumGlobalRec(r1));
+//        /* 24.1.2 Tree 2 */
+//        System.out.print("The Maximum Path Sum of Tree 2 is : ");
+//        System.out.println(maxPathSumGlobalRec(r100));
+//
 //        System.out.print("The total number of paths for sum 100 for T1 is: ");
 //        System.out.println(pathSumIII(r100, 100));
-//       /* 25.1 */
+//        /* 25.1 */
 //        System.out.println("********************* 25.1 *********************");
 //        System.out.print("The closest value in Tree1 comparing to 6.7 is: ");
 //        System.out.println(closestValue(r1, 6.7));
@@ -5583,6 +5601,84 @@ public class TreeDemo {
                 + pathSumFrom(node.left, sum - node.val) + pathSumFrom(node.right, sum - node.val);
     }
 
+///////////////////////////////////////
+// 24.1 Binary Tree Maximum Path Sum //
+///////////////////////////////////////
+
+    /////////////////////////////
+    // 1) maxPathSumResultType //
+    /////////////////////////////
+
+    /*
+        Good one. Must review.
+        Stick to the Overview there are three big situation
+        1.  the maxPath comes from left child
+        2.  the maxPath comes from right child
+        3.  the maxPath must go through the root
+
+        draw it accordingly it's a must
+     */
+
+    private static class ResultType24_1_1 {
+        int singlePath, maxPath;
+        ResultType24_1_1(int singlePath, int maxPath) {
+            this.singlePath = singlePath;
+            this.maxPath = maxPath;
+        }
+    }
+    private static ResultType24_1_1 maxPathSumResultTypeHelper(TreeNode root) {
+        if (root == null) {
+            return new ResultType24_1_1(0, Integer.MIN_VALUE);
+        }
+
+        /* Divide */
+        ResultType24_1_1 left = maxPathSumResultTypeHelper(root.left);
+        ResultType24_1_1 right = maxPathSumResultTypeHelper(root.right);
+
+        /* Conquer */
+        int singlePath = Math.max(left.singlePath, right.singlePath) + root.val;
+        singlePath = Math.max(singlePath, 0);
+
+        int maxPath = Math.max(left.maxPath, right.maxPath);
+        maxPath = Math.max(maxPath, left.singlePath + right.singlePath + root.val);
+
+        return new ResultType24_1_1(singlePath, maxPath);
+    }
+
+    public static int maxPathSumResultType(TreeNode root) {
+        ResultType24_1_1 result = maxPathSumResultTypeHelper(root);
+        return result.maxPath;
+    }
+
+    /*
+        Thought:
+
+        A path from start to end, goes up on the tree for 0 or more steps, then goes down for 0 or more steps. Once it goes down, it can't go up. Each path has a highest node, which is also the lowest common ancestor of all other nodes on the path.
+
+        A recursive method maxPathDown(TreeNode node):
+            (1) computes the maximum path sum with highest node is the input node, update maximum if necessary
+            (2) returns the maximum sum of the path that can be extended to input node's parent.
+     */
+
+    ////////////////////////////
+    // 2) maxPathSumGlobalRec //
+    ////////////////////////////
+
+    private static int maxValue24_1_2;
+
+    public static int maxPathSumGlobalRec(TreeNode root) {
+        maxValue24_1_2 = Integer.MIN_VALUE;
+        maxPathDown(root);
+        return maxValue24_1_2;
+    }
+
+    private static int maxPathDown(TreeNode node) {
+        if (node == null) return 0;
+        int left = Math.max(0, maxPathDown(node.left)); /* Pruning negative */
+        int right = Math.max(0, maxPathDown(node.right));
+        maxValue24_1_2 = Math.max(maxValue24_1_2, left + right + node.val);
+        return Math.max(left, right) + node.val;
+    }
 
 ///////////////////////////
 // 25. Closest BST value //
