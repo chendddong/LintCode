@@ -1,6 +1,26 @@
-////////////////////
-// Solution 1 DFS //
-////////////////////
+/**
+ * Given a string s, partition s such that every substring of the partition is
+ * a palindrome.
+ */
+
+/*
+    Return all possible palindrome partitioning of s.
+
+    Example
+    Given s = "aab", return:
+
+    [
+      ["aa","b"],
+      ["a","a","b"]
+    ]
+
+    Good practice 
+ */
+
+
+/////////
+// DFS //
+/////////
 
 public class Solution {
     public List<List<String>> partition(String s) {
@@ -9,9 +29,9 @@ public class Solution {
             return results;
         }
 
-        List<String> partition = new ArrayList<String>();
-        int startIndex = 0;
-        helper(s, startIndex, partition, results);
+        List<String> partition = new ArrayList<>();
+        
+        partitionHelper(s, 0, partition, results);
 
         return results;
     }
@@ -20,14 +40,15 @@ public class Solution {
         the definition of the recursion:
         -- put palindrome string start from startIndex to the results
      */
-    public void helper(String s,
+    public void partitionHelper(String s,
                        int startIndex,
                        List<String> partition,
                        List<List<String>> results) {
-        /* exit of the recursion 
-           partitioned all the character of the s
+        /* 
+            exit of the recursion 
+            partitioned all the character of the s
         */
-        if (startIndex == s.length()) {
+        if (startIndex == s.length()) { /* Reaching to the last index */
             /* deep copy */
             results.add(new ArrayList<String>(partition));
             return;
@@ -36,16 +57,15 @@ public class Solution {
         for (int i = startIndex; i < s.length(); ++i) {
             /* substring */
             String subString = s.substring(startIndex, i + 1);
-                if (!isPalindrome(subString)) {
-                    continue;
-                }
-                partition.add(subString);
-                helper(s, i + 1, partition, results);
-                partition.remove(partition.size() - 1);
+            if (!isPalindrome(subString)) {
+                continue;
             }
+            partition.add(subString);
+            partitionHelper(s, i + 1, partition, results);
+            partition.remove(partition.size() - 1);
         }
-
-
+    }
+    /* Two pointer squeeze in the middle; i < j*/
     private boolean isPalindrome(String s) {
         for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
             if (s.charAt(i) != s.charAt(j)) {
@@ -57,16 +77,11 @@ public class Solution {
 }
 
 /////////////////
-// Solution DP //
+// Solution DP //               Not fully understand though
 /////////////////
 
 public class Solution {
-    /**
-     * longer but faster
-     * @param s: A string
-     * @return: A list of lists of string
-     * not fully understand the void getIsPalindrome function
-     */
+
     List<List<String>> results;
     boolean[][] isPalindrome;
 
