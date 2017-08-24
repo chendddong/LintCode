@@ -26,7 +26,7 @@ public class Solution {
         Time complexity O(n^2) 
         Space complexity O(n)
      */
-    public int longestIncreasingSubsequence(int[] nums) {
+    public int lengthOfLIS(int[] nums) {
         /* State */
         int[] dp = new int[nums.length];
 
@@ -39,7 +39,7 @@ public class Solution {
                     dp[i] = dp[i] > dp[j] ? dp[i] : dp[j] + 1;
                 }
             }
-            if (dp[i] > max) { /* Update max */
+            if (dp[i] > max) { /* Record max instead of compare at the end */
                 max = dp[i];
             }
         }
@@ -63,7 +63,7 @@ public class Solution {
         Time complexity : O(nlogn)
         Space complexity : O(n)
      */
-    public int longestIncreasingSubsequence(int[] nums) {
+    public int lengthOfLIS(int[] nums) {
         int[] minLast = new int[nums.length + 1];
         minLast[0] = Integer.MIN_VALUE;
         for (int i = 1; i <= nums.length; i++) {
