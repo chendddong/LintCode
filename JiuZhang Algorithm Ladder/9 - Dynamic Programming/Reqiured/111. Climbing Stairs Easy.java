@@ -36,7 +36,7 @@ public class Solution {
         (worst case) .
      */
     public int climbStairs(int n) {
-        climbStairsHelper(0, n);
+        return climbStairsHelper(0, n);
     }
 
     public int climbStairsHelper(int i, int n) {

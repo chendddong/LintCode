@@ -126,3 +126,4 @@ public class Solution {
                             .
     dp[n] = Min{ dp[n - i*i] + 1 },  n - i*i >=0 && i >= 1    
  */
+
