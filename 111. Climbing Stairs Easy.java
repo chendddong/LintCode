@@ -57,8 +57,6 @@ public class Solution {
 public class Solution {
 
     /*
-        Algorithm
-
         In the previous approach we are redundantly calculating the result for every step. Instead, we can store the result at each step in memo array and directly returning the result from the memo array whenever that function is called again.
 
         In this way we are pruning recursion tree with the help of memo array

@@ -31,7 +31,7 @@ public class Solution {
         /* Init */
         dp[0] = 0;
         for (int i = 1; i < A.length; i++) {
-            dp[i] = Integer.MAX_VALUE;
+            dp[i] = Integer.MAX_VALUE; /* Cannot reach */
         }
 
         /* FUCNTION */
