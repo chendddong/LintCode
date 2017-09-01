@@ -76,8 +76,7 @@ public class Solution {
         } else if(i == 2) {
             dp[i] = true;
         } else { /* Too deep */
-            /* The one who gets the last one or the last 2 will loose,
-            otherwise the person will win */            
+            /* dp[i] 现在还剩i个硬币，现在当前取硬币的人最后输赢状况 */ 
             dp[i] = !MemorySearch(i-1, dp, flag) || !MemorySearch(i-2, dp,
                 flag); 
         }
@@ -101,7 +100,7 @@ public class Solution {
         else if (n == 2)
             return true;
            
-        /* Whether the one moves first will win. It's the second type */ 
+        /* dp[i] 现在还剩i个硬币，现在当前取硬币的人最后输赢状况 */ 
         boolean []dp = new boolean[n+1];
         dp[0] = false;
         dp[1] = true;
