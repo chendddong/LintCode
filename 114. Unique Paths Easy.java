@@ -33,19 +33,20 @@ public class Solution {
         if (n == 0) return m;
 
         /* State: dp[x][y] is the unique paths for that certain position */
-        int[][] dp = new int[m][n];
+        // int[][] dp = new int[m][n];
+        int[][] dp = new int[2][n];
         /* Init */
         int i = 0, j = 0;
         for (i = 0; i < m; i++) /* First col */
-            dp[i][0] = 1;
+            dp[i%2][0] = 1;
         for (i = 0; i < n; i++) /* First row */
             dp[0][i] = 1;
         /* Function */
         for (i = 1; i < m; i++) 
             for (j = 1; j < n; j++) 
-                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                dp[i%2][j] = dp[(i - 1)%2][j] + dp[i%2][j - 1];
         /* Answer */
-        return dp[m - 1][n - 1];
+        return dp[(m - 1)%2][n - 1];
 
     }
 }

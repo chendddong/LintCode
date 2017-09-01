@@ -30,7 +30,6 @@ public class Solution {
          */
         int[][] dp = new int[m + 1][n + 1];
 
-
         /* Just omit the replace procedure, since it won't affect anything */
         for (int i = 0; i <= m; i++) {
             dp[i][0] = i; /* delete: length form i to 0 */
