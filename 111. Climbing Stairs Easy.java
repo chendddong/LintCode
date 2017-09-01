@@ -1,4 +1,4 @@
-/**
+f/**
  * You are climbing a stair case. It takes n steps to reach to the top.
  */
 
@@ -57,6 +57,8 @@ public class Solution {
 public class Solution {
 
     /*
+        Algorithm
+
         In the previous approach we are redundantly calculating the result for every step. Instead, we can store the result at each step in memo array and directly returning the result from the memo array whenever that function is called again.
 
         In this way we are pruning recursion tree with the help of memo array
@@ -86,7 +88,7 @@ public class Solution {
 }
 
 ///////////////////
-// DP Space O(n) //         Template
+// DP Space O(1) //         Template
 ///////////////////
 
 public class Solution {
@@ -100,15 +102,16 @@ public class Solution {
         /* Edge */
         if (n <= 1) return 1;
         /* state : dp[i] is the how many ways we can use to get position i */ 
-        int[] dp = new int[n + 1];
+        // int[] dp = new int[n + 1];
+        int[] dp = new int[2];
         /* Init */
         dp[0] = dp[1] = 1;
         /* function dp[i] = dp[i - 2] + dp[i - 1] */
         for (int i = 2; i <= n; i++) {
-            dp[i] = dp[i - 1] + dp[i - 2];
+            dp[i % 2] = dp[(i - 1) % 2] + dp[(i - 2) % 2];
         }
         /* Answer */
-        return dp[n];
+        return dp[n % 2];
     }
 }
 
