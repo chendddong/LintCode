@@ -13,9 +13,6 @@
     the contiguous subarray [4,−1,2,1] has the largest sum = 6.
  */
 
-
-
-
 ////////////////////////
 // sum + ans + minSum //        
 ////////////////////////
@@ -23,7 +20,7 @@
 public class Solution {
     /* Prefix sum */
     public int maxSubArray(int[] nums) {
-        if (nums == null || nums == 0) {
+        if (nums == null || nums.length == 0) {
             return 0;
         }
         
