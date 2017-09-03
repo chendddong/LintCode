@@ -6,17 +6,16 @@
     books.   For example one copier can copy the books from ith to jth continuously, 
     but he can not copy the 1st book, 2nd book and 4th book (without 3rd book).
 
-    They start copying books at the same time and they all cost 1 minute to copy 1  
-    page of a book. What's the best strategy to assign books so that the slowest
-    copier can finish at earliest time?
+    They start copying books at the same time and they all cost 1 minute to
+    copy 1 page of a book. What's the best strategy to assign books so that the slowest copier can finish at earliest time?
  */
 
 /*
     Example
     Given array A = [3,2,4], k = 2.
 
-    Return 5( First person spends 5 minutes to copy book 1 and book 2 and second  
-    person spends 4 minutes to copy book 3. )
+    Return 5( First person spends 5 minutes to copy book 1 and book 2 and
+    second person spends 4 minutes to copy book 3. )
 
  */
 
@@ -97,11 +96,7 @@ public class Solution {
 
 
 public class Solution {
-    /**
-     * @param pages: an array of integers
-     * @param k: an integer
-     * @return: an integer
-     */
+
     int [][]init(int []A)  
     {  
         int n = A.length;
@@ -119,7 +114,6 @@ public class Solution {
     
     public int copyBooks(int[] pages, int k) {
         // write your code here
-        int n = pages.length;
         int [][]w = init(pages);
         int [][]dp = new int[n + 2][k + 2];
         int [][]s = new int[n + 2][k + 2];
