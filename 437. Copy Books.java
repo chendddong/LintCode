@@ -19,9 +19,17 @@
 
  */
 
-///////////////////////////////
-// Solution 1: Binary Search //
-///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+    // • When to binary the answer?
+    //     1. Most / Least key word
+    //     2. There is a threshold say, yes or no. There is a critical point
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////
+// Binary Search //
+///////////////////
 
 /* 
     this version cost O(n log m) where n is the number of books and m is the
@@ -58,7 +66,7 @@ public class Solution {
             }
         }
         
-        // start = 4 end = 5
+        /* start = 4 end = 5 */
 
         if (countCopiers(pages, start) <= k) {
             return start;

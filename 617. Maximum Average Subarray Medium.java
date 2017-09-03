@@ -40,7 +40,8 @@ public class Solution {
         double minPre = 0;
         double[] sum = new double[n + 1];
         sum[0] = 0;
-    
+        
+        /* Have to understand the preSum !!! comeback later */
         for (int i = 1; i <= n; i++) {
             sum[i] = sum[i - 1] + nums[i - 1] - mid;
             if (i >= k && sum[i] - minPre >= 0) 
