@@ -7,7 +7,6 @@
     A subsequence of a string is a new string which is formed from the original
     string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. ("ACE" is a subsequence of "ABCDE" while "AEC" is not).
 
-    Have you met this question in a real interview? Yes
     Example
     Given S = "rabbbit", T = "rabbit", return 3.
 
