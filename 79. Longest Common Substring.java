@@ -30,6 +30,8 @@ public class Solution {
         /* Function */
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
+                /* Since the chars must appear continuous, the dependency only
+                exists between the dp[i][j] = dp[i - 1][j - 1] */
                 if (A.charAt(i - 1) == B.charAt(j - 1)) {
                     dp[i][j] = dp[i - 1][j - 1] + 1;
                 } else {
